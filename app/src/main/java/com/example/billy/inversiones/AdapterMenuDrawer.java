@@ -22,7 +22,8 @@ public class AdapterMenuDrawer extends ArrayAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        if(convertView == null){
+        if(convertView == null)
+        {
             LayoutInflater inflater = (LayoutInflater)parent.getContext().
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -34,6 +35,7 @@ public class AdapterMenuDrawer extends ArrayAdapter {
         TextView name = (TextView) convertView.findViewById(R.id.nombre);
 
         ItemsMenuDrawer item = (ItemsMenuDrawer) getItem(position);
+
         icon.setImageResource(item.getIcono());
         name.setText(item.getNombre());
 

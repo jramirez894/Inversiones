@@ -1,6 +1,7 @@
 package com.example.billy.inversiones;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -24,10 +25,24 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ActionBar actionBar =getSupportActionBar();
+        actionBar.hide();
+
         cedula =(EditText)findViewById(R.id.editTextCedula);
         contrasena =(EditText)findViewById(R.id.editTextContrasena);
         ingresar=(Button)findViewById(R.id.buttonLogin);
         olvidar=(TextView)findViewById(R.id.texViewOlvidarContrasena);
+
+        ingresar.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent=new Intent(MainActivity.this,PrincipalMenu.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         olvidar.setOnClickListener(new View.OnClickListener()
         {
@@ -36,6 +51,7 @@ public class MainActivity extends AppCompatActivity
             {
                 Intent intent=new Intent(MainActivity.this,OlvidarContrasena.class);
                 startActivity(intent);
+                finish();
             }
         });
     }

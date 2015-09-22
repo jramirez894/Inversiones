@@ -1,5 +1,8 @@
 package com.example.billy.inversiones;
 
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.os.PersistableBundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -30,6 +33,7 @@ public class PrincipalMenu extends AppCompatActivity
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.invalidateOptionsMenu();
         actionBar.setTitle("Menu");
+
         actionBar.setHomeAsUpIndicator(R.drawable.ic_drawer);
 
         String[] titulos = getResources().getStringArray(R.array.array_menu_drawer);
@@ -58,14 +62,17 @@ public class PrincipalMenu extends AppCompatActivity
         toggle = new ActionBarDrawerToggle(PrincipalMenu.this, menuDrawer, R.drawable.ic_drawer, R.string.drawer_inicio, R.string.drawer_fin);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        listaDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listaDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int posicion, long l)
             {
                 switch (posicion)
                 {
                     case 0:
-
+                        Intent intent=new Intent(PrincipalMenu.this,CapitalInicial.class);
+                        startActivity(intent);
+                        finish();
                         break;
 
                     case 1:
@@ -105,6 +112,20 @@ public class PrincipalMenu extends AppCompatActivity
     }
 
     @Override
+    public void onPostCreate(Bundle savedInstanceState)
+    {
+        super.onPostCreate(savedInstanceState);
+        toggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        super.onConfigurationChanged(newConfig);
+        toggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_principal_menu, menu);
@@ -119,7 +140,8 @@ public class PrincipalMenu extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (toggle.onOptionsItemSelected(item))
+        {
             return true;
         }
 
