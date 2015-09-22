@@ -6,4 +6,5 @@
     <string name="title_activity_olvidar_contrasena">OlvidarContrasena</string>
     <string name="title_activity_menu_principal">MenuPrincipal</string>
     <string name="title_activity_principal_menu">PrincipalMenu</string>
+    <string name="title_activity_capital_inicial">CapitalInicial</string>
 </resources>

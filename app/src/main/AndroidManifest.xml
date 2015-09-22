@@ -18,11 +18,16 @@
         </activity>
         <activity
             android:name=".OlvidarContrasena"
-            android:label="@string/title_activity_olvidar_contrasena" >
+            android:label="@string/title_activity_olvidar_contrasena"
+            android:parentActivityName=".MainActivity" >
         </activity>
         <activity
             android:name=".PrincipalMenu"
             android:label="@string/title_activity_principal_menu" >
+        </activity>
+        <activity
+            android:name=".CapitalInicial"
+            android:label="@string/title_activity_capital_inicial" >
         </activity>
     </application>
 
