@@ -1,0 +1,76 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/editCedula_AgregarEmpleado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Cedula"
+            android:textSize="20sp"
+            android:inputType="number"/>
+
+        <EditText
+            android:id="@+id/editNombre_AgregarEmpleado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre"
+            android:textSize="20sp"
+            android:inputType="text"
+            android:layout_marginTop="5dp"/>
+
+        <EditText
+            android:id="@+id/editDireccion_AgregarEmpleado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Direccion"
+            android:textSize="20sp"
+            android:inputType="number"
+            android:layout_marginTop="5dp"/>
+
+        <EditText
+            android:id="@+id/editTelefono_AgregarEmpleado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Telefono"
+            android:textSize="20sp"
+            android:inputType="number"
+            android:layout_marginTop="5dp"/>
+
+        <EditText
+            android:id="@+id/editCorreo_AgregarEmpleado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Correo Electronico"
+            android:textSize="20sp"
+            android:inputType="textEmailAddress"
+            android:layout_marginTop="5dp"/>
+
+        <EditText
+            android:id="@+id/editContrasena_AgregarEmpleado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Contraseña"
+            android:textSize="20sp"
+            android:inputType="textPassword"
+            android:layout_marginTop="5dp"/>
+
+        <EditText
+            android:id="@+id/editVerificacionContrasena_AgregarEmpleado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Verificacion Contrasena"
+            android:textSize="20sp"
+            android:inputType="textPassword"
+            android:layout_marginTop="5dp"/>
+    </LinearLayout>
+
+</LinearLayout>

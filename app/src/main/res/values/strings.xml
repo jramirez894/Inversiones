@@ -22,4 +22,5 @@
     <string name="drawer_inicio">inicio</string>
     <string name="drawer_fin">fin</string>
     <string name="title_activity_capital_inicial">CapitalInicial</string>
+    <string name="title_activity_agregar_empleado">AgregarEmpleado</string>
 </resources>

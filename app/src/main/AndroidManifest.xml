@@ -29,6 +29,10 @@
             android:name=".CapitalInicial"
             android:label="@string/title_activity_capital_inicial" >
         </activity>
+        <activity
+            android:name=".AgregarEmpleado"
+            android:label="@string/title_activity_agregar_empleado" >
+        </activity>
     </application>
 
 </manifest>
