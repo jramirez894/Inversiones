@@ -2,8 +2,7 @@ package com.example.billy.inversiones;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.PersistableBundle;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +21,8 @@ public class PrincipalMenu extends AppCompatActivity
     private ActionBarDrawerToggle toggle;
     ListView listaDrawer;
 
+    ListView listaClientes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -36,30 +37,32 @@ public class PrincipalMenu extends AppCompatActivity
 
         actionBar.setHomeAsUpIndicator(R.drawable.ic_drawer);
 
-        String[] titulos = getResources().getStringArray(R.array.array_menu_drawer);
-
         //Obtener drawer
         menuDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-
         //Obtener listview
         listaDrawer = (ListView) findViewById(R.id.lista_menu_drawer);
 
+        listaClientes=(ListView)findViewById(R.id.listaClienes);
+        ActualizarLista();
+
+        String[] titulos = getResources().getStringArray(R.array.array_menu_drawer);
+
         ArrayList<ItemsMenuDrawer> items = new ArrayList<ItemsMenuDrawer>();
-        items.add(new ItemsMenuDrawer(titulos[0], R.mipmap.ic_launcher));
-        items.add(new ItemsMenuDrawer(titulos[1], R.mipmap.ic_launcher));
-        items.add(new ItemsMenuDrawer(titulos[2], R.mipmap.ic_launcher));
-        items.add(new ItemsMenuDrawer(titulos[3], R.mipmap.ic_launcher));
-        items.add(new ItemsMenuDrawer(titulos[4], R.mipmap.ic_launcher));
-        items.add(new ItemsMenuDrawer(titulos[5], R.mipmap.ic_launcher));
-        items.add(new ItemsMenuDrawer(titulos[6], R.mipmap.ic_launcher));
-        items.add(new ItemsMenuDrawer(titulos[7], R.mipmap.ic_launcher));
-        items.add(new ItemsMenuDrawer(titulos[8], R.mipmap.ic_launcher));
+        items.add(new ItemsMenuDrawer(titulos[0], R.mipmap.capital));
+        items.add(new ItemsMenuDrawer(titulos[1], R.mipmap.personas));
+        items.add(new ItemsMenuDrawer(titulos[2], R.mipmap.personas));
+        items.add(new ItemsMenuDrawer(titulos[3], R.mipmap.productos));
+        items.add(new ItemsMenuDrawer(titulos[4], R.mipmap.capital));
+        items.add(new ItemsMenuDrawer(titulos[5], R.mipmap.saldocaja));
+        items.add(new ItemsMenuDrawer(titulos[6], R.mipmap.cancelado));
+        items.add(new ItemsMenuDrawer(titulos[7], R.mipmap.perfil));
+        items.add(new ItemsMenuDrawer(titulos[8], R.mipmap.cerrar));
 
         // Relacionar el adaptador y la escucha de la lista del drawer
         listaDrawer.setAdapter(new AdapterMenuDrawer(this, items));
 
         //Activar icono del menu que se despliega
-        toggle = new ActionBarDrawerToggle(PrincipalMenu.this, menuDrawer, R.drawable.ic_drawer, R.string.drawer_inicio, R.string.drawer_fin);
+        toggle = new ActionBarDrawerToggle(this, menuDrawer, R.string.drawer_inicio, R.string.drawer_fin);
         getSupportActionBar().setHomeButtonEnabled(true);
 
         listaDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -107,8 +110,18 @@ public class PrincipalMenu extends AppCompatActivity
 
                         break;
                 }
+                menuDrawer.closeDrawer(listaDrawer);
             }
         });
+    }
+
+    public void ActualizarLista()
+    {
+        ArrayList<ItemListaPersonalizada> items = new ArrayList<ItemListaPersonalizada>();
+
+        items.add(new ItemListaPersonalizada("jeniffer",R.mipmap.editar,R.mipmap.eliminar));
+
+        listaClientes.setAdapter(new AdapterListaPersonalizada(this,items));
     }
 
     @Override
