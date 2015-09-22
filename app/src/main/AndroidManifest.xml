@@ -16,6 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".OlvidarContrasena"
+            android:label="@string/title_activity_olvidar_contrasena" >
+        </activity>
     </application>
 
 </manifest>
