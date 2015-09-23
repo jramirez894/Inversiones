@@ -20,6 +20,10 @@
             android:name=".OlvidarContrasena"
             android:label="@string/title_activity_olvidar_contrasena" >
         </activity>
+        <activity
+            android:name=".MenuPrincipal"
+            android:label="@string/title_activity_menu_principal" >
+        </activity>
     </application>
 
 </manifest>
