@@ -6,5 +6,20 @@
     <string name="title_activity_olvidar_contrasena">OlvidarContrasena</string>
     <string name="title_activity_menu_principal">MenuPrincipal</string>
     <string name="title_activity_principal_menu">PrincipalMenu</string>
+
+    <string-array name="array_menu_drawer">
+        <item>Capital Inicial</item>
+        <item>Empleados</item>
+        <item>Clientes</item>
+        <item>Productos</item>
+        <item>Gastos</item>
+        <item>Saldo de Caja</item>
+        <item>Cancelados</item>
+        <item>Perfil</item>
+        <item>Cerrar Sesion</item>
+    </string-array>
+
+    <string name="drawer_inicio">inicio</string>
+    <string name="drawer_fin">fin</string>
     <string name="title_activity_capital_inicial">CapitalInicial</string>
 </resources>
