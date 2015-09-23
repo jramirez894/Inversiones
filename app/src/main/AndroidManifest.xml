@@ -21,8 +21,8 @@
             android:label="@string/title_activity_olvidar_contrasena" >
         </activity>
         <activity
-            android:name=".MenuPrincipal"
-            android:label="@string/title_activity_menu_principal" >
+            android:name=".PrincipalMenu"
+            android:label="@string/title_activity_principal_menu" >
         </activity>
     </application>
 
