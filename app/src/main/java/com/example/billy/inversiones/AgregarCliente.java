@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -73,6 +74,10 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_cliente);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Volver");
+        actionBar.show();
+
         this.initialiseTabHost(savedInstanceState);
 
         // Intialise ViewPager
@@ -94,11 +99,6 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }

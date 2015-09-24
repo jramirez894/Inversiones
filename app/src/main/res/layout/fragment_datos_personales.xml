@@ -1,10 +1,80 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.billy.inversiones.DatosPersonales">
+    tools:context="com.example.billy.inversiones.DatosPersonales"
+    android:padding="20dp"
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-</FrameLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Datos Personales"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:textColor="@android:color/background_dark"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/editCedula_AgregarCliente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Cedula"
+        android:layout_marginTop="10dp"
+        android:inputType="number"
+        android:textSize="20sp"/>
+
+    <EditText
+        android:id="@+id/editNombre_AgregarCliente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre"
+        android:layout_marginTop="5dp"
+        android:inputType="text"
+        android:textSize="20sp"/>
+
+    <EditText
+        android:id="@+id/editDireccion_AgregarCliente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Direccion"
+        android:layout_marginTop="5dp"
+        android:inputType="text"
+        android:textSize="20sp"/>
+
+    <EditText
+        android:id="@+id/editCorreo_AgregarCliente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Correo"
+        android:layout_marginTop="5dp"
+        android:inputType="textEmailAddress"
+        android:textSize="20sp"/>
+
+    <EditText
+        android:id="@+id/editNombreEmpresa_AgregarCliente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre Empresa"
+        android:layout_marginTop="20dp"
+        android:inputType="text"
+        android:textSize="20sp"/>
+
+    <EditText
+        android:id="@+id/editDireccionEmpresa_AgregarCliente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Direccion Empresa"
+        android:layout_marginTop="5dp"
+        android:inputType="text"
+        android:textSize="20sp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

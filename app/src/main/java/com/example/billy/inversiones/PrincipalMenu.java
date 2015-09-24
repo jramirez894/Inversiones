@@ -163,7 +163,6 @@ public class PrincipalMenu extends AppCompatActivity
             case R.id.agregarCliente:
                 Intent intent=new Intent(PrincipalMenu.this,AgregarCliente.class);
                 startActivity(intent);
-                finish();
                 break;
         }
 

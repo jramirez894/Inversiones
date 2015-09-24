@@ -7,5 +7,5 @@
         android:id="@+id/guardarEmpleado"
         app:showAsAction="ifRoom"
         android:icon="@mipmap/guardar"
-        android:title="Agregar Cliente"/>
+        android:title="Agregar Empleado"/>
 </menu>

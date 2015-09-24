@@ -1,9 +1,89 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.example.billy.inversiones.DatosCobro">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.billy.inversiones.DatosCobro"
+    android:orientation="vertical"
+    android:padding="20dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-</FrameLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Datos Del Cobro"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:textColor="@android:color/background_dark"
+        android:textStyle="bold"/>
+
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteBuscarProducto_DatosCobro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre Producto"
+            android:layout_marginTop="15dp"
+            android:drawableRight="@android:drawable/ic_menu_search"
+            android:inputType="text"/>
+
+        <ListView
+            android:id="@+id/listViewListaProductos_DatosCobro"
+            android:layout_width="wrap_content"
+            android:layout_height="107dp"/>
+
+        <EditText
+            android:id="@+id/editPrecioProducto_DatosCobro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Precio Producto"
+            android:layout_marginTop="5dp"
+            android:inputType="number"/>
+
+        <EditText
+            android:id="@+id/editVentaProducto_DatosCobro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Fecha de Venta del Produto"
+            android:layout_marginTop="5dp"/>
+
+        <EditText
+            android:id="@+id/editTotalPagar_DatosCobro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Total a Pagar"
+            android:layout_marginTop="5dp"
+            android:inputType="number"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editTextAbono_DatosCobro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="5dp"
+                android:hint="Abono"/>
+
+            <Button
+                android:id="@+id/buttonAbono_DatosCobro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ok"/>
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/editTextValorRestante_DatosCobro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="5dp"
+            android:hint="Valor Restante"/>
+
+    </LinearLayout>
+</LinearLayout>
