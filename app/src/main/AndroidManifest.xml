@@ -33,6 +33,10 @@
             android:name=".AgregarEmpleado"
             android:label="@string/title_activity_agregar_empleado" >
         </activity>
+        <activity
+            android:name=".AgregarCliente"
+            android:label="@string/title_activity_agregar_cliente" >
+        </activity>
     </application>
 
 </manifest>

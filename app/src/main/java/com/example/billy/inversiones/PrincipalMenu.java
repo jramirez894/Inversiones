@@ -158,6 +158,15 @@ public class PrincipalMenu extends AppCompatActivity
             return true;
         }
 
+        switch (item.getItemId())
+        {
+            case R.id.agregarCliente:
+                Intent intent=new Intent(PrincipalMenu.this,AgregarCliente.class);
+                startActivity(intent);
+                finish();
+                break;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 }
