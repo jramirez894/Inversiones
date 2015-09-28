@@ -18,10 +18,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-
 public class DatosCobro extends Fragment implements View.OnClickListener
 {
-    ListView lista;
+    public static ListView lista;
     ArrayList<ItemListaProdutos_DatosCobro> arrayList = new ArrayList<ItemListaProdutos_DatosCobro>();
 
     private DatePickerDialog datePickerDialog;

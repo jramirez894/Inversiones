@@ -5,10 +5,20 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 
 public class M_DatosPersonales extends Fragment
 {
+    public static EditText ced;
+    public static EditText nom;
+    public static EditText direccion;
+    public static EditText telefono;
+    public static EditText correo;
+
+    public static EditText nomEmpresa;
+    public static EditText dircEmpresa;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -16,6 +26,14 @@ public class M_DatosPersonales extends Fragment
         // Inflate the layout for this fragment
         View view;
         view= inflater.inflate(R.layout.fragment_m__datos_personales, container, false);
+
+        ced=(EditText)view.findViewById(R.id.editCedula_DatoPersonales_Mcliente);
+        nom=(EditText)view.findViewById(R.id.editNombre_DatoPersonales_Mcliente);
+        direccion=(EditText)view.findViewById(R.id.editDireccion_DatoPersonales_Mcliente);
+        telefono=(EditText)view.findViewById(R.id.editTelefono_DatoPersonales_Mcliente);
+        correo=(EditText)view.findViewById(R.id.editCorreo_DatoPersonales_Mcliente);
+        nomEmpresa=(EditText)view.findViewById(R.id.editNombreEmpresa_DatoPersonales_Mcliente);
+        dircEmpresa=(EditText)view.findViewById(R.id.editDireccionEmpresa_DatoPersonales_Mcliente);
         return view;
     }
 }
