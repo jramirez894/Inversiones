@@ -48,10 +48,11 @@
             android:inputType="number"/>
 
         <EditText
-            android:id="@+id/editVentaProducto_DatosCobro"
+            android:id="@+id/editFechaVenta_DatosCobro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Fecha de Venta del Produto"
+            android:hint="Fecha de Venta"
+            android:inputType="date"
             android:layout_marginTop="5dp"/>
 
         <EditText
@@ -73,7 +74,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginTop="5dp"
-                android:hint="Abono"/>
+                android:hint="Abono"
+                android:inputType="number"/>
 
             <Button
                 android:id="@+id/buttonAbono_DatosCobro"
@@ -88,7 +90,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginTop="5dp"
-            android:hint="Valor Restante"/>
+            android:hint="Valor Restante"
+            android:inputType="number"/>
 
     </LinearLayout>
     </ScrollView>

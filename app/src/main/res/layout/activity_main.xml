@@ -23,7 +23,8 @@
             android:hint="Ingrese Cedula"
             android:textSize="20sp"
             android:inputType="number"
-            android:layout_marginTop="15dp"/>
+            android:layout_marginTop="15dp"
+            android:drawableLeft="@mipmap/perfil"/>
 
         <EditText
             android:id="@+id/editTextContrasena"
@@ -32,7 +33,8 @@
             android:hint="Ingrese Contraseña"
             android:textSize="20sp"
             android:inputType="number"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            android:drawableLeft="@mipmap/contrasena"/>
 
         <Button
             android:id="@+id/buttonLogin"

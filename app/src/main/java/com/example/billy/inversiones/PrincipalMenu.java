@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -21,7 +22,8 @@ public class PrincipalMenu extends AppCompatActivity
     private ActionBarDrawerToggle toggle;
     ListView listaDrawer;
 
-    ListView listaClientes;
+    public static ListView listaClientes;
+    public static ArrayList<ItemListaPersonalizada> items = new ArrayList<ItemListaPersonalizada>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -65,15 +67,12 @@ public class PrincipalMenu extends AppCompatActivity
         toggle = new ActionBarDrawerToggle(this, menuDrawer, R.string.drawer_inicio, R.string.drawer_fin);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        listaDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        listaDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int posicion, long l)
-            {
-                switch (posicion)
-                {
+            public void onItemClick(AdapterView<?> adapterView, View view, int posicion, long l) {
+                switch (posicion) {
                     case 0:
-                        Intent intent=new Intent(PrincipalMenu.this,CapitalInicial.class);
+                        Intent intent = new Intent(PrincipalMenu.this, CapitalInicial.class);
                         startActivity(intent);
                         finish();
                         break;
@@ -113,13 +112,22 @@ public class PrincipalMenu extends AppCompatActivity
                 menuDrawer.closeDrawer(listaDrawer);
             }
         });
+
+        listaClientes.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+            {
+                long cap = listaClientes.getItemIdAtPosition(i);
+                Toast.makeText(PrincipalMenu.this,String.valueOf(cap), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public void ActualizarLista()
     {
-        ArrayList<ItemListaPersonalizada> items = new ArrayList<ItemListaPersonalizada>();
-
         items.add(new ItemListaPersonalizada("jeniffer",R.mipmap.editar,R.mipmap.eliminar));
+        items.add(new ItemListaPersonalizada("miguel",R.mipmap.editar,R.mipmap.eliminar));
 
         listaClientes.setAdapter(new AdapterListaPersonalizada(this,items));
     }

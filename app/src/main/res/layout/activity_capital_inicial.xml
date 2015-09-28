@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             android:hint="$ Capital Inicial"
             android:textSize="20sp"
-            android:inputType="numberDecimal"/>
+            android:inputType="numberDecimal"
+            android:drawableLeft="@mipmap/saldocaja"/>
 
         <Button
             android:id="@+id/buttonEnviar_CapitalInicial"

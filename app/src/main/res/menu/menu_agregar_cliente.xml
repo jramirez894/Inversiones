@@ -4,7 +4,7 @@
     tools:context="com.example.billy.inversiones.AgregarCliente">
 
     <item
-        android:id="@+id/guardarCliente"
+        android:id="@+id/guardarCliente_AgregarCliente"
         app:showAsAction="ifRoom"
         android:icon="@mipmap/guardar"
         android:title="Agregar Cliente"/>

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
+    public View getView(final int position, View convertView, ViewGroup parent)
     {
         if (convertView==null)
         {
@@ -39,6 +40,33 @@ public class AdapterListaPersonalizada extends ArrayAdapter
         nombreLista.setText(items.getNombreLista());
         editar.setImageResource(items.getEditar());
         eliminar.setImageResource(items.getEliminar());
+
+        editar.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                ItemListaPersonalizada posicionItems = (ItemListaPersonalizada) getItem(position);
+
+                Toast.makeText(getContext(), posicionItems.getNombreLista(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+        eliminar.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                //Captura la Posicion del item de la lista
+                ItemListaPersonalizada posicionItems = (ItemListaPersonalizada) getItem(position);
+
+                //Borrar un item de la lista
+                ArrayAdapter adapter = new AdapterListaPersonalizada(getContext(),PrincipalMenu.items);
+                adapter.remove(posicionItems);
+                //Se carga de nuevo la vista
+                PrincipalMenu.listaClientes.setAdapter(adapter);
+            }
+        });
         return convertView;
     }
 }
