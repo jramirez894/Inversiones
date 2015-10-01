@@ -94,7 +94,7 @@ public class DatosCobro extends Fragment implements View.OnClickListener
 
         arrayList.add(new ItemListaProdutos_DatosCobro("Sabana", R.mipmap.eliminar));
 
-        lista.setAdapter(new AdapterLista_DatosCobro(getActivity() , arrayList));
+        lista.setAdapter(new AdapterLista_Productos_DatosCobro(getActivity() , arrayList));
     }
 
 }

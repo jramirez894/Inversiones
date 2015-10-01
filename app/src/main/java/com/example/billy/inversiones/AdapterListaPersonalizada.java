@@ -1,6 +1,9 @@
 package com.example.billy.inversiones;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,8 @@ import java.util.List;
  */
 public class AdapterListaPersonalizada extends ArrayAdapter
 {
+
+    public static ItemListaPersonalizada posicionItems;
 
     public AdapterListaPersonalizada(Context context, List objects)
     {
@@ -46,9 +51,10 @@ public class AdapterListaPersonalizada extends ArrayAdapter
             @Override
             public void onClick(View view)
             {
-                ItemListaPersonalizada posicionItems = (ItemListaPersonalizada) getItem(position);
+                posicionItems = (ItemListaPersonalizada) getItem(position);
 
-                Toast.makeText(getContext(), posicionItems.getNombreLista(), Toast.LENGTH_LONG).show();
+                Intent intent= new Intent(getContext(),ModificarCliente.class);
+                getContext().startActivity(intent);
             }
         });
 
@@ -57,16 +63,37 @@ public class AdapterListaPersonalizada extends ArrayAdapter
             @Override
             public void onClick(View view)
             {
-                //Captura la Posicion del item de la lista
-                ItemListaPersonalizada posicionItems = (ItemListaPersonalizada) getItem(position);
-
-                //Borrar un item de la lista
-                ArrayAdapter adapter = new AdapterListaPersonalizada(getContext(),PrincipalMenu.items);
-                adapter.remove(posicionItems);
-                //Se carga de nuevo la vista
-                PrincipalMenu.listaClientes.setAdapter(adapter);
+                posicionItems = (ItemListaPersonalizada) getItem(position);
+                guardarCliente();
             }
         });
         return convertView;
+    }
+
+    public void guardarCliente()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setIcon(android.R.drawable.ic_menu_save);
+        builder.setTitle("Eliminar");
+        builder.setMessage("¿Eliminar Cliente?");
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                //Captura la Posicion del item de la lista
+
+                //Borrar un item de la lista
+                ArrayAdapter adapter = new AdapterListaPersonalizada(getContext(), PrincipalMenu.items);
+                adapter.remove(posicionItems);
+                //Se carga de nuevo la vista
+                PrincipalMenu.listaClientes.setAdapter(adapter);
+                Toast.makeText(getContext(), "Se Elimino el Cliente Correctamente", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("Cancelar", null);
+        builder.setCancelable(false);
+        builder.show();
     }
 }

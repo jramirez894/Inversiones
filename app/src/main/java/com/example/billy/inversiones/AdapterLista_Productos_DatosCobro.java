@@ -8,16 +8,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by BILLY on 24/09/2015.
  */
-public class AdapterLista_DatosCobro extends ArrayAdapter
+public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
 {
 
-    public AdapterLista_DatosCobro(Context context, List objects)
+    public AdapterLista_Productos_DatosCobro(Context context, List objects)
     {
         super(context ,0, objects);
     }

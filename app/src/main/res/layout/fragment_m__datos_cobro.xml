@@ -7,13 +7,13 @@
     android:padding="20dp">
 
     <TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Datos Del Cobro"
-    android:textSize="25sp"
-    android:gravity="center"
-    android:textColor="@android:color/background_dark"
-    android:textStyle="bold"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Datos Del Cobro"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:textColor="@android:color/background_dark"
+        android:textStyle="bold"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -26,7 +26,7 @@
 
 
             <AutoCompleteTextView
-                android:id="@+id/autoCompleteBuscarProducto_DatosCobro"
+                android:id="@+id/autoCompleteBuscarProducto_DatoCobro_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Nombre Producto"
@@ -35,12 +35,12 @@
                 android:inputType="text"/>
 
             <ListView
-                android:id="@+id/listViewListaProductos_DatosCobro"
+                android:id="@+id/listViewListaProductos_DatosCobro_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"/>
 
             <EditText
-                android:id="@+id/editPrecioProducto_DatosCobro"
+                android:id="@+id/editPrecioProducto_DatosCobro_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Precio Producto"
@@ -48,7 +48,7 @@
                 android:inputType="number"/>
 
             <EditText
-                android:id="@+id/editFechaVenta_DatosCobro"
+                android:id="@+id/editFechaVenta_DatosCobro_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Fecha de Venta"
@@ -56,7 +56,7 @@
                 android:layout_marginTop="5dp"/>
 
             <EditText
-                android:id="@+id/editTotalPagar_DatosCobro"
+                android:id="@+id/editTotalPagar_DatosCobro_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Total a Pagar"
@@ -69,7 +69,7 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/editTextAbono_DatosCobro"
+                    android:id="@+id/editTextAbono_DatosCobro_Mcliente"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -78,14 +78,14 @@
                     android:inputType="number"/>
 
                 <Button
-                    android:id="@+id/buttonAbono_DatosCobro"
+                    android:id="@+id/buttonAbono_DatosCobro_Mcliente"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ok"/>
             </LinearLayout>
 
             <EditText
-                android:id="@+id/editTextValorRestante_DatosCobro"
+                android:id="@+id/editTextValorRestante_DatosCobro_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

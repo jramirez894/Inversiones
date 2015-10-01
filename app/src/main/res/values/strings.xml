@@ -89,4 +89,5 @@
         <item>5:00 Pm</item>
     </string-array>
     <string name="title_activity_visualizar_cliente">VisualizarCliente</string>
+    <string name="title_activity_modificar_cliente">ModificarCliente</string>
 </resources>

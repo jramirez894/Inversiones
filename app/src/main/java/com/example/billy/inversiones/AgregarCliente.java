@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
-
 public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener
 {
     private TabHost mTabHost;
@@ -186,7 +185,7 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
         }
         catch (Exception e)
         {
-            Toast.makeText(AgregarCliente.this,"Faltan Datos Por Llenar",Toast.LENGTH_SHORT).show();
+
         }
 
 
@@ -296,26 +295,18 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
         builder.setIcon(android.R.drawable.ic_menu_save);
         builder.setTitle("Guardar");
         builder.setMessage("¿Agregar Cliente?");
-        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
-        {
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                Toast.makeText(AgregarCliente.this,"Su Registro fue Exitoso",Toast.LENGTH_SHORT).show();
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(AgregarCliente.this, "Su Registro fue Exitoso", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(AgregarCliente.this, PrincipalMenu.class);
                 startActivity(intent);
                 finish();
             }
         });
 
-        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-
-            }
-        });
+        builder.setNegativeButton("Cancelar",null );
+        builder.setCancelable(false);
         builder.show();
     }
 

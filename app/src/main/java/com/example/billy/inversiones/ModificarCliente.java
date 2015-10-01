@@ -3,7 +3,6 @@ package com.example.billy.inversiones;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,14 +15,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
-public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener
+public class ModificarCliente extends ActionBarActivity implements TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener
 {
     private TabHost mTabHost;
     private ViewPager mViewPager;
-    private HashMap<String, TabInfo> mapTabInfo = new HashMap<String, VisualizarCliente.TabInfo>();
+    private HashMap<String, TabInfo> mapTabInfo = new HashMap<String, ModificarCliente.TabInfo>();
     private PagerAdapter mPagerAdapter;
 
-    private class TabInfo {
+    private class TabInfo
+    {
         private String tag;
         private Class<?> clss;
         private Bundle args;
@@ -41,74 +41,43 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
      * A simple factory that returns dummy views to the Tabhost
      * @author mwho
      */
-    class TabFactory implements TabHost.TabContentFactory {
+    class TabFactory implements TabHost.TabContentFactory
+    {
 
         private final Context mContext;
 
         /**
          * @param context
          */
-        public TabFactory(Context context) {
+        public TabFactory(Context context)
+        {
             mContext = context;
         }
 
-        /** (non-Javadoc)
+        /**
+         * (non-Javadoc)
+         *
          * @see android.widget.TabHost.TabContentFactory#createTabContent(java.lang.String)
          */
-        public View createTabContent(String tag) {
+        public View createTabContent(String tag)
+        {
             View v = new View(mContext);
             v.setMinimumWidth(0);
             v.setMinimumHeight(0);
             return v;
         }
-
     }
 
-    long posicion;
-
-    @Override
+        @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_visualizar_cliente);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Volver");
-        actionBar.show();
-
-        Bundle bundle = getIntent().getExtras();
-        posicion = bundle.getLong("Posicion");
+        setContentView(R.layout.activity_modificar_cliente);
 
         this.initialiseTabHost(savedInstanceState);
 
         // Intialise ViewPager
         this.intialiseViewPager();
-        
-    }
-
-    public void capturarVariables()
-    {
-        //Variables DatosPersonales
-        String cedula = V_DatosPersonales.cedula.getText().toString();
-        String nombre = V_DatosPersonales.nombre.getText().toString();
-        String direccion = V_DatosPersonales.direccion.getText().toString();
-        String telefono = V_DatosPersonales.telefono.getText().toString();
-        String correo = V_DatosPersonales.correo.getText().toString();
-        String nomEmpresa = V_DatosPersonales.cedula.getText().toString();
-        String dirEmpresa = V_DatosPersonales.cedula.getText().toString();
-
-        //Variables DatosCobro
-        long lista = V_DatosCobro.lista.getItemIdAtPosition((int) posicion);
-        String fechaVenta = V_DatosCobro.fechaVenta.getText().toString();
-        String totalPagar = V_DatosCobro.totalPagar.getText().toString();
-        String abono = V_DatosCobro.abono.getText().toString();
-        String valorRestante = V_DatosCobro.valorRestante.getText().toString();
-
-        //Variables DetalleCobro
-        String nomEmpleado = V_DetalleCobro.nomEmpleado.getText().toString();
-        String fechaCobro = V_DetalleCobro.fechaCobro.getText().toString();
-        String diaCobro = V_DetalleCobro.diaCobro.getText().toString();
-        String horaCobro = V_DetalleCobro.horaCobro.getText().toString();
     }
 
     protected void onResume(Bundle savedInstanceState)
@@ -129,12 +98,13 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
     /**
      * Initialise ViewPager
      */
-    private void intialiseViewPager() {
+    private void intialiseViewPager()
+    {
 
         List<Fragment> fragments = new Vector<Fragment>();
-        fragments.add(Fragment.instantiate(this, V_DatosPersonales.class.getName()));
-        fragments.add(Fragment.instantiate(this, V_DatosCobro.class.getName()));
-        fragments.add(Fragment.instantiate(this, V_DetalleCobro.class.getName()));
+        fragments.add(Fragment.instantiate(this, M_DatosPersonales.class.getName()));
+        fragments.add(Fragment.instantiate(this, M_DatosCobro.class.getName()));
+        fragments.add(Fragment.instantiate(this, M_DetalleCobro.class.getName()));
 
         this.mPagerAdapter  = new PagerAdapter(super.getSupportFragmentManager(), fragments);
         //
@@ -152,13 +122,13 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
         mTabHost.setup();
         TabInfo tabInfo = null;
 
-        VisualizarCliente.AddTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab1").setIndicator("", getResources().getDrawable(R.mipmap.perfil)), ( tabInfo = new TabInfo("Tab1", V_DatosPersonales.class, args)));
+        ModificarCliente.AddTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab1").setIndicator("", getResources().getDrawable(R.mipmap.perfil)), ( tabInfo = new TabInfo("Tab1", V_DatosPersonales.class, args)));
         this.mapTabInfo.put(tabInfo.tag, tabInfo);
 
-        VisualizarCliente.AddTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab2").setIndicator("", getResources().getDrawable(R.mipmap.capital)), (tabInfo = new TabInfo("Tab2", V_DatosCobro.class, args)));
+        ModificarCliente.AddTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab2").setIndicator("", getResources().getDrawable(R.mipmap.capital)), (tabInfo = new TabInfo("Tab2", V_DatosCobro.class, args)));
         this.mapTabInfo.put(tabInfo.tag, tabInfo);
 
-        VisualizarCliente.AddTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab3").setIndicator("", getResources().getDrawable(R.mipmap.capital)), (tabInfo = new TabInfo("Tab2", V_DetalleCobro.class, args)));
+        ModificarCliente.AddTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab3").setIndicator("", getResources().getDrawable(R.mipmap.capital)), (tabInfo = new TabInfo("Tab2", V_DetalleCobro.class, args)));
         this.mapTabInfo.put(tabInfo.tag, tabInfo);
         // Default to first tab
         //this.onTabChanged("Tab1");
@@ -166,24 +136,33 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
         mTabHost.setOnTabChangedListener(this);
     }
 
+
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_visualizar_cliente, menu);
+        getMenuInflater().inflate(R.menu.menu_modificar_cliente, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings)
+        {
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
-    private static void AddTab(VisualizarCliente activity, TabHost tabHost, TabHost.TabSpec tabSpec, TabInfo tabInfo) {
+    private static void AddTab(ModificarCliente activity, TabHost tabHost, TabHost.TabSpec tabSpec, TabInfo tabInfo) {
         // Attach a Tab view factory to the spec
         tabSpec.setContent(activity.new TabFactory(activity));
         tabHost.addTab(tabSpec);

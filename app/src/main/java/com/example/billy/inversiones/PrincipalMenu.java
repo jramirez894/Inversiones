@@ -67,14 +67,16 @@ public class PrincipalMenu extends AppCompatActivity
         toggle = new ActionBarDrawerToggle(this, menuDrawer, R.string.drawer_inicio, R.string.drawer_fin);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        listaDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listaDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int posicion, long l) {
-                switch (posicion) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int posicion, long l)
+            {
+                switch (posicion)
+                {
                     case 0:
                         Intent intent = new Intent(PrincipalMenu.this, CapitalInicial.class);
                         startActivity(intent);
-                        finish();
                         break;
 
                     case 1:
@@ -119,7 +121,9 @@ public class PrincipalMenu extends AppCompatActivity
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
             {
                 long cap = listaClientes.getItemIdAtPosition(i);
-                Toast.makeText(PrincipalMenu.this,String.valueOf(cap), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(PrincipalMenu.this, VisualizarCliente.class);
+                intent.putExtra("Posicion",cap);
+                startActivity(intent);
             }
         });
     }

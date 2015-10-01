@@ -1,9 +1,82 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.example.billy.inversiones.V_DatosCobro">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Datos Del Cobro"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:textColor="@android:color/background_dark"
+        android:textStyle="bold"/>
 
-</FrameLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="15dp">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Productos"
+                android:textSize="20sp"
+                android:textColor="@android:color/black"/>
+
+            <ListView
+                android:id="@+id/listViewListaProductos_VDatosCobro"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:id="@+id/textViewFechaVenta_VDatosCobro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Fecha de Venta:"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:layout_marginTop="15dp"/>
+
+            <TextView
+                android:id="@+id/textViewTotalPagar_VDatosCobro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Total a Pagar: $"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:layout_marginTop="10dp"/>
+
+
+            <TextView
+                android:id="@+id/textViewtAbono_VDatosCobro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Abono: $"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/textViewValorRestante_VDatosCobro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Valor Restante: $"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

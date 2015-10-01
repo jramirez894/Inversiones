@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity
             {
                 Intent intent=new Intent(MainActivity.this,OlvidarContrasena.class);
                 startActivity(intent);
-                finish();
             }
         });
     }

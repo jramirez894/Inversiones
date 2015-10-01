@@ -27,7 +27,8 @@
         </activity>
         <activity
             android:name=".CapitalInicial"
-            android:label="@string/title_activity_capital_inicial" >
+            android:label="@string/title_activity_capital_inicial"
+            android:parentActivityName=".PrincipalMenu" >
         </activity>
         <activity
             android:name=".AgregarEmpleado"
@@ -40,7 +41,12 @@
         </activity>
         <activity
             android:name=".VisualizarCliente"
-            android:label="@string/title_activity_visualizar_cliente" >
+            android:label="@string/title_activity_visualizar_cliente"
+            android:parentActivityName=".PrincipalMenu" >
+        </activity>
+        <activity
+            android:name=".ModificarCliente"
+            android:label="@string/title_activity_modificar_cliente" >
         </activity>
     </application>
 
