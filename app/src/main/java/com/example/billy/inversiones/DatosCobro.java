@@ -21,7 +21,7 @@ import java.util.Locale;
 public class DatosCobro extends Fragment implements View.OnClickListener
 {
     public static ListView lista;
-    ArrayList<ItemListaProdutos_DatosCobro> arrayList = new ArrayList<ItemListaProdutos_DatosCobro>();
+    public static ArrayList<ItemListaProdutos_DatosCobro> arrayList = new ArrayList<ItemListaProdutos_DatosCobro>();
 
     private DatePickerDialog datePickerDialog;
     private SimpleDateFormat dateFormatter;
@@ -33,6 +33,7 @@ public class DatosCobro extends Fragment implements View.OnClickListener
     public static EditText abono;
     public static Button okAbono;
     public static EditText valorRestante;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -57,6 +58,7 @@ public class DatosCobro extends Fragment implements View.OnClickListener
 
         ActualizarLista();
         setDateTimeField();
+
 
         return view;
     }

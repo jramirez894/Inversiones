@@ -44,7 +44,7 @@ public class PrincipalMenu extends AppCompatActivity
         //Obtener listview
         listaDrawer = (ListView) findViewById(R.id.lista_menu_drawer);
 
-        listaClientes=(ListView)findViewById(R.id.listaClienes);
+        listaClientes=(ListView)findViewById(R.id.listaClienes_MenuPrincipal);
         ActualizarLista();
 
         String[] titulos = getResources().getStringArray(R.array.array_menu_drawer);
@@ -80,7 +80,8 @@ public class PrincipalMenu extends AppCompatActivity
                         break;
 
                     case 1:
-
+                        Intent intent1 = new Intent(PrincipalMenu.this, Empleados.class);
+                        startActivity(intent1);
                         break;
 
                     case 2:

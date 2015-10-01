@@ -1,8 +1,12 @@
 package com.example.billy.inversiones;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.List;
@@ -68,11 +73,20 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         }
     }
 
+    long posicion;
+
         @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modificar_cliente);
+
+        Bundle bundle = getIntent().getExtras();
+        posicion = bundle.getLong("Posicion");
+
+        ActionBar actionBar =getSupportActionBar();
+        actionBar.setTitle("Volver");
+        actionBar.show();
 
         this.initialiseTabHost(savedInstanceState);
 
@@ -154,12 +168,36 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings)
-        {
-            return true;
-        }
+       switch (item.getItemId())
+       {
+           case R.id.modificarCliente:
+               ModificarCliente();
+               break;
+       }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void ModificarCliente()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(android.R.drawable.ic_menu_save);
+        builder.setTitle("Guardar");
+        builder.setMessage("¿Modificar Cliente?");
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ModificarCliente.this, PrincipalMenu.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        builder.setNegativeButton("Cancelar",null );
+        builder.setCancelable(false);
+        builder.show();
     }
 
     private static void AddTab(ModificarCliente activity, TabHost tabHost, TabHost.TabSpec tabSpec, TabInfo tabInfo) {
@@ -203,5 +241,31 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
     public void onPageScrollStateChanged(int state) {
         // TODO Auto-generated method stub
 
+    }
+
+    //Varaibles de los Tab
+    public void capturarVariables()
+    {
+        //Variables DatosPersonales
+        String cedula = M_DatosPersonales.cedula.getText().toString();
+        String nombre = M_DatosPersonales.nombre.getText().toString();
+        String direccion = M_DatosPersonales.direccion.getText().toString();
+        String telefono = M_DatosPersonales.telefono.getText().toString();
+        String correo = M_DatosPersonales.correo.getText().toString();
+        String nomEmpresa = M_DatosPersonales.nomEmpresa.getText().toString();
+        String dirEmpresa = M_DatosPersonales.dircEmpresa.getText().toString();
+
+        //Variables DatosCobro
+        long lista = M_DatosCobro.lista.getItemIdAtPosition((int) posicion);
+        String fechaVenta = M_DatosCobro.fechaVenta.getText().toString();
+        String totalPagar = M_DatosCobro.totalPagar.getText().toString();
+        String abono = M_DatosCobro.abono.getText().toString();
+        String valorRestante = M_DatosCobro.valorRestante.getText().toString();
+
+        //Variables DetalleCobro
+        String nombreEmpleado = M_DetalleCobro.buscarEmpleado.getText().toString();
+        String fechaCobro = M_DetalleCobro.fechaDeCobro.getSelectedItem().toString();
+        String diaCobro = M_DetalleCobro.diaCobro.getSelectedItem().toString();
+        String horaCobro = M_DetalleCobro.horaCobro.getSelectedItem().toString();
     }
 }

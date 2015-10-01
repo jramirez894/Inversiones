@@ -32,7 +32,8 @@
         </activity>
         <activity
             android:name=".AgregarEmpleado"
-            android:label="@string/title_activity_agregar_empleado" >
+            android:label="@string/title_activity_agregar_empleado"
+            android:parentActivityName=".Empleados" >
         </activity>
         <activity
             android:name=".AgregarCliente"
@@ -46,7 +47,23 @@
         </activity>
         <activity
             android:name=".ModificarCliente"
-            android:label="@string/title_activity_modificar_cliente" >
+            android:label="@string/title_activity_modificar_cliente"
+            android:parentActivityName=".PrincipalMenu" >
+        </activity>
+        <activity
+            android:name=".Empleados"
+            android:label="@string/title_activity_empleados"
+            android:parentActivityName=".PrincipalMenu" >
+        </activity>
+        <activity
+            android:name=".V_Empleado"
+            android:label="@string/title_activity_v__empleado"
+            android:parentActivityName=".Empleados" >
+        </activity>
+        <activity
+            android:name=".M_Empleado"
+            android:label="@string/title_activity_m__empleado"
+            android:parentActivityName=".Empleados">
         </activity>
     </application>
 

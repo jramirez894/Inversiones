@@ -90,4 +90,7 @@
     </string-array>
     <string name="title_activity_visualizar_cliente">VisualizarCliente</string>
     <string name="title_activity_modificar_cliente">ModificarCliente</string>
+    <string name="title_activity_empleados">Empleados</string>
+    <string name="title_activity_v__empleado">V_Empleado</string>
+    <string name="title_activity_m__empleado">M_Empleado</string>
 </resources>

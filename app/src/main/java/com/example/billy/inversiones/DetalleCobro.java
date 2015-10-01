@@ -11,6 +11,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class DetalleCobro extends Fragment
 {
     public static AutoCompleteTextView buscarEmpleado;
@@ -20,6 +22,7 @@ public class DetalleCobro extends Fragment
     public static Spinner fechaDeCobro;
     public static Spinner diaCobro;
     public static Spinner horaCobro;
+
 
 
     @Override

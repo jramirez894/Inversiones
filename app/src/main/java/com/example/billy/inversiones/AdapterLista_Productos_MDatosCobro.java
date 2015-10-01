@@ -9,48 +9,43 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.List;
 
 /**
- * Created by BILLY on 24/09/2015.
+ * Created by Admin_Sena on 01/10/2015.
  */
-public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
+public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter
 {
 
-    public static ItemListaProdutos_DatosCobro posicionItems;
+    public static ItemListaroductos_MDatosCobro posicionItems;
 
-    public AdapterLista_Productos_DatosCobro(Context context, List objects)
+    public AdapterLista_Productos_MDatosCobro(Context context, List objects)
     {
-        super(context ,0, objects);
+        super(context, 0, objects);
     }
-
-
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent)
     {
-        if (convertView==null)
+        if (convertView == null)
         {
-            LayoutInflater inflater=(LayoutInflater)parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView=inflater.inflate(R.layout.itemslista_productos_datoscobro,null);
+            LayoutInflater inflater = (LayoutInflater)parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.itemslista_productos_mdatoscobro,null);
         }
 
-        ItemListaProdutos_DatosCobro items =(ItemListaProdutos_DatosCobro)getItem(position);
+        ItemListaroductos_MDatosCobro items = (ItemListaroductos_MDatosCobro)getItem(position);
 
-        TextView nomProducto=(TextView)convertView.findViewById(R.id.textViewNombreProducto_DatosCobro);
-        ImageView eliminar=(ImageView)convertView.findViewById(R.id.imageViewEliminarProducto_DatosCobro);
+        TextView nombre = (TextView) convertView.findViewById(R.id.textViewNombreProducto_MDatosCobro);
+        ImageView eliminar = (ImageView)convertView.findViewById(R.id.imageViewEliminarProducto_MDatosCobro);
 
-        nomProducto.setText(items.getNomProducto());
+        nombre.setText(items.getNombre());
         eliminar.setImageResource(items.getEliminar());
 
-        eliminar.setOnClickListener(new View.OnClickListener()
-        {
+        eliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
-                posicionItems = (ItemListaProdutos_DatosCobro) getItem(position);
+                posicionItems = (ItemListaroductos_MDatosCobro) getItem(position);
                 EliminarProducto();
             }
         });
@@ -71,10 +66,10 @@ public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
                 //Captura la Posicion del item de la lista
 
                 //Borrar un item de la lista
-                ArrayAdapter adapter = new AdapterLista_Productos_DatosCobro(getContext(),DatosCobro.arrayList);
+                ArrayAdapter adapter = new AdapterLista_Productos_MDatosCobro(getContext(),M_DatosCobro.arrayList);
                 adapter.remove(posicionItems);
                 //Se carga de nuevo la vista
-                DatosCobro.lista.setAdapter(adapter);
+                M_DatosCobro.lista.setAdapter(adapter);
             }
         });
 
@@ -83,4 +78,3 @@ public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
         builder.show();
     }
 }
-

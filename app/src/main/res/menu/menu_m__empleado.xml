@@ -1,11 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.billy.inversiones.ModificarCliente">
+    tools:context="com.example.billy.inversiones.M_Empleado">
 
     <item
-        android:id="@+id/modificarCliente"
+        android:id="@+id/guardarEmpleado_MEmpleado"
         app:showAsAction="ifRoom"
         android:icon="@mipmap/guardar"
-        android:title="Modificar Cliente"/>
+        android:title="Modificar Empleado"/>
 </menu>

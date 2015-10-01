@@ -10,8 +10,8 @@ import android.widget.EditText;
 
 public class M_DatosPersonales extends Fragment
 {
-    public static EditText ced;
-    public static EditText nom;
+    public static EditText cedula;
+    public static EditText nombre;
     public static EditText direccion;
     public static EditText telefono;
     public static EditText correo;
@@ -27,8 +27,8 @@ public class M_DatosPersonales extends Fragment
         View view;
         view= inflater.inflate(R.layout.fragment_m__datos_personales, container, false);
 
-        ced=(EditText)view.findViewById(R.id.editCedula_DatoPersonales_Mcliente);
-        nom=(EditText)view.findViewById(R.id.editNombre_DatoPersonales_Mcliente);
+        cedula=(EditText)view.findViewById(R.id.editCedula_DatoPersonales_Mcliente);
+        nombre=(EditText)view.findViewById(R.id.editNombre_DatoPersonales_Mcliente);
         direccion=(EditText)view.findViewById(R.id.editDireccion_DatoPersonales_Mcliente);
         telefono=(EditText)view.findViewById(R.id.editTelefono_DatoPersonales_Mcliente);
         correo=(EditText)view.findViewById(R.id.editCorreo_DatoPersonales_Mcliente);

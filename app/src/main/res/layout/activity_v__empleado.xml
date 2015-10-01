@@ -1,0 +1,68 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Datos Empleado"
+            android:textSize="25sp"
+            android:gravity="center"
+            android:textColor="@android:color/background_dark"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/textViewNombre_VEmpleado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:text="Nombre:"
+            android:layout_marginTop="50dp"/>
+
+        <TextView
+            android:id="@+id/textViewTelefono_VEmpleado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:text="Telefono:"
+            android:layout_marginTop="15dp"/>
+
+        <TextView
+            android:id="@+id/textViewGastoDia_VEmpleado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:text="Gasto del Dia:"
+            android:layout_marginTop="15dp"/>
+
+        <TextView
+            android:id="@+id/textViewCobroRecogido_VEmpleado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:text="Cobro Recogido:"
+            android:layout_marginTop="15dp"/>
+
+        <TextView
+            android:id="@+id/textViewDiferencia_VEmpleado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            android:text="Gasto del Dia:"
+            android:layout_marginTop="15dp"/>
+
+    </LinearLayout>
+</LinearLayout>

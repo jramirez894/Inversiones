@@ -22,6 +22,7 @@ import java.util.Locale;
 public class M_DatosCobro extends Fragment implements View.OnClickListener
 {
     public static ListView lista;
+    public static ArrayList<ItemListaroductos_MDatosCobro> arrayList = new ArrayList<ItemListaroductos_MDatosCobro>();
 
     private DatePickerDialog datePickerDialog;
     private SimpleDateFormat dateFormatter;
@@ -57,6 +58,7 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
 
         lista=(ListView)view.findViewById(R.id.listViewListaProductos_DatosCobro_Mcliente);
 
+        ActualizarLista();
         setDateTimeField();
         return view;
     }
@@ -86,6 +88,15 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
         {
             datePickerDialog.show();
         }
+    }
+
+    public void ActualizarLista()
+    {
+        arrayList.clear();
+
+        arrayList.add(new ItemListaroductos_MDatosCobro("Sabanas", R.mipmap.eliminar));
+
+        lista.setAdapter(new AdapterLista_Productos_MDatosCobro(getContext() , arrayList));
     }
 
 }

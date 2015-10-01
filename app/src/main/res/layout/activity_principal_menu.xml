@@ -16,7 +16,7 @@
             android:orientation="horizontal">
 
             <AutoCompleteTextView
-                android:id="@+id/autocompleteClientes"
+                android:id="@+id/autocompleteBuscarClientes_MenuPrincipal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -24,7 +24,7 @@
                 android:completionThreshold="1"/>
 
             <ImageView
-                android:id="@+id/imgBuscarClientes"
+                android:id="@+id/imgBuscarClientes_MenuPrincipal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_menu_search"
@@ -33,7 +33,7 @@
         </LinearLayout>
 
         <ListView
-            android:id="@+id/listaClienes"
+            android:id="@+id/listaClienes_MenuPrincipal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp">

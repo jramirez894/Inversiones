@@ -11,7 +11,7 @@
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/editCedula_AgregarEmpleado"
+            android:id="@+id/editCedula_M_Empleado"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Cedula"
@@ -19,7 +19,7 @@
             android:inputType="number"/>
 
         <EditText
-            android:id="@+id/editNombre_AgregarEmpleado"
+            android:id="@+id/editNombre_M_Empleado"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nombre"
@@ -28,7 +28,7 @@
             android:layout_marginTop="5dp"/>
 
         <EditText
-            android:id="@+id/editDireccion_AgregarEmpleado"
+            android:id="@+id/editDireccion_M_Empleado"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Direccion"
@@ -37,7 +37,7 @@
             android:layout_marginTop="5dp"/>
 
         <EditText
-            android:id="@+id/editTelefono_AgregarEmpleado"
+            android:id="@+id/editTelefono_M_Empleado"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Telefono"
@@ -46,7 +46,7 @@
             android:layout_marginTop="5dp"/>
 
         <EditText
-            android:id="@+id/editCorreo_AgregarEmpleado"
+            android:id="@+id/editCorreo_M_Empleado"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Correo Electronico"
@@ -55,7 +55,7 @@
             android:layout_marginTop="5dp"/>
 
         <EditText
-            android:id="@+id/editContrasena_AgregarEmpleado"
+            android:id="@+id/editContrasena_M_Empleado"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Contraseña"
@@ -64,7 +64,7 @@
             android:layout_marginTop="5dp"/>
 
         <EditText
-            android:id="@+id/editVerificacionContrasena_AgregarEmpleado"
+            android:id="@+id/editVerificacionContrasena_M_Empleado"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Verificacion Contrasena"

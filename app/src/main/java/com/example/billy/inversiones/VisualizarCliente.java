@@ -86,6 +86,7 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
         
     }
 
+    //Variables de los Tab
     public void capturarVariables()
     {
         //Variables DatosPersonales
@@ -94,8 +95,8 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
         String direccion = V_DatosPersonales.direccion.getText().toString();
         String telefono = V_DatosPersonales.telefono.getText().toString();
         String correo = V_DatosPersonales.correo.getText().toString();
-        String nomEmpresa = V_DatosPersonales.cedula.getText().toString();
-        String dirEmpresa = V_DatosPersonales.cedula.getText().toString();
+        String nomEmpresa = V_DatosPersonales.nomEmpresa.getText().toString();
+        String dirEmpresa = V_DatosPersonales.dirEmpresa.getText().toString();
 
         //Variables DatosCobro
         long lista = V_DatosCobro.lista.getItemIdAtPosition((int) posicion);
