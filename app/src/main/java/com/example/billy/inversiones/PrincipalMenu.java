@@ -85,10 +85,13 @@ public class PrincipalMenu extends AppCompatActivity
                         break;
 
                     case 2:
-
+                        Intent intent2 = new Intent(PrincipalMenu.this, PrincipalMenu.class);
+                        startActivity(intent2);
                         break;
 
                     case 3:
+                        Intent intent3 = new Intent(PrincipalMenu.this, Productos.class);
+                        startActivity(intent3);
 
                         break;
 

@@ -73,16 +73,11 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         }
     }
 
-    long posicion;
-
         @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modificar_cliente);
-
-        Bundle bundle = getIntent().getExtras();
-        posicion = bundle.getLong("Posicion");
 
         ActionBar actionBar =getSupportActionBar();
         actionBar.setTitle("Volver");
@@ -178,6 +173,7 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         return super.onOptionsItemSelected(item);
     }
 
+    //Alerta de Confirmacion
     public void ModificarCliente()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -256,7 +252,6 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         String dirEmpresa = M_DatosPersonales.dircEmpresa.getText().toString();
 
         //Variables DatosCobro
-        long lista = M_DatosCobro.lista.getItemIdAtPosition((int) posicion);
         String fechaVenta = M_DatosCobro.fechaVenta.getText().toString();
         String totalPagar = M_DatosCobro.totalPagar.getText().toString();
         String abono = M_DatosCobro.abono.getText().toString();

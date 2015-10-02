@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.billy.inversiones.Productos">
+
+    <item
+        android:id="@+id/agregarProducto_Productos"
+        app:showAsAction="ifRoom"
+        android:icon="@mipmap/comprar"
+        android:title="Agregar Empleado"/>
+
+</menu>

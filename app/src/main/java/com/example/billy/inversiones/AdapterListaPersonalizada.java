@@ -53,6 +53,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
             {
                 posicionItems = (ItemListaPersonalizada) getItem(position);
 
+                //Abrir ModificarCliente
                 Intent intent= new Intent(getContext(),ModificarCliente.class);
                 getContext().startActivity(intent);
             }

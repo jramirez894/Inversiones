@@ -63,7 +63,12 @@
         <activity
             android:name=".M_Empleado"
             android:label="@string/title_activity_m__empleado"
-            android:parentActivityName=".Empleados">
+            android:parentActivityName=".Empleados" >
+        </activity>
+        <activity
+            android:name=".Productos"
+            android:label="@string/title_activity_productos"
+            android:parentActivityName=".PrincipalMenu">
         </activity>
     </application>
 
