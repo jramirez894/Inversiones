@@ -18,6 +18,7 @@ import com.example.billy.clientes.AgregarCliente;
 import com.example.billy.clientes.VisualizarCliente;
 import com.example.billy.empleado.Empleados;
 import com.example.billy.capital_inicial.CapitalInicial;
+import com.example.billy.gastos.Reg_Gasto;
 import com.example.billy.productos.Productos;
 import com.example.billy.inversiones.R;
 
@@ -103,6 +104,8 @@ public class PrincipalMenu extends AppCompatActivity
                         break;
 
                     case 4:
+                        Intent intent4 = new Intent(PrincipalMenu.this, Reg_Gasto.class);
+                        startActivity(intent4);
 
                         break;
 

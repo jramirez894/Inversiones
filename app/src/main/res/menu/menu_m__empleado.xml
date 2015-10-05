@@ -4,7 +4,7 @@
     tools:context="com.example.billy.empleado.M_Empleado">
 
     <item
-        android:id="@+id/guardarEmpleado_MEmpleado"
+        android:id="@+id/modificar_MEmpleado"
         app:showAsAction="ifRoom"
         android:icon="@mipmap/guardar"
         android:title="Modificar Empleado"/>

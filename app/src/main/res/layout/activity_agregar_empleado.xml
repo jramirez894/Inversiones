@@ -10,13 +10,23 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Datos Empleado"
+            android:textSize="25sp"
+            android:gravity="center"
+            android:textColor="@android:color/background_dark"
+            android:textStyle="bold"/>
+
         <EditText
             android:id="@+id/editCedula_AgregarEmpleado"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Cedula"
             android:textSize="20sp"
-            android:inputType="number"/>
+            android:inputType="number"
+            android:layout_marginTop="15dp"/>
 
         <EditText
             android:id="@+id/editNombre_AgregarEmpleado"

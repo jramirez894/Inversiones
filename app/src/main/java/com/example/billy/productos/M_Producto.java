@@ -1,4 +1,4 @@
-package com.example.billy.empleado;
+package com.example.billy.productos;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -11,43 +11,37 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.billy.menu_principal.PrincipalMenu;
+import com.example.billy.empleado.Empleados;
 import com.example.billy.inversiones.R;
 
-public class M_Empleado extends AppCompatActivity
+public class M_Producto extends AppCompatActivity
 {
-    EditText cedula;
-    EditText nombreE;
-    EditText direccion;
-    EditText telefono;
-    EditText correo;
-    EditText contrasena;
-    EditText verContrasena;
+    EditText nombre;
+    EditText cantidad;
+    EditText precioCompra;
+    EditText precioVenta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_m__empleado);
+        setContentView(R.layout.activity_m__producto);
 
-        ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar =getSupportActionBar();
         actionBar.setTitle("Volver");
         actionBar.show();
 
-        cedula =(EditText)findViewById(R.id.editCedula_M_Empleado);
-        nombreE =(EditText)findViewById(R.id.editNombre_M_Empleado);
-        direccion =(EditText)findViewById(R.id.editDireccion_M_Empleado);
-        telefono =(EditText)findViewById(R.id.editTelefono_M_Empleado);
-        correo =(EditText)findViewById(R.id.editCorreo_M_Empleado);
-        contrasena =(EditText)findViewById(R.id.editContrasena_M_Empleado);
-        verContrasena =(EditText)findViewById(R.id.editVerificacionContrasena_M_Empleado);
+        nombre = (EditText)findViewById(R.id.editTextNombre_MProducto);
+        cantidad = (EditText)findViewById(R.id.editTextCantidad_MProducto);
+        precioCompra = (EditText)findViewById(R.id.editTextPrecioCompra_MProducto);
+        precioVenta = (EditText)findViewById(R.id.editTextPrecioVenta_MProducto);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_m__empleado, menu);
+        getMenuInflater().inflate(R.menu.menu_m__producto, menu);
         return true;
     }
 
@@ -62,28 +56,29 @@ public class M_Empleado extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         switch (item.getItemId())
         {
-            case R.id.modificar_MEmpleado:
-                ModificarEmpleado();
+            case R.id.modificar_MProducto:
+                ModificarProducto();
                 break;
         }
+
 
         return super.onOptionsItemSelected(item);
     }
 
     //Alerta de Confirmacion
-    public void ModificarEmpleado()
+    public void ModificarProducto()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(android.R.drawable.ic_menu_save);
         builder.setTitle("Guardar");
-        builder.setMessage("¿Modificar Empleado?");
+        builder.setMessage("¿Modificar Producto?");
         builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
         {
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                Toast.makeText(M_Empleado.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(M_Empleado.this, Empleados.class);
+                Toast.makeText(M_Producto.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(M_Producto.this, Productos.class);
                 startActivity(intent);
                 finish();
             }

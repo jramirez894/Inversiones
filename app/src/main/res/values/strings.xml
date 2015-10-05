@@ -94,4 +94,14 @@
     <string name="title_activity_v__empleado">V_Empleado</string>
     <string name="title_activity_m__empleado">M_Empleado</string>
     <string name="title_activity_productos">Productos</string>
+    <string name="title_activity_agregar_producto">AgregarProducto</string>
+    <string name="title_activity_v__producto">V_Producto</string>
+    <string name="title_activity_m__producto">M_Producto</string>
+    <string name="title_activity_reg__gasto">Reg_Gasto</string>
+
+    <string-array name="tiposGastos">
+        <item>Servicios</item>
+        <item>Renta</item>
+        <item>Empleados</item>
+    </string-array>
 </resources>

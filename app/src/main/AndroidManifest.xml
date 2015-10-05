@@ -68,6 +68,26 @@
         <activity
             android:name="com.example.billy.productos.Productos"
             android:label="@string/title_activity_productos"
+            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu" >
+        </activity>
+        <activity
+            android:name="com.example.billy.productos.AgregarProducto"
+            android:label="@string/title_activity_agregar_producto"
+            android:parentActivityName="com.example.billy.productos.Productos" >
+        </activity>
+        <activity
+            android:name="com.example.billy.productos.V_Producto"
+            android:label="@string/title_activity_v__producto"
+            android:parentActivityName="com.example.billy.productos.Productos" >
+        </activity>
+        <activity
+            android:name="com.example.billy.productos.M_Producto"
+            android:label="@string/title_activity_m__producto"
+            android:parentActivityName="com.example.billy.productos.Productos" >
+        </activity>
+        <activity
+            android:name="com.example.billy.gastos.Reg_Gasto"
+            android:label="@string/title_activity_reg__gasto"
             android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu">
         </activity>
     </application>
