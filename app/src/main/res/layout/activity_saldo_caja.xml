@@ -1,12 +1,53 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.example.billy.saldo_caja.SaldoCaja">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-</RelativeLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Saldo De Caja"
+            android:textSize="25sp"
+            android:gravity="center"
+            android:textColor="@android:color/background_dark"
+            android:textStyle="bold"
+            android:layout_marginTop="40dp"/>
+
+        <TextView
+            android:id="@+id/texViewGastoDia_SaldoCaja"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gasto Por Dia: $"
+            android:textSize="20sp"
+            android:textColor="@android:color/background_dark"
+            android:layout_marginTop="70dp"/>
+
+        <TextView
+            android:id="@+id/texViewCobroDia_SaldoCaja"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cobro Por Dia: $"
+            android:textSize="20sp"
+            android:textColor="@android:color/background_dark"
+            android:layout_marginTop="20dp"/>
+
+        <TextView
+            android:id="@+id/texViewDiferencia_SaldoCaja"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Diferencia: $"
+            android:textSize="20sp"
+            android:textColor="@android:color/background_dark"
+            android:layout_marginTop="20dp"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>

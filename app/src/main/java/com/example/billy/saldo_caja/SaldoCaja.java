@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.billy.constantes.Constantes;
 import com.example.billy.gastos.Historial;
@@ -13,6 +14,10 @@ import com.example.billy.inversiones.R;
 
 public class SaldoCaja extends AppCompatActivity
 {
+    TextView gastoDia;
+    TextView cobroDia;
+    TextView diferencia;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -23,6 +28,10 @@ public class SaldoCaja extends AppCompatActivity
         ActionBar actionBar =getSupportActionBar();
         actionBar.setTitle("Volver");
         actionBar.show();
+
+        gastoDia = (TextView)findViewById(R.id.texViewGastoDia_SaldoCaja);
+        cobroDia = (TextView)findViewById(R.id.texViewCobroDia_SaldoCaja);
+        diferencia = (TextView)findViewById(R.id.texViewDiferencia_SaldoCaja);
     }
 
     @Override

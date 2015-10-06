@@ -71,6 +71,9 @@ public class Historial extends AppCompatActivity implements View.OnClickListener
                 String capInico = fechaInicio.getText().toString();
                 String capFin = fechaFin.getText().toString();
 
+                Constantes.fechaInicio = capInico;
+                Constantes.fechaFin = capFin;
+
                 if (capInico.equals("")||
                         capFin.equals(""))
                 {

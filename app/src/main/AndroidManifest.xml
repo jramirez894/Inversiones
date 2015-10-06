@@ -93,17 +93,31 @@
         <activity
             android:name="com.example.billy.gastos.Historial"
             android:label="@string/title_activity_historial"
-            android:parentActivityName="com.example.billy.saldo_caja.SaldoCaja">
+            android:parentActivityName="com.example.billy.saldo_caja.SaldoCaja" >
         </activity>
         <activity
             android:name="com.example.billy.gastos.Inf_Historial"
             android:label="@string/title_activity_inf__historial"
-            android:parentActivityName="com.example.billy.gastos.Historial">
+            android:parentActivityName="com.example.billy.gastos.Historial" >
         </activity>
         <activity
             android:name="com.example.billy.saldo_caja.SaldoCaja"
             android:label="@string/title_activity_saldo_caja"
-            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu">
+            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu" >
+        </activity>
+        <activity
+            android:name="com.example.billy.gastos.Lista_InfHistorial"
+            android:label="@string/title_activity_lista__inf_historial"
+            android:parentActivityName="com.example.billy.gastos.Inf_Historial" >
+        </activity>
+        <activity
+            android:name="com.example.billy.cancelados.Cancelados"
+            android:label="@string/title_activity_cancelados"
+            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu" >
+        </activity>
+        <activity
+            android:name="com.example.billy.cancelados.Inf_ClienteCancelados"
+            android:label="@string/title_activity_inf__cliente_cancelados" >
         </activity>
     </application>
 

@@ -24,6 +24,16 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteCedulaCliente_AgregarCliente"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Cedula Cliente"
+            android:drawableRight="@android:drawable/ic_menu_search"
+            android:inputType="number"
+            android:completionThreshold="1"/>
+
     <EditText
         android:id="@+id/editCedula_AgregarCliente"
         android:layout_width="match_parent"

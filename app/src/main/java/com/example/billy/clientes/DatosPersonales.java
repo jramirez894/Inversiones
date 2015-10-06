@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
 import com.example.billy.inversiones.R;
@@ -12,6 +13,7 @@ import com.example.billy.inversiones.R;
 
 public class DatosPersonales extends Fragment
 {
+    public static EditText buscarCedula;
     public static EditText ced;
     public static EditText nom;
     public static EditText direccion;
@@ -28,6 +30,9 @@ public class DatosPersonales extends Fragment
         View view;
 
         view = inflater.inflate(R.layout.fragment_datos_personales, container, false);
+
+        //Mostrar Alerta Si existe o el cliente inactivo o activo
+        buscarCedula = (AutoCompleteTextView)view.findViewById(R.id.autoCompleteCedulaCliente_AgregarCliente);
 
         ced=(EditText)view.findViewById(R.id.editCedula_AgregarCliente);
         nom=(EditText)view.findViewById(R.id.editNombre_AgregarCliente);

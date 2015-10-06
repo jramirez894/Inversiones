@@ -13,12 +13,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.billy.cancelados.Cancelados;
 import com.example.billy.clientes.AdapterListaPersonalizada;
 import com.example.billy.clientes.AgregarCliente;
 import com.example.billy.clientes.VisualizarCliente;
 import com.example.billy.empleado.Empleados;
 import com.example.billy.capital_inicial.CapitalInicial;
 import com.example.billy.gastos.Reg_Gasto;
+import com.example.billy.inversiones.MainActivity;
 import com.example.billy.productos.Productos;
 import com.example.billy.inversiones.R;
 import com.example.billy.saldo_caja.SaldoCaja;
@@ -81,42 +83,46 @@ public class PrincipalMenu extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int posicion, long l)
             {
+                Intent intent;
                 switch (posicion)
                 {
+
                     case 0:
-                        Intent intent = new Intent(PrincipalMenu.this, CapitalInicial.class);
+                        intent = new Intent(PrincipalMenu.this, CapitalInicial.class);
                         startActivity(intent);
                         break;
 
                     case 1:
-                        Intent intent1 = new Intent(PrincipalMenu.this, Empleados.class);
-                        startActivity(intent1);
+                        intent = new Intent(PrincipalMenu.this, Empleados.class);
+                        startActivity(intent);
                         break;
 
                     case 2:
-                        Intent intent2 = new Intent(PrincipalMenu.this, PrincipalMenu.class);
-                        startActivity(intent2);
+                        intent = new Intent(PrincipalMenu.this, PrincipalMenu.class);
+                        startActivity(intent);
                         break;
 
                     case 3:
-                        Intent intent3 = new Intent(PrincipalMenu.this, Productos.class);
-                        startActivity(intent3);
+                        intent = new Intent(PrincipalMenu.this, Productos.class);
+                        startActivity(intent);
 
                         break;
 
                     case 4:
-                        Intent intent4 = new Intent(PrincipalMenu.this, Reg_Gasto.class);
-                        startActivity(intent4);
+                        intent = new Intent(PrincipalMenu.this, Reg_Gasto.class);
+                        startActivity(intent);
 
                         break;
 
                     case 5:
-                        Intent intent5 = new Intent(PrincipalMenu.this, SaldoCaja.class);
-                        startActivity(intent5);
+                        intent = new Intent(PrincipalMenu.this, SaldoCaja.class);
+                        startActivity(intent);
 
                         break;
 
                     case 6:
+                        intent = new Intent(PrincipalMenu.this, Cancelados.class);
+                        startActivity(intent);
 
                         break;
 
@@ -125,7 +131,9 @@ public class PrincipalMenu extends AppCompatActivity
                         break;
 
                     case 8:
-
+                        intent = new Intent(PrincipalMenu.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
                         break;
                 }
                 menuDrawer.closeDrawer(listaDrawer);

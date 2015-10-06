@@ -27,7 +27,134 @@
             android:gravity="center"
             android:textSize="20sp"
             android:textColor="@android:color/black"
-            android:layout_marginTop="15dp"/>
+            android:layout_marginTop="20dp"
+            android:drawableRight="@android:drawable/ic_menu_my_calendar"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="40dp">
+
+            <TextView
+                android:id="@+id/textViewRenta_InfHistorial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="$ Renta"
+                android:textSize="20sp"
+                android:textColor="@android:color/black"/>
+
+            <ImageView
+                android:id="@+id/imageInfRenta_InfHistorial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/informacion"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                android:id="@+id/textViewServicios_InfHistorial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="$ Sevicios"
+                android:textSize="20sp"
+                android:textColor="@android:color/black"/>
+
+            <ImageView
+                android:id="@+id/imageInfServicios_InfHistorial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/informacion"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                android:id="@+id/textViewPagoEmpleados_InfHistorial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="$ Empleados"
+                android:textSize="20sp"
+                android:textColor="@android:color/black"/>
+
+            <ImageView
+                android:id="@+id/imageInfEmpleados_InfHistorial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/informacion"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                android:id="@+id/textViewGasolina_InfHistorial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="$ Gasolina"
+                android:textSize="20sp"
+                android:textColor="@android:color/black"/>
+
+            <ImageView
+                android:id="@+id/imageInfGasolina_InfHistorial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/informacion"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp">
+
+            <TextView
+                android:id="@+id/textViewComida_InfHistorial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="$ Comida"
+                android:textSize="20sp"
+                android:textColor="@android:color/black"/>
+
+            <ImageView
+                android:id="@+id/imageInfComida_InfHistorial"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/informacion"/>
+
+        </LinearLayout>
+
+
+
+
+
+
     </LinearLayout>
 
 
