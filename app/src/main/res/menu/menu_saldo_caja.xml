@@ -1,10 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.billy.gastos.Reg_Gasto">
+    tools:context="com.example.billy.saldo_caja.SaldoCaja">
 
     <item
-        android:id="@+id/historial_RegCobro"
+        android:id="@+id/historial_SaldoCaja"
         app:showAsAction="ifRoom"
         android:icon="@mipmap/informacion"
         android:title="Historial"/>

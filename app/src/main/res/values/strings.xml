@@ -104,4 +104,7 @@
         <item>Renta</item>
         <item>Empleados</item>
     </string-array>
+    <string name="title_activity_historial">Historial</string>
+    <string name="title_activity_inf__historial">Inf_Historial</string>
+    <string name="title_activity_saldo_caja">SaldoCaja</string>
 </resources>

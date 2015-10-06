@@ -1,5 +1,8 @@
 package com.example.billy.gastos;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,7 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.example.billy.constantes.Constantes;
+import com.example.billy.empleado.Empleados;
 import com.example.billy.inversiones.R;
 
 public class Reg_Gasto extends AppCompatActivity
@@ -44,10 +50,48 @@ public class Reg_Gasto extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
+                String tipo = tipoGasto.getSelectedItem().toString();
                 String val = valor.getText().toString();
                 String des = descripcion.getText().toString();
+
+                if (val.equals("")||
+                        des.equals(""))
+                {
+                    Toast.makeText(Reg_Gasto.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    RegistrarGasto();
+                }
             }
         });
+    }
+
+    public void RegistrarGasto()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(android.R.drawable.ic_menu_save);
+        builder.setTitle("Guardar");
+        builder.setMessage("¿Registrar Gasto?");
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                Toast.makeText(Reg_Gasto.this, "Su Registro fue Exitoso", Toast.LENGTH_SHORT).show();
+                limpiar();
+            }
+        });
+
+        builder.setNegativeButton("Cancelar",null );
+        builder.setCancelable(false);
+        builder.show();
+    }
+
+    public void limpiar()
+    {
+        valor.setText("");
+        descripcion.setText("");
     }
 
     @Override
@@ -59,15 +103,22 @@ public class Reg_Gasto extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId())
+        {
+            case R.id.historial_RegCobro:
+                Constantes.atrasHistorial="Reg_Gasto";
+                Intent intent = new Intent(Reg_Gasto.this,Historial.class);
+                intent.putExtra("Atras",Constantes.atrasHistorial);
+                startActivity(intent);
+                break;
         }
 
         return super.onOptionsItemSelected(item);

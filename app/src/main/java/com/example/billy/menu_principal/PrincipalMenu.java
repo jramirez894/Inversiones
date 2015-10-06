@@ -21,6 +21,7 @@ import com.example.billy.capital_inicial.CapitalInicial;
 import com.example.billy.gastos.Reg_Gasto;
 import com.example.billy.productos.Productos;
 import com.example.billy.inversiones.R;
+import com.example.billy.saldo_caja.SaldoCaja;
 
 import java.util.ArrayList;
 
@@ -110,6 +111,8 @@ public class PrincipalMenu extends AppCompatActivity
                         break;
 
                     case 5:
+                        Intent intent5 = new Intent(PrincipalMenu.this, SaldoCaja.class);
+                        startActivity(intent5);
 
                         break;
 

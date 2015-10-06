@@ -88,6 +88,21 @@
         <activity
             android:name="com.example.billy.gastos.Reg_Gasto"
             android:label="@string/title_activity_reg__gasto"
+            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu" >
+        </activity>
+        <activity
+            android:name="com.example.billy.gastos.Historial"
+            android:label="@string/title_activity_historial"
+            android:parentActivityName="com.example.billy.saldo_caja.SaldoCaja">
+        </activity>
+        <activity
+            android:name="com.example.billy.gastos.Inf_Historial"
+            android:label="@string/title_activity_inf__historial"
+            android:parentActivityName="com.example.billy.gastos.Historial">
+        </activity>
+        <activity
+            android:name="com.example.billy.saldo_caja.SaldoCaja"
+            android:label="@string/title_activity_saldo_caja"
             android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu">
         </activity>
     </application>
