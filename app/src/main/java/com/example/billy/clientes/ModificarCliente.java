@@ -117,6 +117,7 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         fragments.add(Fragment.instantiate(this, M_DatosPersonales.class.getName()));
         fragments.add(Fragment.instantiate(this, M_DatosCobro.class.getName()));
         fragments.add(Fragment.instantiate(this, M_DetalleCobro.class.getName()));
+        fragments.add(Fragment.instantiate(this, ClientesHistorial.class.getName()));
 
         this.mPagerAdapter  = new PagerAdapter(super.getSupportFragmentManager(), fragments);
         //
@@ -141,6 +142,9 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         this.mapTabInfo.put(tabInfo.tag, tabInfo);
 
         ModificarCliente.AddTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab3").setIndicator("", getResources().getDrawable(R.mipmap.capital)), (tabInfo = new TabInfo("Tab2", V_DetalleCobro.class, args)));
+        this.mapTabInfo.put(tabInfo.tag, tabInfo);
+
+        ModificarCliente.AddTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab3").setIndicator("", getResources().getDrawable(R.mipmap.informacion)), (tabInfo = new TabInfo("Tab2", ClientesHistorial.class, args)));
         this.mapTabInfo.put(tabInfo.tag, tabInfo);
         // Default to first tab
         //this.onTabChanged("Tab1");

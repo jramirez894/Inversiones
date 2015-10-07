@@ -21,6 +21,7 @@ import com.example.billy.empleado.Empleados;
 import com.example.billy.capital_inicial.CapitalInicial;
 import com.example.billy.gastos.Reg_Gasto;
 import com.example.billy.inversiones.MainActivity;
+import com.example.billy.perfil.Perfil;
 import com.example.billy.productos.Productos;
 import com.example.billy.inversiones.R;
 import com.example.billy.saldo_caja.SaldoCaja;
@@ -127,6 +128,8 @@ public class PrincipalMenu extends AppCompatActivity
                         break;
 
                     case 7:
+                        intent = new Intent(PrincipalMenu.this, Perfil.class);
+                        startActivity(intent);
 
                         break;
 

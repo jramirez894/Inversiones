@@ -118,7 +118,12 @@
         <activity
             android:name="com.example.billy.cancelados.Inf_ClienteCancelados"
             android:label="@string/title_activity_inf__cliente_cancelados"
-            android:parentActivityName="com.example.billy.cancelados.Cancelados">
+            android:parentActivityName="com.example.billy.cancelados.Cancelados" >
+        </activity>
+        <activity
+            android:name="com.example.billy.perfil.Perfil"
+            android:label="@string/title_activity_perfil"
+            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu" >
         </activity>
     </application>
 
