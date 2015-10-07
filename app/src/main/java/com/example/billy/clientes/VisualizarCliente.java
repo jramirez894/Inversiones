@@ -113,7 +113,6 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
         String diaCobro = V_DetalleCobro.diaCobro.getText().toString();
         String horaCobro = V_DetalleCobro.horaCobro.getText().toString();
     }
-
     protected void onResume(Bundle savedInstanceState)
     {
         if (savedInstanceState != null)

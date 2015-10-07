@@ -16,8 +16,8 @@ import android.widget.TabHost;
 import android.widget.Toast;
 
 import com.example.billy.menu_principal.PagerAdapter;
-import com.example.billy.menu_principal.PrincipalMenu;
 import com.example.billy.inversiones.R;
+import com.example.billy.menu_principal.PrincipalMenu;
 
 import java.util.HashMap;
 import java.util.List;
@@ -75,7 +75,8 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
      * A simple factory that returns dummy views to the Tabhost
      * @author mwho
      */
-    class TabFactory implements TabHost.TabContentFactory {
+    class TabFactory implements TabHost.TabContentFactory
+    {
 
         private final Context mContext;
 
@@ -109,8 +110,6 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Volver");
         actionBar.show();
-
-
 
         this.initialiseTabHost(savedInstanceState);
 
@@ -247,7 +246,7 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
         // Default to first tab
         //this.onTabChanged("Tab1");
         //
-        mTabHost.setOnTabChangedListener(this);
+       mTabHost.setOnTabChangedListener (this);
     }
 
 
@@ -260,7 +259,8 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
     /** (non-Javadoc)
      * @see android.widget.TabHost.OnTabChangeListener#onTabChanged(java.lang.String)
      */
-    public void onTabChanged(String tag) {
+    public void onTabChanged(String tag)
+    {
         //TabInfo newTab = this.mapTabInfo.get(tag);
         int pos = this.mTabHost.getCurrentTab();
         this.mViewPager.setCurrentItem(pos);
@@ -271,7 +271,8 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
      */
     @Override
     public void onPageScrolled(int position, float positionOffset,
-                               int positionOffsetPixels) {
+                               int positionOffsetPixels)
+    {
         // TODO Auto-generated method stub
 
     }
@@ -280,7 +281,8 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
      * @see android.support.v4.view.ViewPager.OnPageChangeListener#onPageSelected(int)
      */
     @Override
-    public void onPageSelected(int position) {
+    public void onPageSelected(int position)
+    {
         // TODO Auto-generated method stub
         this.mTabHost.setCurrentTab(position);
     }
@@ -289,11 +291,13 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
      * @see android.support.v4.view.ViewPager.OnPageChangeListener#onPageScrollStateChanged(int)
      */
     @Override
-    public void onPageScrollStateChanged(int state) {
+    public void onPageScrollStateChanged(int state)
+    {
         // TODO Auto-generated method stub
 
     }
 
+    //Alerta de Confirmacion
     public void guardarCliente()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

@@ -1,47 +1,135 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp">
 
-    <TabHost
-        android:id="@android:id/tabhost"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Datos Personales"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:textColor="@android:color/background_dark"
+        android:textStyle="bold"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="fill_parent"
+            <TextView
+                android:id="@+id/textViewCedula_VClienteClienteCancelado"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:orientation="horizontal"
-                android:background="@android:color/darker_gray">
+                android:text="Cedula:"
+                android:layout_marginTop="20dp"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"/>
 
-                <FrameLayout
-                    android:id="@android:id/tabcontent"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="0">
+            <TextView
+                android:id="@+id/textViewNombre_VClienteClienteCancelado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nombre:"
+                android:layout_marginTop="10dp"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"/>
 
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/viewpager"
-                        android:layout_width="fill_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1">
-                    </android.support.v4.view.ViewPager>
+            <TextView
+                android:id="@+id/textViewDireccion_VClienteClienteCancelado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Direccion:"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="10dp"
+                android:textSize="20sp"/>
 
-                </FrameLayout>
+            <TextView
+                android:id="@+id/textViewTelefono_VClienteClienteCancelado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Telefono:"
+                android:layout_marginTop="10dp"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"/>
 
-            </TabWidget>
+            <TextView
+                android:id="@+id/textViewCorreo_VClienteClienteCancelado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Correo:"
+                android:layout_marginTop="10dp"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/textViewNombreEmpresa_VClienteClienteCancelado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nombre Empresa:"
+                android:layout_marginTop="30dp"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/textViewDireccionEmpresa_ClienteCancelado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Direccion Empresa:"
+                android:layout_marginTop="10dp"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/textViewSugerencia_ClienteCancelado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sugerencia:"
+                android:layout_marginTop="10dp"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/texViewEstado_ClienteCancelado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Estado del Cliente Actualmente:"
+                android:layout_marginTop="10dp"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/spinnerEstado_ClienteCancelado"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="5dp">
+
+                </Spinner>
+
+                <Button
+                    android:id="@+id/buttonConfirmarEstado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ok"
+                    android:layout_marginTop="20dp"/>
+            </LinearLayout>
+
+
 
         </LinearLayout>
 
-    </TabHost>
-
+    </ScrollView>
 
 </LinearLayout>

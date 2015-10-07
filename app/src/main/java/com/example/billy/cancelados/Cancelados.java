@@ -1,5 +1,6 @@
 package com.example.billy.cancelados;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,7 +39,8 @@ public class Cancelados extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
             {
-
+                Intent intent = new Intent(Cancelados.this,Inf_ClienteCancelados.class);
+                startActivity(intent);
             }
         });
     }
