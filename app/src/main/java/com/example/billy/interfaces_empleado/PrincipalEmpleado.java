@@ -1,5 +1,6 @@
 package com.example.billy.interfaces_empleado;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.PersistableBundle;
 import android.support.v4.widget.DrawerLayout;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.billy.interfaces_empleado.cliente_empleados.AgregarCliente_Empleado;
 import com.example.billy.inversiones.R;
 
 import java.util.ArrayList;
@@ -99,6 +101,14 @@ public class PrincipalEmpleado extends AppCompatActivity
         if (toggle.onOptionsItemSelected(item))
         {
             return true;
+        }
+
+        switch (item.getItemId())
+        {
+            case R.id.agregarCliente_Empleado:
+                Intent intent = new Intent(PrincipalEmpleado.this, AgregarCliente_Empleado.class);
+                startActivity(intent);
+                break;
         }
 
         return super.onOptionsItemSelected(item);

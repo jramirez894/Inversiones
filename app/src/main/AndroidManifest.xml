@@ -129,6 +129,11 @@
             android:name="com.example.billy.interfaces_empleado.PrincipalEmpleado"
             android:label="@string/title_activity_principal_empleado" >
         </activity>
+        <activity
+            android:name="com.example.billy.interfaces_empleado.cliente_empleados.AgregarCliente_Empleado"
+            android:label="@string/title_activity_agregar_cliente__empleado"
+            android:parentActivityName="com.example.billy.interfaces_empleado.PrincipalEmpleado">
+        </activity>
     </application>
 
 </manifest>

@@ -123,4 +123,5 @@
         <item>Clientes</item>
         <item>Gastos</item>
     </string-array>
+    <string name="title_activity_agregar_cliente__empleado">AgregarCliente_Empleado</string>
 </resources>
