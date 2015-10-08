@@ -77,7 +77,6 @@ public class PrincipalMenu extends AppCompatActivity
 
         //Activar icono del menu que se despliega
         toggle = new ActionBarDrawerToggle(this, menuDrawer, R.string.drawer_inicio, R.string.drawer_fin);
-        getSupportActionBar().setHomeButtonEnabled(true);
 
         listaDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {

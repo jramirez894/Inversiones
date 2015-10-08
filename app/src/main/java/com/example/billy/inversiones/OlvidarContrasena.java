@@ -59,19 +59,15 @@ public class OlvidarContrasena extends AppCompatActivity
         builder.setMessage("¿Enviar Codigo de Recuperación?");
         builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which)
+            {
                 Intent intent = new Intent(OlvidarContrasena.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
-        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(OlvidarContrasena.this, OlvidarContrasena.class);
-                startActivity(intent);
-            }
-        });
+        builder.setNegativeButton("Cancelar",null);
         builder.show();
     }
 

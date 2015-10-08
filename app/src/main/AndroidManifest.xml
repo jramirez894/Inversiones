@@ -125,6 +125,10 @@
             android:label="@string/title_activity_perfil"
             android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu" >
         </activity>
+        <activity
+            android:name="com.example.billy.interfaces_empleado.PrincipalEmpleado"
+            android:label="@string/title_activity_principal_empleado" >
+        </activity>
     </application>
 
 </manifest>

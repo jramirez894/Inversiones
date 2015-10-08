@@ -117,4 +117,10 @@
     </string-array>
     <string name="title_activity_perfil">Perfil</string>
     <string name="title_activity_historial_cliente">HistorialCliente</string>
+    <string name="title_activity_principal_empleado">PrincipalEmpleado</string>
+
+    <string-array name="item_PrincipalMenu">
+        <item>Clientes</item>
+        <item>Gastos</item>
+    </string-array>
 </resources>
