@@ -130,8 +130,16 @@
             android:label="@string/title_activity_principal_empleado" >
         </activity>
         <activity
-            android:name="com.example.billy.interfaces_empleado.cliente_empleados.AgregarCliente_Empleado"
-            android:label="@string/title_activity_agregar_cliente__empleado"
+            android:name="com.example.billy.interfaces_empleado.visualizar_cliente.VisualizarCliente_Empleado"
+            android:label="@string/title_activity_visualizar_cliente__empleado" >
+        </activity>
+        <activity
+            android:name="com.example.billy.interfaces_empleado.modificar_cliente.MCliente_DatosPersonales"
+            android:label="@string/title_activity_mcliente__datos_personales" >
+        </activity>
+        <activity
+            android:name="com.example.billy.interfaces_empleado.gastos_empleado.RegGasto_Empleado"
+            android:label="@string/title_activity_reg_gasto__empleado"
             android:parentActivityName="com.example.billy.interfaces_empleado.PrincipalEmpleado">
         </activity>
     </application>

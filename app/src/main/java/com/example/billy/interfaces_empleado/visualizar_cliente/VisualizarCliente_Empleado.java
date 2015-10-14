@@ -1,6 +1,5 @@
-package com.example.billy.interfaces_empleado.cliente_empleados;
+package com.example.billy.interfaces_empleado.visualizar_cliente;
 
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,25 +7,21 @@ import android.view.MenuItem;
 
 import com.example.billy.inversiones.R;
 
-public class AgregarCliente_Empleado extends AppCompatActivity
+public class VisualizarCliente_Empleado extends AppCompatActivity
 {
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_agregar_cliente__empleado);
-
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Volver");
-        actionBar.show();
+        setContentView(R.layout.activity_visualizar_cliente__empleado);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_agregar_cliente__empleado, menu);
+        getMenuInflater().inflate(R.menu.menu_visualizar_cliente__empleado, menu);
         return true;
     }
 

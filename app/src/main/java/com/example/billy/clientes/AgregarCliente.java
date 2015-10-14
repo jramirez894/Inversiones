@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.TabHost;
 import android.widget.Toast;
 
+import com.example.billy.empleado.Empleados;
+import com.example.billy.interfaces_empleado.PrincipalEmpleado;
 import com.example.billy.menu_principal.PagerAdapter;
 import com.example.billy.inversiones.R;
 import com.example.billy.menu_principal.PrincipalMenu;
@@ -100,12 +102,17 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
 
     }
 
+    String interfaz ="";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agregar_cliente);
+
+        Bundle bundle = getIntent().getExtras();
+        interfaz = bundle.getString("Interfaz");
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Volver");
@@ -132,10 +139,30 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml
+        int id = item.getItemId();
+
+        /*if (id == android.R.id.home)
+        {
+            Intent intent;
+           switch (interfaz)
+               {
+                   case "Administrador":
+                       intent = new Intent(AgregarCliente.this, PrincipalMenu.class);
+                       startActivity(intent);
+                       finish();
+                       break;
+
+                   case "Empleado":
+                       intent = new Intent(AgregarCliente.this, PrincipalEmpleado.class);
+                       startActivity(intent);
+                       finish();
+                       break;
+
+               }
+        }*/
+
         try
         {
-            int id = item.getItemId();
-
             //Variables Asociadas tab DatosPersonales
             cedula = DatosPersonales.ced.getText().toString();
             nombre = DatosPersonales.nom.getText().toString();
@@ -246,7 +273,7 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
         // Default to first tab
         //this.onTabChanged("Tab1");
         //
-       mTabHost.setOnTabChangedListener (this);
+       mTabHost.setOnTabChangedListener(this);
     }
 
 
@@ -304,19 +331,31 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
         builder.setIcon(android.R.drawable.ic_menu_save);
         builder.setTitle("Guardar");
         builder.setMessage("¿Agregar Cliente?");
-        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
+        {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(AgregarCliente.this, "Su Registro fue Exitoso", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(AgregarCliente.this, PrincipalMenu.class);
-                startActivity(intent);
-                finish();
+            public void onClick(DialogInterface dialog, int which)
+            {
+                switch (interfaz)
+                {
+                    case "Administrador":
+                        Intent intent = new Intent(AgregarCliente.this, PrincipalMenu.class);
+                        startActivity(intent);
+                        finish();
+                        break;
+
+                    case "Empleado":
+                        Intent intent1 = new Intent(AgregarCliente.this, PrincipalEmpleado.class);
+                        startActivity(intent1);
+                        finish();
+                        break;
+                }
+
             }
         });
 
-        builder.setNegativeButton("Cancelar",null );
+        builder.setNegativeButton("Cancelar", null);
         builder.setCancelable(false);
         builder.show();
     }
-
 }

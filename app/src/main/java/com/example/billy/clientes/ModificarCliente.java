@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.TabHost;
 import android.widget.Toast;
 
+import com.example.billy.interfaces_empleado.PrincipalEmpleado;
 import com.example.billy.menu_principal.PagerAdapter;
 import com.example.billy.menu_principal.PrincipalMenu;
 import com.example.billy.inversiones.R;
@@ -76,18 +77,22 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         }
     }
 
+    String interfaz ="";
+
         @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modificar_cliente);
 
+        Bundle bundle = getIntent().getExtras();
+        interfaz = bundle.getString("Interfaz");
+
         ActionBar actionBar =getSupportActionBar();
         actionBar.setTitle("Volver");
         actionBar.show();
 
         this.initialiseTabHost(savedInstanceState);
-
         // Intialise ViewPager
         this.intialiseViewPager();
     }
@@ -187,14 +192,28 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         builder.setIcon(android.R.drawable.ic_menu_save);
         builder.setTitle("Guardar");
         builder.setMessage("¿Modificar Cliente?");
-        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
+        {
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(ModificarCliente.this, PrincipalMenu.class);
-                startActivity(intent);
-                finish();
+
+                switch (interfaz)
+                {
+                    case "Administrador":
+                        Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(ModificarCliente.this, PrincipalMenu.class);
+                        startActivity(intent);
+                        finish();
+                        break;
+
+                    case "Empleado":
+                        Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
+                        Intent intent1 = new Intent(ModificarCliente.this, PrincipalEmpleado.class);
+                        startActivity(intent1);
+                        finish();
+                        break;
+                }
             }
         });
 

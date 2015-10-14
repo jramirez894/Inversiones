@@ -1,8 +1,7 @@
-package com.example.billy.gastos;
+package com.example.billy.interfaces_empleado.gastos_empleado;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,11 +14,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.billy.constantes.Constantes;
-import com.example.billy.empleado.Empleados;
 import com.example.billy.inversiones.R;
 
-public class Reg_Gasto extends AppCompatActivity
+public class RegGasto_Empleado extends AppCompatActivity
 {
     Spinner tipoGasto;
     EditText valor;
@@ -30,18 +27,18 @@ public class Reg_Gasto extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reg__gasto);
+        setContentView(R.layout.activity_reg_gasto__empleado);
 
         ActionBar actionBar =getSupportActionBar();
         actionBar.setTitle("Volver");
         actionBar.show();
 
-        tipoGasto = (Spinner)findViewById(R.id.spinnerReg_Gasto_Gasto);
-        valor = (EditText)findViewById(R.id.editTextValorGasto_Gasto);
-        descripcion = (EditText)findViewById(R.id.editTextDescripcion_Gasto);
-        guardar = (Button)findViewById(R.id.buttonReg_Gasto_Gasto);
+        tipoGasto = (Spinner)findViewById(R.id.spinnerReg_Gasto_Gasto_Empleado);
+        valor = (EditText)findViewById(R.id.editTextValorGasto_Gasto_Empleado);
+        descripcion = (EditText)findViewById(R.id.editTextDescripcion_Gasto_Empleado);
+        guardar = (Button)findViewById(R.id.buttonReg_Gasto_Gasto_Empleado);
 
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(Reg_Gasto.this,R.array.tiposGastos,android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(this,R.array.tiposGastos,android.R.layout.simple_spinner_dropdown_item);
         tipoGasto.setAdapter(adapter);
 
         guardar.setOnClickListener(new View.OnClickListener()
@@ -56,7 +53,7 @@ public class Reg_Gasto extends AppCompatActivity
                 if (val.equals("")||
                         des.equals(""))
                 {
-                    Toast.makeText(Reg_Gasto.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegGasto_Empleado.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
@@ -78,7 +75,7 @@ public class Reg_Gasto extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                Toast.makeText(Reg_Gasto.this, "Su Registro fue Exitoso", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegGasto_Empleado.this, "Su Registro fue Exitoso", Toast.LENGTH_SHORT).show();
                 limpiar();
             }
         });
@@ -98,7 +95,7 @@ public class Reg_Gasto extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_reg__gasto, menu);
+        getMenuInflater().inflate(R.menu.menu_reg_gasto__empleado, menu);
         return true;
     }
 
@@ -111,14 +108,9 @@ public class Reg_Gasto extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        switch (item.getItemId())
+        if (id == R.id.action_settings)
         {
-            case R.id.historial_RegCobro:
-                Constantes.atrasHistorial="Reg_Gasto";
-                Intent intent = new Intent(Reg_Gasto.this,Historial.class);
-                intent.putExtra("Atras",Constantes.atrasHistorial);
-                startActivity(intent);
-                break;
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

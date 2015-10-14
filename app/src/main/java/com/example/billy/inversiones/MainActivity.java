@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.billy.interfaces_empleado.PrincipalEmpleado;
 import com.example.billy.menu_principal.PrincipalMenu;
@@ -21,6 +22,12 @@ public class MainActivity extends AppCompatActivity
 
     Button ingresar;
     TextView olvidar;
+
+    String ced1 = "1088336137";
+    String contra1 = "1234";
+
+    String ced2 = "1088336137";
+    String contra2 ="12345";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -41,9 +48,34 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                Intent intent=new Intent(MainActivity.this,PrincipalEmpleado.class);
-                startActivity(intent);
-                finish();
+                String capCedula = cedula.getText().toString();
+                String capContrase = contrasena.getText().toString();
+
+                if (capCedula.equals("")||
+                        capContrase.equals(""))
+                {
+                    Toast.makeText(MainActivity.this, "Faltan Datos Por LLenar", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    if (capCedula.equals(ced1) && capContrase.equals(contra1))
+                    {
+                        Intent intent=new Intent(MainActivity.this,PrincipalMenu.class);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    if (capCedula.equals(ced2) && capContrase.equals(contra2))
+                    {
+                        Intent intent=new Intent(MainActivity.this,PrincipalEmpleado.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    else
+                    {
+                        Toast.makeText(MainActivity.this, "Porfavor Verificar Datos", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
 

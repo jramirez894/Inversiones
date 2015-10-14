@@ -122,6 +122,10 @@
     <string-array name="item_PrincipalMenu">
         <item>Clientes</item>
         <item>Gastos</item>
+        <item>Cerrar Sesion</item>
     </string-array>
     <string name="title_activity_agregar_cliente__empleado">AgregarCliente_Empleado</string>
+    <string name="title_activity_visualizar_cliente__empleado">VisualizarCliente_Empleado</string>
+    <string name="title_activity_mcliente__datos_personales">MCliente_DatosPersonales</string>
+    <string name="title_activity_reg_gasto__empleado">RegGasto_Empleado</string>
 </resources>

@@ -2,7 +2,6 @@ package com.example.billy.interfaces_empleado;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.PersistableBundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -14,7 +13,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.billy.interfaces_empleado.cliente_empleados.AgregarCliente_Empleado;
+import com.example.billy.clientes.AgregarCliente;
+import com.example.billy.clientes.VisualizarCliente;
+import com.example.billy.interfaces_empleado.gastos_empleado.RegGasto_Empleado;
+import com.example.billy.interfaces_empleado.visualizar_cliente.VisualizarCliente_Empleado;
+import com.example.billy.inversiones.MainActivity;
 import com.example.billy.inversiones.R;
 
 import java.util.ArrayList;
@@ -23,7 +26,11 @@ public class PrincipalEmpleado extends AppCompatActivity
 {
     ActionBarDrawerToggle toggle;
     DrawerLayout drawerLayout;
-    ListView lista;
+    ListView listaDrawer;
+    ListView listaClientes;
+
+
+    ArrayList<ItemLista_Clientes> arrayList = new ArrayList<ItemLista_Clientes>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,34 +44,67 @@ public class PrincipalEmpleado extends AppCompatActivity
         actionBar.invalidateOptionsMenu();
 
         drawerLayout = (DrawerLayout)findViewById(R.id.menuDrawer);
-        lista = (ListView)findViewById(R.id.listViewDrawer_PrincipalEmpleado);
+        listaDrawer = (ListView)findViewById(R.id.listViewDrawer_PrincipalEmpleado);
+        listaClientes= (ListView)findViewById(R.id.listaClienes_PrincipalEmpleado);
+        ActualizarLista();
 
         String[] items = getResources().getStringArray(R.array.item_PrincipalMenu);
 
         ArrayList<ItemPrincipalMenu> arrayList = new ArrayList<ItemPrincipalMenu>();
         arrayList.add(new ItemPrincipalMenu(R.mipmap.personas,items[0]));
         arrayList.add(new ItemPrincipalMenu(R.mipmap.saldocaja,items[1]));
-        lista.setAdapter(new Adapter_PrincipalMenu(this, arrayList));
+        arrayList.add(new ItemPrincipalMenu(R.mipmap.cerrar,items[2]));
+        listaDrawer.setAdapter(new Adapter_PrincipalMenu(this, arrayList));
 
         toggle =new ActionBarDrawerToggle(PrincipalEmpleado.this,drawerLayout,R.string.drawer_inicio,R.string.drawer_fin);
 
-        lista.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        listaDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
             {
+                Intent intent;
                 switch (position)
                 {
                     case 0:
                         break;
 
                     case 1:
+                        intent = new Intent(PrincipalEmpleado.this, RegGasto_Empleado.class);
+                        startActivity(intent);
+                        break;
+
+                    case 2:
+                        intent = new Intent(PrincipalEmpleado.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
                         break;
                 }
-                drawerLayout.closeDrawer(lista);
+                drawerLayout.closeDrawer(listaDrawer);
             }
         });
 
+        listaClientes.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
+            {
+                long cap = listaClientes.getItemIdAtPosition(position);
+                Intent intent = new Intent(PrincipalEmpleado.this, VisualizarCliente.class);
+                intent.putExtra("Posicion",cap);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    public void ActualizarLista()
+    {
+        arrayList.clear();
+
+        arrayList.add(new ItemLista_Clientes("Miguel", R.mipmap.editar));
+
+        listaClientes.setAdapter(new AdapterLista_Clientes(this,arrayList));
     }
 
     @Override
@@ -106,7 +146,8 @@ public class PrincipalEmpleado extends AppCompatActivity
         switch (item.getItemId())
         {
             case R.id.agregarCliente_Empleado:
-                Intent intent = new Intent(PrincipalEmpleado.this, AgregarCliente_Empleado.class);
+                Intent intent = new Intent(PrincipalEmpleado.this, AgregarCliente.class);
+                intent.putExtra("Interfaz","Empleado");
                 startActivity(intent);
                 break;
         }

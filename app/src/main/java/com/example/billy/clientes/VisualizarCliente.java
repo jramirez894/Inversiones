@@ -137,6 +137,7 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
         fragments.add(Fragment.instantiate(this, V_DatosPersonales.class.getName()));
         fragments.add(Fragment.instantiate(this, V_DatosCobro.class.getName()));
         fragments.add(Fragment.instantiate(this, V_DetalleCobro.class.getName()));
+        fragments.add(Fragment.instantiate(this, ClientesHistorial.class.getName()));
 
         this.mPagerAdapter  = new PagerAdapter(super.getSupportFragmentManager(), fragments);
         //
@@ -162,6 +163,9 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
 
         VisualizarCliente.AddTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab3").setIndicator("", getResources().getDrawable(R.mipmap.capital)), (tabInfo = new TabInfo("Tab2", V_DetalleCobro.class, args)));
         this.mapTabInfo.put(tabInfo.tag, tabInfo);
+
+        VisualizarCliente.AddTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab3").setIndicator("", getResources().getDrawable(R.mipmap.informacion)), (tabInfo = new TabInfo("Tab2", ClientesHistorial.class, args)));
+        this.mapTabInfo.put(tabInfo.tag, tabInfo);
         // Default to first tab
         //this.onTabChanged("Tab1");
         //
@@ -176,7 +180,8 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.

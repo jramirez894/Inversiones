@@ -145,9 +145,9 @@ public class PrincipalMenu extends AppCompatActivity
         listaClientes.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
             {
-                long cap = listaClientes.getItemIdAtPosition(i);
+                long cap = listaClientes.getItemIdAtPosition(position);
                 Intent intent = new Intent(PrincipalMenu.this, VisualizarCliente.class);
                 intent.putExtra("Posicion",cap);
                 startActivity(intent);
@@ -201,6 +201,7 @@ public class PrincipalMenu extends AppCompatActivity
         {
             case R.id.agregarCliente:
                 Intent intent=new Intent(PrincipalMenu.this,AgregarCliente.class);
+                intent.putExtra("Interfaz","Administrador");
                 startActivity(intent);
                 break;
         }

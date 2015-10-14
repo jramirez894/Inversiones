@@ -59,6 +59,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
 
                 //Abrir ModificarCliente
                 Intent intent= new Intent(getContext(),ModificarCliente.class);
+                intent.putExtra("Interfaz","Administrador");
                 getContext().startActivity(intent);
             }
         });
