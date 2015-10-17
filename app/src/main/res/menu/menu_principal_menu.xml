@@ -7,6 +7,16 @@
         android:id="@+id/agregarCliente"
         app:showAsAction="ifRoom"
         android:icon="@mipmap/agregar"
-        android:title="Agregar Cliente"/>
+        android:title="Agregar Cliente"
+        android:visible="true"/>
+
+
+    <item
+        android:id="@+id/ordenarCliente"
+        app:showAsAction="ifRoom"
+        android:icon="@mipmap/ordenar"
+        android:title="Ordenar Clientes"
+        android:visible="true"/>
+
 
 </menu>

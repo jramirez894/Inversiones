@@ -8,11 +8,14 @@ public class ItemListaPersonalizada
     public String nombreLista;
     public int editar;
     public int eliminar;
+    public String ediOrganizar;
 
-    public ItemListaPersonalizada(String nombreLista, int editar, int eliminar) {
+    public ItemListaPersonalizada(String nombreLista, int editar, int eliminar, String ediOrganizar)
+    {
         this.nombreLista = nombreLista;
         this.editar = editar;
         this.eliminar = eliminar;
+        this.ediOrganizar = ediOrganizar;
     }
 
     public String getNombreLista() {
@@ -38,4 +41,15 @@ public class ItemListaPersonalizada
     public void setEliminar(int eliminar) {
         this.eliminar = eliminar;
     }
+
+    public String getEdiOrganizar()
+    {
+        return ediOrganizar;
+    }
+
+    public void setEdiOrganizar(String ediOrganizar)
+    {
+        this.ediOrganizar = ediOrganizar;
+    }
 }
+

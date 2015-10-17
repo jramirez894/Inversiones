@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +26,9 @@ public class AdapterListaPersonalizada extends ArrayAdapter
 {
 
     public static ItemListaPersonalizada posicionItems;
+    public static ImageView editar;
+    public static ImageView eliminar;
+    public static EditText organizar;
 
     public AdapterListaPersonalizada(Context context, List objects)
     {
@@ -43,12 +47,14 @@ public class AdapterListaPersonalizada extends ArrayAdapter
         ItemListaPersonalizada items = (ItemListaPersonalizada)getItem(position);
 
         TextView nombreLista = (TextView)convertView.findViewById(R.id.textViewNombreListaPersonalizada);
-        ImageView editar = (ImageView)convertView.findViewById(R.id.imageViewEditar);
-        ImageView eliminar = (ImageView)convertView.findViewById(R.id.imageViewEliminar);
+        editar = (ImageView)convertView.findViewById(R.id.imageViewEditarListaPersonalizada);
+        eliminar = (ImageView)convertView.findViewById(R.id.imageViewEliminarListaPersonalizada);
+        organizar = (EditText)convertView.findViewById(R.id.edit_OrganizarListaPersonalizada);
 
         nombreLista.setText(items.getNombreLista());
         editar.setImageResource(items.getEditar());
         eliminar.setImageResource(items.getEliminar());
+        organizar.setText(items.getEdiOrganizar());
 
         editar.setOnClickListener(new View.OnClickListener()
         {

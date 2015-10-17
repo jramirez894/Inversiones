@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.billy.cancelados.Cancelados;
@@ -48,6 +49,7 @@ public class PrincipalMenu extends AppCompatActivity
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.invalidateOptionsMenu();
         actionBar.setTitle("Menu");
+
 
         actionBar.setHomeAsUpIndicator(R.drawable.ic_drawer);
 
@@ -157,10 +159,10 @@ public class PrincipalMenu extends AppCompatActivity
 
     public void ActualizarLista()
     {
-        items.add(new ItemListaPersonalizada("jeniffer",R.mipmap.editar,R.mipmap.eliminar));
-        items.add(new ItemListaPersonalizada("miguel",R.mipmap.editar,R.mipmap.eliminar));
+        items.add(new ItemListaPersonalizada("jeniffer",R.mipmap.editar,R.mipmap.eliminar, ""));
+        items.add(new ItemListaPersonalizada("miguel", R.mipmap.editar, R.mipmap.eliminar, ""));
 
-        listaClientes.setAdapter(new AdapterListaPersonalizada(this,items));
+        listaClientes.setAdapter(new AdapterListaPersonalizada(this, items));
     }
 
     @Override
@@ -178,14 +180,16 @@ public class PrincipalMenu extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_principal_menu, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean  onOptionsItemSelected(MenuItem item)
+    {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -200,9 +204,16 @@ public class PrincipalMenu extends AppCompatActivity
         switch (item.getItemId())
         {
             case R.id.agregarCliente:
-                Intent intent=new Intent(PrincipalMenu.this,AgregarCliente.class);
+                Intent intent = new Intent(PrincipalMenu.this,AgregarCliente.class);
                 intent.putExtra("Interfaz","Administrador");
                 startActivity(intent);
+                break;
+
+            case R.id.ordenarCliente:
+                    AdapterListaPersonalizada.editar.setVisibility(View.GONE);
+                    AdapterListaPersonalizada.eliminar.setVisibility(View.GONE);
+                    AdapterListaPersonalizada.organizar.setVisibility(View.VISIBLE);
+
                 break;
         }
 
