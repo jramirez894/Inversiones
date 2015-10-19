@@ -50,7 +50,7 @@
             android:id="@+id/editTextPrecioVenta_Producto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Precio de Compra"
+            android:hint="Precio de Venta"
             android:textSize="20sp"
             android:layout_marginTop="10dp"
             android:inputType="number"/>

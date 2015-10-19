@@ -12,4 +12,8 @@ public class Constantes
     //Variables que contienen el editTex de la fecha
     public static String fechaInicio;
     public static String fechaFin;
+
+    //Variables para ordenar la lista de clientes que tiene que visitar cada dia
+    public static String EDITAR_LISTA = "Botones";
+    public static String CERRAR_SESION = "CERRAR";
 }

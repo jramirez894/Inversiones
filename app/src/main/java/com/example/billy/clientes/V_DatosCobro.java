@@ -18,7 +18,6 @@ public class V_DatosCobro extends Fragment
     public static ListView lista;
     public static TextView fechaVenta;
     public static TextView totalPagar;
-    public static TextView abono;
     public static TextView valorRestante;
     ArrayList<ItemsLista_Productos_ViDatosCobro> arrayList = new ArrayList<ItemsLista_Productos_ViDatosCobro>();
 
@@ -35,7 +34,6 @@ public class V_DatosCobro extends Fragment
 
         fechaVenta = (TextView)view.findViewById(R.id.textViewFechaVenta_VDatosCobro);
         totalPagar = (TextView)view.findViewById(R.id.textViewTotalPagar_VDatosCobro);
-        abono = (TextView)view.findViewById(R.id.textViewtAbono_VDatosCobro);
         valorRestante = (TextView)view.findViewById(R.id.textViewValorRestante_VDatosCobro);
 
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {

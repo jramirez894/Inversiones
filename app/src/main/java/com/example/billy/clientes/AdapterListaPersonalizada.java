@@ -10,13 +10,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.billy.constantes.Constantes;
 import com.example.billy.menu_principal.ItemListaPersonalizada;
 import com.example.billy.menu_principal.PrincipalMenu;
 import com.example.billy.inversiones.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +32,8 @@ public class AdapterListaPersonalizada extends ArrayAdapter
     public static ImageView editar;
     public static ImageView eliminar;
     public static EditText organizar;
+    public static TextView nombreLista;
+    public static Spinner spinOrden;
 
     public AdapterListaPersonalizada(Context context, List objects)
     {
@@ -44,41 +49,113 @@ public class AdapterListaPersonalizada extends ArrayAdapter
             convertView = inflater.inflate(R.layout.lista_personalizada,null);
         }
 
-        ItemListaPersonalizada items = (ItemListaPersonalizada)getItem(position);
+        switch (Constantes.EDITAR_LISTA)
+        {
+            case "Botones":
 
-        TextView nombreLista = (TextView)convertView.findViewById(R.id.textViewNombreListaPersonalizada);
-        editar = (ImageView)convertView.findViewById(R.id.imageViewEditarListaPersonalizada);
-        eliminar = (ImageView)convertView.findViewById(R.id.imageViewEliminarListaPersonalizada);
+                ItemListaPersonalizada items = (ItemListaPersonalizada)getItem(position);
+
+                nombreLista = (TextView)convertView.findViewById(R.id.textViewNombreListaPersonalizada);
+                editar = (ImageView)convertView.findViewById(R.id.imageViewEditarListaPersonalizada);
+                eliminar = (ImageView)convertView.findViewById(R.id.imageViewEliminarListaPersonalizada);
+                organizar = (EditText)convertView.findViewById(R.id.edit_OrganizarListaPersonalizada);
+                spinOrden = (Spinner)convertView.findViewById(R.id.spinOrdenListaPersonalizada);
+
+                nombreLista.setText(items.getNombreLista());
+                editar.setImageResource(items.getEditar());
+                eliminar.setImageResource(items.getEliminar());
+                organizar.setText(items.getEdiOrganizar());
+
+                editar.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        posicionItems = (ItemListaPersonalizada) getItem(position);
+
+                        //Abrir ModificarCliente
+                        Intent intent= new Intent(getContext(),ModificarCliente.class);
+                        intent.putExtra("Interfaz","Administrador");
+                        getContext().startActivity(intent);
+                    }
+                });
+
+                eliminar.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        posicionItems = (ItemListaPersonalizada) getItem(position);
+                        EliminarCliente();
+                    }
+                });
+
+                organizar.setVisibility(View.GONE);
+                spinOrden.setVisibility(View.GONE);
+                editar.setVisibility(View.VISIBLE);
+                eliminar.setVisibility(View.VISIBLE);
+
+                break;
+
+            case "EditText":
+
+                ItemListaPersonalizada items2 = (ItemListaPersonalizada)getItem(position);
+
+                nombreLista = (TextView)convertView.findViewById(R.id.textViewNombreListaPersonalizada);
+                editar = (ImageView)convertView.findViewById(R.id.imageViewEditarListaPersonalizada);
+                eliminar = (ImageView)convertView.findViewById(R.id.imageViewEliminarListaPersonalizada);
+                organizar = (EditText)convertView.findViewById(R.id.edit_OrganizarListaPersonalizada);
+                spinOrden = (Spinner)convertView.findViewById(R.id.spinOrdenListaPersonalizada);
+
+                nombreLista.setText(items2.getNombreLista());
+                organizar.setText(items2.getEdiOrganizar());
+
+                organizar.setVisibility(View.VISIBLE);
+                spinOrden.setVisibility(View.VISIBLE);
+                editar.setVisibility(View.GONE);
+                eliminar.setVisibility(View.GONE);
+
+                ArrayList<String> arrayLimiteOrden = new ArrayList<String>();
+                arrayLimiteOrden.clear();
+
+                for(int i = 0; i < PrincipalMenu.items.size(); i++)
+                {
+                    arrayLimiteOrden.add(String.valueOf(i+1));
+                }
+
+                spinOrden.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, arrayLimiteOrden));
+
+                break;
+        }
         organizar = (EditText)convertView.findViewById(R.id.edit_OrganizarListaPersonalizada);
 
-        nombreLista.setText(items.getNombreLista());
-        editar.setImageResource(items.getEditar());
-        eliminar.setImageResource(items.getEliminar());
-        organizar.setText(items.getEdiOrganizar());
-
-        editar.setOnClickListener(new View.OnClickListener()
-        {
+        organizar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                posicionItems = (ItemListaPersonalizada) getItem(position);
+            public void onClick(View view) {
+                final ItemListaPersonalizada items3 = (ItemListaPersonalizada) getItem(position);
 
-                //Abrir ModificarCliente
-                Intent intent= new Intent(getContext(),ModificarCliente.class);
-                intent.putExtra("Interfaz","Administrador");
-                getContext().startActivity(intent);
+                LayoutInflater inflaterAlert = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View dialoglayout = inflaterAlert.inflate(R.layout.alert_dialog_lista_personalizada_ordenar, null);
+
+                final EditText editOrden = (EditText) dialoglayout.findViewById(R.id.editOrdenAlert);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setView(dialoglayout);
+                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String ordendAlert = editOrden.getText().toString();
+                        items3.setEdiOrganizar(ordendAlert);
+                        ArrayAdapter adapter = new AdapterListaPersonalizada(getContext(), PrincipalMenu.items);
+                        //Se carga de nuevo la vista
+                        PrincipalMenu.listaClientes.setAdapter(adapter);
+                    }
+                });
+                builder.setCancelable(false);
+                builder.show();
             }
         });
 
-        eliminar.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                posicionItems = (ItemListaPersonalizada) getItem(position);
-                EliminarCliente();
-            }
-        });
         return convertView;
     }
 

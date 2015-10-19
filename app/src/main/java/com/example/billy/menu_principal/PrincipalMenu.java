@@ -1,5 +1,7 @@
 package com.example.billy.menu_principal;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,9 +20,11 @@ import com.example.billy.cancelados.Cancelados;
 import com.example.billy.clientes.AdapterListaPersonalizada;
 import com.example.billy.clientes.AgregarCliente;
 import com.example.billy.clientes.VisualizarCliente;
+import com.example.billy.constantes.Constantes;
 import com.example.billy.empleado.Empleados;
 import com.example.billy.capital_inicial.CapitalInicial;
 import com.example.billy.gastos.Reg_Gasto;
+import com.example.billy.interfaces_empleado.PrincipalEmpleado;
 import com.example.billy.inversiones.MainActivity;
 import com.example.billy.perfil.Perfil;
 import com.example.billy.productos.Productos;
@@ -37,6 +41,10 @@ public class PrincipalMenu extends AppCompatActivity
 
     public static ListView listaClientes;
     public static ArrayList<ItemListaPersonalizada> items = new ArrayList<ItemListaPersonalizada>();
+
+    MenuItem menuGuardar;
+    MenuItem menuAgregar;
+    MenuItem menuOrdenar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -159,10 +167,11 @@ public class PrincipalMenu extends AppCompatActivity
 
     public void ActualizarLista()
     {
+        items.clear();
         items.add(new ItemListaPersonalizada("jeniffer",R.mipmap.editar,R.mipmap.eliminar, ""));
         items.add(new ItemListaPersonalizada("miguel", R.mipmap.editar, R.mipmap.eliminar, ""));
 
-        listaClientes.setAdapter(new AdapterListaPersonalizada(this, items));
+        listaClientes.setAdapter(new AdapterListaPersonalizada(PrincipalMenu.this, items));
     }
 
     @Override
@@ -184,6 +193,12 @@ public class PrincipalMenu extends AppCompatActivity
     {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_principal_menu, menu);
+
+        //Elementos del menu item
+        menuGuardar = (MenuItem) menu.findItem(R.id.guardarCliente);
+        menuAgregar = (MenuItem) menu.findItem(R.id.agregarCliente);
+        menuOrdenar = (MenuItem) menu.findItem(R.id.ordenarCliente);
+
         return true;
     }
 
@@ -201,6 +216,8 @@ public class PrincipalMenu extends AppCompatActivity
             return true;
         }
 
+
+
         switch (item.getItemId())
         {
             case R.id.agregarCliente:
@@ -210,9 +227,36 @@ public class PrincipalMenu extends AppCompatActivity
                 break;
 
             case R.id.ordenarCliente:
-                    AdapterListaPersonalizada.editar.setVisibility(View.GONE);
-                    AdapterListaPersonalizada.eliminar.setVisibility(View.GONE);
-                    AdapterListaPersonalizada.organizar.setVisibility(View.VISIBLE);
+                Constantes.EDITAR_LISTA = "EditText";
+                ActualizarLista();
+                menuGuardar.setVisible(true);
+                menuAgregar.setVisible(false);
+                menuOrdenar.setVisible(false);
+
+                break;
+
+            case R.id.guardarCliente:
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setIcon(android.R.drawable.ic_menu_save);
+                builder.setTitle("Guardar");
+                builder.setMessage("¿Confirmar?");
+                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        menuGuardar.setVisible(false);
+                        menuAgregar.setVisible(true);
+                        menuOrdenar.setVisible(true);
+
+                        Constantes.EDITAR_LISTA = "Botones";
+                        ActualizarLista();
+                    }
+                });
+
+                builder.setNegativeButton("Cancelar", null);
+                builder.setCancelable(false);
+                builder.show();
 
                 break;
         }

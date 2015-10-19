@@ -104,7 +104,6 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
         long lista = V_DatosCobro.lista.getItemIdAtPosition((int) posicion);
         String fechaVenta = V_DatosCobro.fechaVenta.getText().toString();
         String totalPagar = V_DatosCobro.totalPagar.getText().toString();
-        String abono = V_DatosCobro.abono.getText().toString();
         String valorRestante = V_DatosCobro.valorRestante.getText().toString();
 
         //Variables DetalleCobro
