@@ -127,11 +127,14 @@ public class AdapterListaPersonalizada extends ArrayAdapter
 
                 break;
         }
-        organizar = (EditText)convertView.findViewById(R.id.edit_OrganizarListaPersonalizada);
 
-        organizar.setOnClickListener(new View.OnClickListener() {
+        /*organizar = (EditText)convertView.findViewById(R.id.edit_OrganizarListaPersonalizada);
+
+        organizar.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 final ItemListaPersonalizada items3 = (ItemListaPersonalizada) getItem(position);
 
                 LayoutInflater inflaterAlert = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -141,9 +144,11 @@ public class AdapterListaPersonalizada extends ArrayAdapter
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setView(dialoglayout);
-                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
+                {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
                         String ordendAlert = editOrden.getText().toString();
                         items3.setEdiOrganizar(ordendAlert);
                         ArrayAdapter adapter = new AdapterListaPersonalizada(getContext(), PrincipalMenu.items);
@@ -154,7 +159,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                 builder.setCancelable(false);
                 builder.show();
             }
-        });
+        });*/
 
         return convertView;
     }

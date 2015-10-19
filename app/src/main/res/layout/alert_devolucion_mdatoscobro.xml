@@ -8,18 +8,26 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ingrese el Orden en el que Visitara al Cliente"
-        android:textSize="25sp"
+        android:text="¿Registrar Producto Por Devolucion?"
+        android:textSize="20sp"
         android:gravity="center"
         android:textColor="@android:color/background_dark"
         android:textStyle="bold"/>
 
     <EditText
-        android:id="@+id/editOrdenAlert"
+        android:id="@+id/editDescripcion_Devolucion_MDatosCobro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Orden en la Lista"
+        android:hint="Descripcion"
         android:layout_marginTop="20dp"
-        android:inputType="number"/>
+        android:inputType="text"/>
+
+    <EditText
+        android:id="@+id/editFecha_Devolucion_MDatosCobro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Fecha"
+        android:layout_marginTop="10dp"
+        android:inputType="date"/>
 
 </LinearLayout>
