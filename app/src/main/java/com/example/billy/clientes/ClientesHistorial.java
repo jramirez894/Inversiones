@@ -2,6 +2,7 @@ package com.example.billy.clientes;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +37,7 @@ public class ClientesHistorial extends Fragment
 
         arrayList.add(new Item_ClienteHistorial("Fecha: " + "2015/10/06", "Valor:$ "+ "20000"));
 
-        lista.setAdapter(new AdapterLista_ClienteHistorial(getContext(),arrayList));
+        lista.setAdapter(new AdapterLista_ClienteHistorial(getContext(), arrayList));
     }
-
 
 }

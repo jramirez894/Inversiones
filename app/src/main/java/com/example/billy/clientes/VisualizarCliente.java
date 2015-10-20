@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -230,5 +231,18 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
     public void onPageScrollStateChanged(int state) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event)
+    {
+        switch (keyCode)
+        {
+            case KeyEvent.KEYCODE_BACK:
+
+                return true;
+        }
+
+        return super.onKeyUp(keyCode, event);
     }
 }

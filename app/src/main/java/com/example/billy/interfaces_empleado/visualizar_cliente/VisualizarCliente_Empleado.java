@@ -2,6 +2,7 @@ package com.example.billy.interfaces_empleado.visualizar_cliente;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -39,5 +40,18 @@ public class VisualizarCliente_Empleado extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event)
+    {
+        switch (keyCode)
+        {
+            case KeyEvent.KEYCODE_BACK:
+
+                return true;
+        }
+
+        return super.onKeyUp(keyCode, event);
     }
 }

@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -288,5 +289,18 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         String fechaCobro = M_DetalleCobro.fechaDeCobro.getSelectedItem().toString();
         String diaCobro = M_DetalleCobro.diaCobro.getSelectedItem().toString();
         String horaCobro = M_DetalleCobro.horaCobro.getSelectedItem().toString();
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event)
+    {
+        switch (keyCode)
+        {
+            case KeyEvent.KEYCODE_BACK:
+
+                return true;
+        }
+
+        return super.onKeyUp(keyCode, event);
     }
 }

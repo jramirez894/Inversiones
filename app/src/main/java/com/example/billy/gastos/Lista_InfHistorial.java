@@ -3,6 +3,7 @@ package com.example.billy.gastos;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -67,7 +68,7 @@ public class Lista_InfHistorial extends AppCompatActivity
 
         arrayList.add(new ItemLista_InfHistorial("Descripcion: " + "Se gasto Mucho", "Valor: " + "20.000", "Gasolina"));
 
-        listaInf.setAdapter(new Adapter_InfHistorial(Lista_InfHistorial.this,arrayList));
+        listaInf.setAdapter(new Adapter_InfHistorial(Lista_InfHistorial.this, arrayList));
     }
 
     @Override
@@ -88,5 +89,18 @@ public class Lista_InfHistorial extends AppCompatActivity
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event)
+    {
+        switch (keyCode)
+        {
+            case KeyEvent.KEYCODE_BACK:
+
+                return true;
+        }
+
+        return super.onKeyUp(keyCode, event);
     }
 }

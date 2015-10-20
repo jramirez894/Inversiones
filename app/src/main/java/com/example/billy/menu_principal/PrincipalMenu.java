@@ -52,6 +52,8 @@ public class PrincipalMenu extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal_menu);
 
+        Constantes.EDITAR_LISTA = "Botones";
+
         ActionBar actionBar = getSupportActionBar();
 
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -110,6 +112,7 @@ public class PrincipalMenu extends AppCompatActivity
                     case 2:
                         intent = new Intent(PrincipalMenu.this, PrincipalMenu.class);
                         startActivity(intent);
+                        finish();
                         break;
 
                     case 3:
