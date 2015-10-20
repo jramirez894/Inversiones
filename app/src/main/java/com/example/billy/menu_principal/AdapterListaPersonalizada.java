@@ -1,4 +1,4 @@
-package com.example.billy.clientes;
+package com.example.billy.menu_principal;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -14,9 +14,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.billy.clientes.ModificarCliente;
 import com.example.billy.constantes.Constantes;
-import com.example.billy.menu_principal.ItemListaPersonalizada;
-import com.example.billy.menu_principal.PrincipalMenu;
 import com.example.billy.inversiones.R;
 
 import java.util.ArrayList;
@@ -164,6 +163,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
         return convertView;
     }
 
+    //Alerta de Confirmacion
     public void EliminarCliente()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

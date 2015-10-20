@@ -16,6 +16,8 @@
         <item>Gastos</item>
         <item>Saldo de Caja</item>
         <item>Cancelados</item>
+        <item>Garantias</item>
+        <item>Devoluciones</item>
         <item>Perfil</item>
         <item>Cerrar Sesion</item>
     </string-array>
@@ -128,4 +130,6 @@
     <string name="title_activity_visualizar_cliente__empleado">VisualizarCliente_Empleado</string>
     <string name="title_activity_mcliente__datos_personales">MCliente_DatosPersonales</string>
     <string name="title_activity_reg_gasto__empleado">RegGasto_Empleado</string>
+    <string name="title_activity_garantia">Garantia</string>
+    <string name="title_activity_devolucion">Devolucion</string>
 </resources>

@@ -140,7 +140,17 @@
         <activity
             android:name="com.example.billy.interfaces_empleado.gastos_empleado.RegGasto_Empleado"
             android:label="@string/title_activity_reg_gasto__empleado"
-            android:parentActivityName="com.example.billy.interfaces_empleado.PrincipalEmpleado">
+            android:parentActivityName="com.example.billy.interfaces_empleado.PrincipalEmpleado" >
+        </activity>
+        <activity
+            android:name="com.example.billy.garantias_product.Garantia"
+            android:label="@string/title_activity_garantia"
+            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu">
+        </activity>
+        <activity
+            android:name="com.example.billy.devolucion.Devolucion"
+            android:label="@string/title_activity_devolucion"
+            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu">
         </activity>
     </application>
 

@@ -13,18 +13,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.billy.cancelados.Cancelados;
-import com.example.billy.clientes.AdapterListaPersonalizada;
 import com.example.billy.clientes.AgregarCliente;
 import com.example.billy.clientes.VisualizarCliente;
 import com.example.billy.constantes.Constantes;
+import com.example.billy.devolucion.Devolucion;
 import com.example.billy.empleado.Empleados;
 import com.example.billy.capital_inicial.CapitalInicial;
+import com.example.billy.garantias_product.Garantia;
 import com.example.billy.gastos.Reg_Gasto;
-import com.example.billy.interfaces_empleado.PrincipalEmpleado;
 import com.example.billy.inversiones.MainActivity;
 import com.example.billy.perfil.Perfil;
 import com.example.billy.productos.Productos;
@@ -81,8 +80,10 @@ public class PrincipalMenu extends AppCompatActivity
         items.add(new ItemsMenuDrawer(titulos[4], R.mipmap.capital));
         items.add(new ItemsMenuDrawer(titulos[5], R.mipmap.saldocaja));
         items.add(new ItemsMenuDrawer(titulos[6], R.mipmap.cancelado));
-        items.add(new ItemsMenuDrawer(titulos[7], R.mipmap.perfil));
-        items.add(new ItemsMenuDrawer(titulos[8], R.mipmap.cerrar));
+        items.add(new ItemsMenuDrawer(titulos[7], R.mipmap.garantia));
+        items.add(new ItemsMenuDrawer(titulos[8], R.mipmap.devolucion));
+        items.add(new ItemsMenuDrawer(titulos[9], R.mipmap.perfil));
+        items.add(new ItemsMenuDrawer(titulos[10], R.mipmap.cerrar));
 
         // Relacionar el adaptador y la escucha de la lista del drawer
         listaDrawer.setAdapter(new AdapterMenuDrawer(this, items));
@@ -140,12 +141,24 @@ public class PrincipalMenu extends AppCompatActivity
                         break;
 
                     case 7:
-                        intent = new Intent(PrincipalMenu.this, Perfil.class);
+                        intent = new Intent(PrincipalMenu.this, Garantia.class);
                         startActivity(intent);
 
                         break;
 
                     case 8:
+                        intent = new Intent(PrincipalMenu.this, Devolucion.class);
+                        startActivity(intent);
+
+                        break;
+
+                    case 9:
+                        intent = new Intent(PrincipalMenu.this, Perfil.class);
+                        startActivity(intent);
+
+                        break;
+
+                    case 10:
                         intent = new Intent(PrincipalMenu.this, MainActivity.class);
                         startActivity(intent);
                         finish();
