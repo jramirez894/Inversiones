@@ -13,8 +13,8 @@ import java.util.ArrayList;
 
 public class Devolucion extends AppCompatActivity
 {
-    ListView  listaDevolucion;
-    ArrayList<Items_Devolucion>arrayList = new ArrayList<Items_Devolucion>();
+    public static ListView  listaDevolucion;
+    public static ArrayList<Items_Devolucion>arrayList = new ArrayList<Items_Devolucion>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

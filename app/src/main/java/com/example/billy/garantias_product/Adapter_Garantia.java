@@ -67,7 +67,7 @@ public class Adapter_Garantia extends ArrayAdapter
     public void EliminarGarantia()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setIcon(android.R.drawable.ic_menu_save);
+        builder.setIcon(R.mipmap.borrar);
         builder.setTitle("Eliminar");
         builder.setMessage("¿Eliminar Garantia?");
         builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()

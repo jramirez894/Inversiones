@@ -167,7 +167,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
     public void EliminarCliente()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setIcon(android.R.drawable.ic_menu_save);
+        builder.setIcon(R.mipmap.borrar);
         builder.setTitle("Eliminar");
         builder.setMessage("¿Eliminar Cliente?");
         builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
