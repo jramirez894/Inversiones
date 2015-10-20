@@ -9,7 +9,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,138 +20,166 @@
         <activity
             android:name=".OlvidarContrasena"
             android:label="@string/title_activity_olvidar_contrasena"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.menu_principal.PrincipalMenu"
-            android:label="@string/title_activity_principal_menu" >
+            android:label="@string/title_activity_principal_menu"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.capital_inicial.CapitalInicial"
             android:label="@string/title_activity_capital_inicial"
-            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu" >
+            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.empleado.AgregarEmpleado"
             android:label="@string/title_activity_agregar_empleado"
-            android:parentActivityName="com.example.billy.empleado.Empleados" >
+            android:parentActivityName="com.example.billy.empleado.Empleados"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.clientes.AgregarCliente"
             android:label="@string/title_activity_agregar_cliente"
-            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu" >
+            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.clientes.VisualizarCliente"
             android:label="@string/title_activity_visualizar_cliente"
-            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu" >
+            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.clientes.ModificarCliente"
             android:label="@string/title_activity_modificar_cliente"
-            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu" >
+            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.empleado.Empleados"
             android:label="@string/title_activity_empleados"
-            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu" >
+            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.empleado.V_Empleado"
             android:label="@string/title_activity_v__empleado"
-            android:parentActivityName="com.example.billy.empleado.Empleados" >
+            android:parentActivityName="com.example.billy.empleado.Empleados"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.empleado.M_Empleado"
             android:label="@string/title_activity_m__empleado"
-            android:parentActivityName="com.example.billy.empleado.Empleados" >
+            android:parentActivityName="com.example.billy.empleado.Empleados"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.productos.Productos"
             android:label="@string/title_activity_productos"
-            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu" >
+            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.productos.AgregarProducto"
             android:label="@string/title_activity_agregar_producto"
-            android:parentActivityName="com.example.billy.productos.Productos" >
+            android:parentActivityName="com.example.billy.productos.Productos"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.productos.V_Producto"
             android:label="@string/title_activity_v__producto"
-            android:parentActivityName="com.example.billy.productos.Productos" >
+            android:parentActivityName="com.example.billy.productos.Productos"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.productos.M_Producto"
             android:label="@string/title_activity_m__producto"
-            android:parentActivityName="com.example.billy.productos.Productos" >
+            android:parentActivityName="com.example.billy.productos.Productos"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.gastos.Reg_Gasto"
             android:label="@string/title_activity_reg__gasto"
-            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu" >
+            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.gastos.Historial"
             android:label="@string/title_activity_historial"
-            android:parentActivityName="com.example.billy.saldo_caja.SaldoCaja" >
+            android:parentActivityName="com.example.billy.saldo_caja.SaldoCaja"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.gastos.Inf_Historial"
             android:label="@string/title_activity_inf__historial"
-            android:parentActivityName="com.example.billy.gastos.Historial" >
+            android:parentActivityName="com.example.billy.gastos.Historial"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.saldo_caja.SaldoCaja"
             android:label="@string/title_activity_saldo_caja"
-            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu" >
+            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.gastos.Lista_InfHistorial"
             android:label="@string/title_activity_lista__inf_historial"
-            android:parentActivityName="com.example.billy.gastos.Inf_Historial" >
+            android:parentActivityName="com.example.billy.gastos.Inf_Historial"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.cancelados.Cancelados"
             android:label="@string/title_activity_cancelados"
-            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu" >
+            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.cancelados.Inf_ClienteCancelados"
             android:label="@string/title_activity_inf__cliente_cancelados"
-            android:parentActivityName="com.example.billy.cancelados.Cancelados" >
+            android:parentActivityName="com.example.billy.cancelados.Cancelados"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.perfil.Perfil"
             android:label="@string/title_activity_perfil"
-            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu" >
+            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.interfaces_empleado.PrincipalEmpleado"
-            android:label="@string/title_activity_principal_empleado" >
+            android:label="@string/title_activity_principal_empleado"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.interfaces_empleado.visualizar_cliente.VisualizarCliente_Empleado"
-            android:label="@string/title_activity_visualizar_cliente__empleado" >
+            android:label="@string/title_activity_visualizar_cliente__empleado"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.interfaces_empleado.modificar_cliente.MCliente_DatosPersonales"
-            android:label="@string/title_activity_mcliente__datos_personales" >
+            android:label="@string/title_activity_mcliente__datos_personales"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.interfaces_empleado.gastos_empleado.RegGasto_Empleado"
             android:label="@string/title_activity_reg_gasto__empleado"
-            android:parentActivityName="com.example.billy.interfaces_empleado.PrincipalEmpleado" >
+            android:parentActivityName="com.example.billy.interfaces_empleado.PrincipalEmpleado"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.garantias_product.Garantia"
             android:label="@string/title_activity_garantia"
-            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu">
+            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.example.billy.devolucion.Devolucion"
             android:label="@string/title_activity_devolucion"
-            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu">
+            android:parentActivityName="com.example.billy.menu_principal.PrincipalMenu"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 
