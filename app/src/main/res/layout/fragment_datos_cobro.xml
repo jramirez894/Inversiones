@@ -63,26 +63,14 @@
                 android:layout_marginTop="5dp"
                 android:inputType="number"/>
 
-            <LinearLayout
+            <EditText
+                android:id="@+id/editTextAbono_DatosCobro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/editTextAbono_DatosCobro"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginTop="5dp"
-                    android:hint="Abono"
-                    android:inputType="number"/>
-
-                <Button
-                    android:id="@+id/buttonAbono_DatosCobro"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Ok"/>
-            </LinearLayout>
+                android:layout_weight="1"
+                android:layout_marginTop="5dp"
+                android:hint="Abono"
+                android:inputType="number"/>
 
             <EditText
                 android:id="@+id/editTextValorRestante_DatosCobro"

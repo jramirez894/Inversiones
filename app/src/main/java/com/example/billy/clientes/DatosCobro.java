@@ -33,7 +33,6 @@ public class DatosCobro extends Fragment implements View.OnClickListener
     public static EditText fechaVenta;
     public static EditText totalPagar;
     public static EditText abono;
-    public static Button okAbono;
     public static EditText valorRestante;
 
 
@@ -47,7 +46,6 @@ public class DatosCobro extends Fragment implements View.OnClickListener
         valorProducto=(EditText)view.findViewById(R.id.editPrecioProducto_DatosCobro);
         totalPagar=(EditText)view.findViewById(R.id.editTotalPagar_DatosCobro);
         abono=(EditText)view.findViewById(R.id.editTextAbono_DatosCobro);
-        okAbono=(Button)view.findViewById(R.id.buttonAbono_DatosCobro);
         valorRestante=(EditText)view.findViewById(R.id.editTextValorRestante_DatosCobro);
 
         //Fecha Personalizada
