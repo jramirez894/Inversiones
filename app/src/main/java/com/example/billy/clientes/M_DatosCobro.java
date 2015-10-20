@@ -3,7 +3,9 @@ package com.example.billy.clientes;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,14 +77,42 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
         setDateTimeField();
         setDateTimeFieldPendiente();
 
-        pendiente.setOnClickListener(new View.OnClickListener()
-        {
+        pendiente.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 fechaPendiente.setVisibility(View.VISIBLE);
             }
         });
+
+        //Metodo para restar el abono ingresado al valor total
+        abono.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                try
+                {
+                    //con la variable charSequence se captura y se convierte a entero lo que se esta escribiendo en el EditText de abono
+                    int abonoIngresado = Integer.valueOf(charSequence.toString());
+                    int totalAPagar = Integer.parseInt(totalPagar.getText().toString());
+                    int resta = totalAPagar - abonoIngresado;
+
+                    valorRestante.setText(String.valueOf(resta));
+                } catch (Exception e) {
+                    valorRestante.setText("");
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
         return view;
     }
 

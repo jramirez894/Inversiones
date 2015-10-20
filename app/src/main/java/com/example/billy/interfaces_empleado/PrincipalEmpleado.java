@@ -17,7 +17,6 @@ import android.widget.ListView;
 import com.example.billy.clientes.AgregarCliente;
 import com.example.billy.clientes.VisualizarCliente;
 import com.example.billy.interfaces_empleado.gastos_empleado.RegGasto_Empleado;
-import com.example.billy.interfaces_empleado.visualizar_cliente.VisualizarCliente_Empleado;
 import com.example.billy.inversiones.MainActivity;
 import com.example.billy.inversiones.R;
 
