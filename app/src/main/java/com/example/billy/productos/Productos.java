@@ -9,9 +9,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.example.billy.inversiones.R;
 
@@ -23,6 +25,8 @@ public class Productos extends AppCompatActivity
     ImageView buscar;
     public static ListView listaProductos;
     public static ArrayList<ItemsListaProductos_Productos> arrayList = new ArrayList<ItemsListaProductos_Productos>();
+
+    Spinner categoria;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -36,18 +40,20 @@ public class Productos extends AppCompatActivity
 
         buscarProducto = (AutoCompleteTextView)findViewById(R.id.autocompleteBuscarProducto_Producto);
         buscar = (ImageView)findViewById(R.id.imgBuscarProducto_Producto);
+        categoria =(Spinner)findViewById(R.id.spinnerCategoria_FiltarProducto);
         listaProductos = (ListView)findViewById(R.id.listaProductos_Producto);
         ActualizarLista();
 
-        listaProductos.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        listaProductos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
-            {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Intent intent = new Intent(Productos.this, V_Producto.class);
                 startActivity(intent);
             }
         });
+
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(this,R.array.categoria_producto,android.R.layout.simple_spinner_dropdown_item);
+        categoria.setAdapter(adapter);
     }
 
     public void ActualizarLista()
