@@ -9,7 +9,6 @@
 
     <!--//items menuDrawer-->
     <string-array name="array_menu_drawer">
-        <item>Capital Inicial</item>
         <item>Empleados</item>
         <item>Clientes</item>
         <item>Productos</item>
@@ -132,4 +131,11 @@
     <string name="title_activity_reg_gasto__empleado">RegGasto_Empleado</string>
     <string name="title_activity_garantia">Garantia</string>
     <string name="title_activity_devolucion">Devolucion</string>
+
+    <string-array name="categoria_producto">
+        <item>Categoria</item>
+        <item>Casa</item>
+        <item>Perfumeria</item>
+        <item>Decoracion</item>
+    </string-array>
 </resources>

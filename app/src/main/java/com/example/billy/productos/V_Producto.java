@@ -13,6 +13,8 @@ import com.example.billy.inversiones.R;
 public class V_Producto extends AppCompatActivity
 {
     TextView nombre;
+    TextView categoria;
+    TextView descripcion;
     TextView cantidad;
     TextView precioCompra;
     TextView precioVenta;
@@ -29,6 +31,8 @@ public class V_Producto extends AppCompatActivity
         actionBar.show();
 
         nombre = (TextView)findViewById(R.id.textNombreVProducto);
+        categoria = (TextView)findViewById(R.id.textCategoria_VProducto);
+        descripcion = (TextView)findViewById(R.id.textDescripcion_VProducto);
         cantidad = (TextView)findViewById(R.id.textCantidad_VProducto);
         precioCompra = (TextView)findViewById(R.id.textPrecioCompra_VProducto);
         precioVenta = (TextView)findViewById(R.id.textPrecioVenta_VProducto);

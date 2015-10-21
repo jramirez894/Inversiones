@@ -28,6 +28,37 @@
             android:layout_marginTop="60dp"
             android:inputType="text"/>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spinnerCategoria_Producto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="5dp">
+            </Spinner>
+
+            <ImageView
+                android:id="@+id/imageAddCategoria_Producto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/mas"
+                android:layout_gravity="center"/>
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/editTextDescripcion_Producto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Descripcion Producto"
+            android:textSize="20sp"
+            android:layout_marginTop="5dp"
+            android:inputType="text"/>
+
         <EditText
             android:id="@+id/editTextCantidad_Producto"
             android:layout_width="match_parent"

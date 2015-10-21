@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.billy.empleado.Empleados;
@@ -18,6 +20,8 @@ import com.example.billy.inversiones.R;
 public class M_Producto extends AppCompatActivity
 {
     EditText nombre;
+    Spinner categoria;
+    EditText descripcion;
     EditText cantidad;
     EditText precioCompra;
     EditText precioVenta;
@@ -33,9 +37,14 @@ public class M_Producto extends AppCompatActivity
         actionBar.show();
 
         nombre = (EditText)findViewById(R.id.editTextNombre_MProducto);
+        categoria = (Spinner)findViewById(R.id.spinnerCategoria_MProducto);
+        descripcion = (EditText)findViewById(R.id.editTextDescripcion_MProducto);
         cantidad = (EditText)findViewById(R.id.editTextCantidad_MProducto);
         precioCompra = (EditText)findViewById(R.id.editTextPrecioCompra_MProducto);
         precioVenta = (EditText)findViewById(R.id.editTextPrecioVenta_MProducto);
+
+        ArrayAdapter adapter = ArrayAdapter.createFromResource(this,R.array.categoria_producto,android.R.layout.simple_spinner_dropdown_item);
+        categoria.setAdapter(adapter);
     }
 
     @Override

@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,6 +26,22 @@
             android:hint="Nombre Producto"
             android:textSize="20sp"
             android:layout_marginTop="60dp"
+            android:inputType="text"/>
+
+        <Spinner
+            android:id="@+id/spinnerCategoria_MProducto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+        </Spinner>
+
+        <EditText
+            android:id="@+id/editTextDescripcion_MProducto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Descripcion Producto"
+            android:textSize="20sp"
+            android:layout_marginTop="5dp"
             android:inputType="text"/>
 
         <EditText

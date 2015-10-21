@@ -21,7 +21,6 @@ import com.example.billy.clientes.VisualizarCliente;
 import com.example.billy.constantes.Constantes;
 import com.example.billy.devolucion.Devolucion;
 import com.example.billy.empleado.Empleados;
-import com.example.billy.capital_inicial.CapitalInicial;
 import com.example.billy.garantias_product.Garantia;
 import com.example.billy.gastos.Reg_Gasto;
 import com.example.billy.inversiones.MainActivity;
@@ -73,17 +72,16 @@ public class PrincipalMenu extends AppCompatActivity
         String[] titulos = getResources().getStringArray(R.array.array_menu_drawer);
 
         ArrayList<ItemsMenuDrawer> items = new ArrayList<ItemsMenuDrawer>();
-        items.add(new ItemsMenuDrawer(titulos[0], R.mipmap.capital));
+        items.add(new ItemsMenuDrawer(titulos[0], R.mipmap.personas));
         items.add(new ItemsMenuDrawer(titulos[1], R.mipmap.personas));
-        items.add(new ItemsMenuDrawer(titulos[2], R.mipmap.personas));
-        items.add(new ItemsMenuDrawer(titulos[3], R.mipmap.productos));
-        items.add(new ItemsMenuDrawer(titulos[4], R.mipmap.capital));
-        items.add(new ItemsMenuDrawer(titulos[5], R.mipmap.saldocaja));
-        items.add(new ItemsMenuDrawer(titulos[6], R.mipmap.cancelado));
-        items.add(new ItemsMenuDrawer(titulos[7], R.mipmap.garantia));
-        items.add(new ItemsMenuDrawer(titulos[8], R.mipmap.devolucion));
-        items.add(new ItemsMenuDrawer(titulos[9], R.mipmap.perfil));
-        items.add(new ItemsMenuDrawer(titulos[10], R.mipmap.cerrar));
+        items.add(new ItemsMenuDrawer(titulos[2], R.mipmap.productos));
+        items.add(new ItemsMenuDrawer(titulos[3], R.mipmap.capital));
+        items.add(new ItemsMenuDrawer(titulos[4], R.mipmap.saldocaja));
+        items.add(new ItemsMenuDrawer(titulos[5], R.mipmap.cancelado));
+        items.add(new ItemsMenuDrawer(titulos[6], R.mipmap.garantia));
+        items.add(new ItemsMenuDrawer(titulos[7], R.mipmap.devolucion));
+        items.add(new ItemsMenuDrawer(titulos[8], R.mipmap.perfil));
+        items.add(new ItemsMenuDrawer(titulos[9], R.mipmap.cerrar));
 
         // Relacionar el adaptador y la escucha de la lista del drawer
         listaDrawer.setAdapter(new AdapterMenuDrawer(this, items));
@@ -99,66 +97,60 @@ public class PrincipalMenu extends AppCompatActivity
                 Intent intent;
                 switch (posicion)
                 {
-
                     case 0:
-                        intent = new Intent(PrincipalMenu.this, CapitalInicial.class);
-                        startActivity(intent);
-                        break;
-
-                    case 1:
                         intent = new Intent(PrincipalMenu.this, Empleados.class);
                         startActivity(intent);
                         break;
 
-                    case 2:
+                    case 1:
                         intent = new Intent(PrincipalMenu.this, PrincipalMenu.class);
                         startActivity(intent);
                         finish();
                         break;
 
-                    case 3:
+                    case 2:
                         intent = new Intent(PrincipalMenu.this, Productos.class);
                         startActivity(intent);
 
                         break;
 
-                    case 4:
+                    case 3:
                         intent = new Intent(PrincipalMenu.this, Reg_Gasto.class);
                         startActivity(intent);
 
                         break;
 
-                    case 5:
+                    case 4:
                         intent = new Intent(PrincipalMenu.this, SaldoCaja.class);
                         startActivity(intent);
 
                         break;
 
-                    case 6:
+                    case 5:
                         intent = new Intent(PrincipalMenu.this, Cancelados.class);
                         startActivity(intent);
 
                         break;
 
-                    case 7:
+                    case 6:
                         intent = new Intent(PrincipalMenu.this, Garantia.class);
                         startActivity(intent);
 
                         break;
 
-                    case 8:
+                    case 7:
                         intent = new Intent(PrincipalMenu.this, Devolucion.class);
                         startActivity(intent);
 
                         break;
 
-                    case 9:
+                    case 8:
                         intent = new Intent(PrincipalMenu.this, Perfil.class);
                         startActivity(intent);
 
                         break;
 
-                    case 10:
+                    case 9:
                         intent = new Intent(PrincipalMenu.this, MainActivity.class);
                         startActivity(intent);
                         finish();
