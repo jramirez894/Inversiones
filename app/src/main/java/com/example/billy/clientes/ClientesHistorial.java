@@ -37,7 +37,7 @@ public class ClientesHistorial extends Fragment
 
         arrayList.add(new Item_ClienteHistorial("Fecha: " + "2015/10/06", "Valor:$ "+ "20000"));
 
-        lista.setAdapter(new AdapterLista_ClienteHistorial(getContext(), arrayList));
+        lista.setAdapter(new AdapterLista_ClienteHistorial(getActivity(), arrayList));
     }
 
 }

@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.billy.interfaces_empleado.PrincipalEmpleado;
 import com.example.billy.menu_principal.PrincipalMenu;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity
 
     boolean existe = false;
 
+    String respuesta = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -59,7 +62,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                TareaRol tareaRol = new TareaRol();
+                TareaLogin tareaRol = new TareaLogin();
                 tareaRol.execute(cedula.getText().toString(), contrasena.getText().toString());
             }
         });
@@ -97,79 +100,7 @@ public class MainActivity extends AppCompatActivity
 
     //Clases Asyntask para login y rol del usuario que inicia sesion
 
-    private class TareaRol extends AsyncTask<String,Integer,Boolean>
-    {
-        private String respStr;
-
-        @TargetApi(Build.VERSION_CODES.KITKAT)
-        protected Boolean doInBackground(String... params)
-        {
-            String cedu = params[0];
-
-            boolean result = true;
-
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpGet httpRol = new HttpGet("http://algo/");
-            httpRol.setHeader("content-type", "application/json");
-
-            try
-            {
-                HttpResponse resp = httpClient.execute(httpRol);
-                respStr = EntityUtils.toString(resp.getEntity());
-
-                JSONArray respJSON = new JSONArray(respStr);
-
-                for(int i=0; i<respJSON.length(); i++)
-                {
-                    JSONObject obj = respJSON.getJSONObject(i);
-
-                    if(obj.getString("cedula").equalsIgnoreCase(cedu))
-                    {
-                        SesionUsuarios.setRol(obj.getString("tipoUsuario"));
-                        SesionUsuarios.setCedula(obj.getString("cedula"));
-                        SesionUsuarios.setNombre(obj.getString("nombre"));
-                        existe = true;
-                    }
-                }
-            }
-            catch(Exception ex)
-            {
-                Log.e("ServicioRest", "Error!", ex);
-                result = false;
-            }
-
-            return result;
-        }
-
-        protected void onPostExecute(Boolean result)
-        {
-            if (result && existe)
-            {
-                TareaWSLogin login = new TareaWSLogin();
-                login.execute(cedula.getText().toString(), contrasena.getText().toString());
-            }
-
-            else
-            {
-                if(!existe)
-                {
-                    AlertDialog.Builder alerta = new AlertDialog.Builder(MainActivity.this);
-                    alerta.setTitle("Inicio de Sesion");
-                    alerta.setMessage("El Usuario no Existe en el Sistema, Compruebe su Usuario y Contraseña");
-                    alerta.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    });
-                    alerta.setCancelable(false);
-                    alerta.show();
-                }
-            }
-        }
-    }
-
-    private class TareaWSLogin extends AsyncTask<String,Integer,Boolean>
+    private class TareaLogin extends AsyncTask<String,Integer,Boolean>
     {
         private String respStr;
         private JSONObject msg;
@@ -179,7 +110,7 @@ public class MainActivity extends AppCompatActivity
         {
             boolean resul = true;
             HttpClient httpClient = new DefaultHttpClient();
-            HttpPost login = new HttpPost("http://server.disruptiva.company:8001/token-auth/");
+            HttpPost login = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerLogin.php/");
             login.setHeader("content-type", "application/json");
 
             try
@@ -187,12 +118,32 @@ public class MainActivity extends AppCompatActivity
                 msg = new JSONObject();
                 msg.put("cedula", params[0]);
                 msg.put("password", params[1]);
+                msg.put("option", "signInUsser");
 
                 StringEntity entity = new StringEntity(msg.toString());
                 login.setEntity(entity);
 
                 HttpResponse resp = httpClient.execute(login);
                 respStr = EntityUtils.toString(resp.getEntity());
+
+                respuesta = respStr;
+
+                /*JSONObject respJSON = new JSONObject(respStr);
+                JSONObject objItems = respJSON.getJSONObject("items");
+
+                String obj = String.valueOf(objItems);
+
+                if(obj.equalsIgnoreCase("No Existe"))
+                {
+                    existe = false;
+                }
+                else
+                {
+                    SesionUsuarios.setRol(objItems.getString("tipoUsuario"));
+                    SesionUsuarios.setCedula(objItems.getString("cedula"));
+                    SesionUsuarios.setNombre(objItems.getString("nombre"));
+                    existe = true;
+                }*/
             }
 
             catch(Exception ex)
@@ -206,18 +157,27 @@ public class MainActivity extends AppCompatActivity
 
         protected void onPostExecute(Boolean result)
         {
-            if(SesionUsuarios.getRol().equalsIgnoreCase("AD"))
+            Toast.makeText(MainActivity.this, respuesta, Toast.LENGTH_SHORT).show();
+
+            if(existe)
             {
-                Intent clientApp = new Intent(MainActivity.this, PrincipalMenu.class);
-                startActivity(clientApp);
+                if(SesionUsuarios.getRol().equalsIgnoreCase("AD"))
+                {
+                    Intent clientApp = new Intent(MainActivity.this, PrincipalMenu.class);
+                    startActivity(clientApp);
+                }
+                else
+                {
+                    if(SesionUsuarios.getRol().equalsIgnoreCase("VE"))
+                    {
+                        Intent clientApp = new Intent(MainActivity.this, PrincipalEmpleado.class);
+                        startActivity(clientApp);
+                    }
+                }
             }
             else
             {
-                if(SesionUsuarios.getRol().equalsIgnoreCase("VE"))
-                {
-                    Intent clientApp = new Intent(MainActivity.this, PrincipalEmpleado.class);
-                    startActivity(clientApp);
-                }
+                Toast.makeText(MainActivity.this, "El Usuario no Existe", Toast.LENGTH_SHORT).show();
             }
         }
     }

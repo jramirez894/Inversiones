@@ -172,7 +172,7 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
 
         arrayList.add(new ItemListaroductos_MDatosCobro("Sabanas", R.mipmap.garantia,R.mipmap.devolucion,R.mipmap.eliminar));
 
-        lista.setAdapter(new AdapterLista_Productos_MDatosCobro(getContext() , arrayList));
+        lista.setAdapter(new AdapterLista_Productos_MDatosCobro(getActivity() , arrayList));
     }
 
 }
