@@ -141,18 +141,14 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         builder.setView(dialoglayout);
         builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i)
-            {
+            public void onClick(DialogInterface dialogInterface, int i) {
                 //Capturar variables de la alerta
                 String capDescripcion = editDescripcionGarantia.getText().toString();
                 String capFecha = editFechaGarantia.getText().toString();
-                if (capDescripcion.equals("")||
-                        capFecha.equals(""))
-                {
+                if (capDescripcion.equals("") ||
+                        capFecha.equals("")) {
                     Toast.makeText(getContext(), "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
+                } else {
                     //Borrar un item de la lista
                     ArrayAdapter adapter = new AdapterLista_Productos_MDatosCobro(getContext(), M_DatosCobro.arrayList);
                     adapter.remove(posicionItems);
@@ -161,8 +157,10 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                     Toast.makeText(getContext(), "Producto Registrado por Garantia", Toast.LENGTH_SHORT).show();
                 }
 
+
             }
         });
+        builder.setNegativeButton("Cancelar", null);
         builder.setCancelable(false);
         builder.show();
     }
@@ -210,6 +208,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
 
             }
         });
+        builder.setNegativeButton("Cancelar", null);
         builder.setCancelable(false);
         builder.show();
     }

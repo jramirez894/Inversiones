@@ -50,6 +50,12 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
     TextView txtMensaje_AlertaMCliente;
     EditText editCalificacion_AlertaMCliente;
 
+    //Variables para capturar los elementos de la alerta
+    int valorRestante = 0;
+    String fecha;
+    String calificacion;
+
+
     @Override
     public void onClick(View view)
     {
@@ -218,7 +224,6 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
     {
         LayoutInflater inflaterAlert = (LayoutInflater) ModificarCliente.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialoglayout = inflaterAlert.inflate(R.layout.alert_guardar_modificar_cliente, null);
-        int valorRestante = 0;
 
         String valorRestanteVacio = M_DatosCobro.valorRestante.getText().toString();
 
@@ -237,12 +242,12 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
 
             }
 
+            txtMensaje_AlertaMCliente = (TextView) dialoglayout.findViewById(R.id.txtMensaje_AlertaMCliente);
+            editCalificacion_AlertaMCliente = (EditText) dialoglayout.findViewById(R.id.editCalificacion_AlertaMCliente);
+
             if(valorRestante != 0)
             {
-                txtMensaje_AlertaMCliente = (TextView) dialoglayout.findViewById(R.id.txtMensaje_AlertaMCliente);
                 txtMensaje_AlertaMCliente.setVisibility(View.GONE);
-
-                editCalificacion_AlertaMCliente = (EditText) dialoglayout.findViewById(R.id.editCalificacion_AlertaMCliente);
                 editCalificacion_AlertaMCliente.setVisibility(View.GONE);
             }
 
@@ -257,22 +262,61 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
             alerta.setIcon(R.mipmap.garantia);
             alerta.setTitle("Garantia");
             alerta.setView(dialoglayout);
-            alerta.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            alerta.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
+            {
                 @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+                    fecha = editFecha_AlertaMCliente.getText().toString();
+                    calificacion = editCalificacion_AlertaMCliente.getText().toString();
                     switch (interfaz) {
                         case "Administrador":
-                            Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(ModificarCliente.this, PrincipalMenu.class);
-                            startActivity(intent);
-                            finish();
+                            if (valorRestante != 0) {
+                                if (fecha.equals("")) {
+                                    Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(ModificarCliente.this, PrincipalMenu.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+
+                            } else {
+                                if (fecha.equals("") ||
+                                        calificacion.equals("")) {
+                                    Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(ModificarCliente.this, PrincipalMenu.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            }
                             break;
 
                         case "Empleado":
-                            Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
-                            Intent intent1 = new Intent(ModificarCliente.this, PrincipalEmpleado.class);
-                            startActivity(intent1);
-                            finish();
+                            if (valorRestante != 0) {
+                                if (fecha.equals("")) {
+                                    Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
+                                    Intent intent1 = new Intent(ModificarCliente.this, PrincipalEmpleado.class);
+                                    startActivity(intent1);
+                                    finish();
+                                }
+
+                            } else {
+                                if (fecha.equals("") ||
+                                        calificacion.equals("")) {
+                                    Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
+                                    Intent intent1 = new Intent(ModificarCliente.this, PrincipalEmpleado.class);
+                                    startActivity(intent1);
+                                    finish();
+                                }
+                            }
+
                             break;
                     }
                 }
