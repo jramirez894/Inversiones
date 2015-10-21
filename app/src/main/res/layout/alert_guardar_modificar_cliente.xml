@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="¿Guardar Cambios?"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:textColor="@android:color/background_dark"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/txtMensaje_AlertaMCliente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Este cliente pasara a estado inactivo."
+        android:textSize="20sp"
+        android:gravity="center"
+        android:textColor="@android:color/background_dark"
+        android:layout_marginTop="10dp"/>
+
+    <EditText
+        android:id="@+id/editFecha_AlertaMCliente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="fecha"
+        android:layout_marginTop="10dp"
+        android:inputType="date"/>
+
+    <EditText
+        android:id="@+id/editCalificacion_AlertaMCliente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Calificacion del Cliente"
+        android:layout_marginTop="5dp"
+        android:inputType="textPersonName"/>
 
 </LinearLayout>

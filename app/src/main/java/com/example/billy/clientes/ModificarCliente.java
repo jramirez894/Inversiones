@@ -1,6 +1,7 @@
 package com.example.billy.clientes;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,11 +10,17 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.billy.interfaces_empleado.PrincipalEmpleado;
@@ -21,16 +28,36 @@ import com.example.billy.menu_principal.PagerAdapter;
 import com.example.billy.menu_principal.PrincipalMenu;
 import com.example.billy.inversiones.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Vector;
 
-public class ModificarCliente extends ActionBarActivity implements TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener
+public class ModificarCliente extends ActionBarActivity implements TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener, View.OnClickListener
 {
     private TabHost mTabHost;
     private ViewPager mViewPager;
     private HashMap<String, TabInfo> mapTabInfo = new HashMap<String, ModificarCliente.TabInfo>();
     private PagerAdapter mPagerAdapter;
+
+    //Variables fecha personalizada
+    private DatePickerDialog datePickerDialog;
+    private SimpleDateFormat dateFormatter;
+
+    EditText editFecha_AlertaMCliente;
+    TextView txtMensaje_AlertaMCliente;
+    EditText editCalificacion_AlertaMCliente;
+
+    @Override
+    public void onClick(View view)
+    {
+        if(view == editFecha_AlertaMCliente)
+        {
+            datePickerDialog.show();
+        }
+    }
 
     private class TabInfo
     {
@@ -189,38 +216,89 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
     //Alerta de Confirmacion
     public void ModificarCliente()
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setIcon(android.R.drawable.ic_menu_save);
-        builder.setTitle("Guardar");
-        builder.setMessage("¿Modificar Cliente?");
-        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
+        LayoutInflater inflaterAlert = (LayoutInflater) ModificarCliente.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View dialoglayout = inflaterAlert.inflate(R.layout.alert_guardar_modificar_cliente, null);
+        int valorRestante = 0;
+
+        String valorRestanteVacio = M_DatosCobro.valorRestante.getText().toString();
+
+        if (valorRestanteVacio.equalsIgnoreCase(""))
         {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
+            Toast.makeText(ModificarCliente.this, "Aun no se ha registrado el valor restante", Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            try
+            {
+                valorRestante = Integer.valueOf(M_DatosCobro.valorRestante.getText().toString());
+            }
+            catch (Exception e)
             {
 
-                switch (interfaz)
-                {
-                    case "Administrador":
-                        Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(ModificarCliente.this, PrincipalMenu.class);
-                        startActivity(intent);
-                        finish();
-                        break;
-
-                    case "Empleado":
-                        Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
-                        Intent intent1 = new Intent(ModificarCliente.this, PrincipalEmpleado.class);
-                        startActivity(intent1);
-                        finish();
-                        break;
-                }
             }
-        });
 
-        builder.setNegativeButton("Cancelar",null );
-        builder.setCancelable(false);
-        builder.show();
+            if(valorRestante != 0)
+            {
+                txtMensaje_AlertaMCliente = (TextView) dialoglayout.findViewById(R.id.txtMensaje_AlertaMCliente);
+                txtMensaje_AlertaMCliente.setVisibility(View.GONE);
+
+                editCalificacion_AlertaMCliente = (EditText) dialoglayout.findViewById(R.id.editCalificacion_AlertaMCliente);
+                editCalificacion_AlertaMCliente.setVisibility(View.GONE);
+            }
+
+            //Fecha Personalizada para la garantia
+            dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+            editFecha_AlertaMCliente = (EditText) dialoglayout.findViewById(R.id.editFecha_AlertaMCliente);
+            editFecha_AlertaMCliente.setInputType(InputType.TYPE_NULL);
+            editFecha_AlertaMCliente.requestFocus();
+            setDateTimeField();
+
+            AlertDialog.Builder alerta = new AlertDialog.Builder(ModificarCliente.this);
+            alerta.setIcon(R.mipmap.garantia);
+            alerta.setTitle("Garantia");
+            alerta.setView(dialoglayout);
+            alerta.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    switch (interfaz) {
+                        case "Administrador":
+                            Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(ModificarCliente.this, PrincipalMenu.class);
+                            startActivity(intent);
+                            finish();
+                            break;
+
+                        case "Empleado":
+                            Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
+                            Intent intent1 = new Intent(ModificarCliente.this, PrincipalEmpleado.class);
+                            startActivity(intent1);
+                            finish();
+                            break;
+                    }
+                }
+            });
+            alerta.setNegativeButton("Cancelar", null);
+            alerta.setCancelable(false);
+            alerta.show();
+        }
+    }
+
+    private void setDateTimeField()
+    {
+        editFecha_AlertaMCliente.setOnClickListener(this);
+
+        Calendar newCalendar = Calendar.getInstance();
+
+        datePickerDialog = new DatePickerDialog(ModificarCliente.this, new DatePickerDialog.OnDateSetListener()
+        {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
+            {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                editFecha_AlertaMCliente.setText(dateFormatter.format(newDate.getTime()));
+            }
+        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
     }
 
     private static void AddTab(ModificarCliente activity, TabHost tabHost, TabHost.TabSpec tabSpec, TabInfo tabInfo) {
