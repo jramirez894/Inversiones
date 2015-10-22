@@ -22,14 +22,24 @@ import com.example.billy.interfaces_empleado.PrincipalEmpleado;
 import com.example.billy.menu_principal.PrincipalMenu;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -108,7 +118,7 @@ public class MainActivity extends AppCompatActivity
         @TargetApi(Build.VERSION_CODES.KITKAT)
         protected Boolean doInBackground(String... params)
         {
-            boolean resul = true;
+            /*boolean resul = true;
             HttpClient httpClient = new DefaultHttpClient();
             HttpPost login = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerLogin.php/");
             login.setHeader("content-type", "application/json");
@@ -143,21 +153,89 @@ public class MainActivity extends AppCompatActivity
                     SesionUsuarios.setCedula(objItems.getString("cedula"));
                     SesionUsuarios.setNombre(objItems.getString("nombre"));
                     existe = true;
-                }*/
+                }
             }
-
             catch(Exception ex)
             {
                 Log.e("ServicioRest", "Error!", ex);
                 resul = false;
             }
+            return resul;*/
+
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerLogin.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("cedula", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("password", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("option",  "signInUsser"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                        respuesta= String.valueOf(objItems);
+
+                if(respuesta.equalsIgnoreCase("No Existe"))
+                {
+                    existe = false;
+                }
+                else
+                {
+                    for(int i=0; i<objItems.length(); i++)
+                    {
+                        JSONObject obj = objItems.getJSONObject(i);
+
+                        SesionUsuarios.setRol(obj.getString("tipoUsuario"));
+                        SesionUsuarios.setCedula(obj.getString("cedula"));
+                        SesionUsuarios.setNombre(obj.getString("nombre"));
+                        existe = true;
+                    }
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            //return false;
 
             return resul;
         }
 
         protected void onPostExecute(Boolean result)
         {
-            Toast.makeText(MainActivity.this, respuesta, Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, respuesta
+                    , Toast.LENGTH_SHORT).show();
 
             if(existe)
             {

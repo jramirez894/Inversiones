@@ -38,8 +38,7 @@
                 android:textSize="20sp"
                 android:inputType="textPassword"
                 android:layout_marginTop="10dp"
-                android:drawableLeft="@mipmap/contrasena"
-                android:text="1234"/>
+                android:drawableLeft="@mipmap/contrasena"/>
 
             <Button
                 android:id="@+id/buttonLogin"

@@ -92,7 +92,8 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
                 try
                 {
                     //con la variable charSequence se captura y se convierte a entero lo que se esta escribiendo en el EditText de abono
