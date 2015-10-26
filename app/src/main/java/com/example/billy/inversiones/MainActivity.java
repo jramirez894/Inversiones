@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity
                 JSONArray objItems = respJSON.getJSONArray("items");
 
                 //String obj
-                        respuesta= String.valueOf(objItems);
+                respuesta= String.valueOf(objItems);
 
                 if(respuesta.equalsIgnoreCase("No Existe"))
                 {
