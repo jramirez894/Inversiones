@@ -6,11 +6,14 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.billy.inversiones.R;
 
 public class V_Empleado extends AppCompatActivity
 {
+    TextView textViewNombre_VEmpleado;
+    TextView textViewTelefono_VEmpleado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -21,6 +24,13 @@ public class V_Empleado extends AppCompatActivity
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Volver");
         actionBar.show();
+
+        textViewNombre_VEmpleado = (TextView) findViewById(R.id.textViewNombre_VEmpleado);
+        textViewTelefono_VEmpleado = (TextView) findViewById(R.id.textViewTelefono_VEmpleado);
+
+        Bundle bundle = getIntent().getExtras();
+        textViewNombre_VEmpleado.setText("Nombre: " + bundle.getString("nombre"));
+        textViewTelefono_VEmpleado.setText("Telefono: " + bundle.getString("telefono"));
     }
 
     @Override

@@ -78,11 +78,9 @@ public class AdapterListaEmpleado extends ArrayAdapter
             }
         });
 
-        eliminar.setOnClickListener(new View.OnClickListener()
-        {
+        eliminar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 posicionItems = (ItemListaEmpleado) getItem(position);
                 EliminarEmpleado();
             }
@@ -90,7 +88,6 @@ public class AdapterListaEmpleado extends ArrayAdapter
 
         return convertView;
     }
-
 
     public void EliminarEmpleado()
     {

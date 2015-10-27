@@ -74,7 +74,11 @@ public class Empleados extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
             {
+                ItemListaEmpleado empleado = arrayList.get(position);
+
                 Intent intent = new Intent(Empleados.this, V_Empleado.class);
+                intent.putExtra("nombre", empleado.getNombreEmp());
+                intent.putExtra("telefono", empleado.getTelefonoEmp());
                 startActivity(intent);
             }
         });
