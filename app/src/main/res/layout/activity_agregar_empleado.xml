@@ -5,82 +5,88 @@
     android:orientation="vertical"
     android:padding="20dp">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Datos Empleado"
-            android:textSize="25sp"
-            android:gravity="center"
-            android:textColor="@android:color/background_dark"
-            android:textStyle="bold"/>
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/editCedula_AgregarEmpleado"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Cedula"
-            android:textSize="20sp"
-            android:inputType="number"
-            android:layout_marginTop="15dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Datos Empleado"
+                android:textSize="25sp"
+                android:gravity="center"
+                android:textColor="@android:color/background_dark"
+                android:textStyle="bold"/>
 
-        <EditText
-            android:id="@+id/editNombre_AgregarEmpleado"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nombre"
-            android:textSize="20sp"
-            android:inputType="text"
-            android:layout_marginTop="5dp"/>
+            <EditText
+                android:id="@+id/editCedula_AgregarEmpleado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Cedula"
+                android:textSize="20sp"
+                android:inputType="number"
+                android:layout_marginTop="15dp"/>
 
-        <EditText
-            android:id="@+id/editDireccion_AgregarEmpleado"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Direccion"
-            android:textSize="20sp"
-            android:inputType="text"
-            android:layout_marginTop="5dp"/>
+            <EditText
+                android:id="@+id/editNombre_AgregarEmpleado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nombre"
+                android:textSize="20sp"
+                android:inputType="text"
+                android:layout_marginTop="5dp"/>
 
-        <EditText
-            android:id="@+id/editTelefono_AgregarEmpleado"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Telefono"
-            android:textSize="20sp"
-            android:inputType="number"
-            android:layout_marginTop="5dp"/>
+            <EditText
+                android:id="@+id/editDireccion_AgregarEmpleado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Direccion"
+                android:textSize="20sp"
+                android:inputType="text"
+                android:layout_marginTop="5dp"/>
 
-        <EditText
-            android:id="@+id/editCorreo_AgregarEmpleado"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Correo Electronico"
-            android:textSize="20sp"
-            android:inputType="textEmailAddress"
-            android:layout_marginTop="5dp"/>
+            <EditText
+                android:id="@+id/editTelefono_AgregarEmpleado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Telefono"
+                android:textSize="20sp"
+                android:inputType="number"
+                android:layout_marginTop="5dp"/>
 
-        <EditText
-            android:id="@+id/editContrasena_AgregarEmpleado"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Contraseña"
-            android:textSize="20sp"
-            android:inputType="textPassword"
-            android:layout_marginTop="5dp"/>
+            <EditText
+                android:id="@+id/editCorreo_AgregarEmpleado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Correo Electronico"
+                android:textSize="20sp"
+                android:inputType="textEmailAddress"
+                android:layout_marginTop="5dp"/>
 
-        <EditText
-            android:id="@+id/editVerificacionContrasena_AgregarEmpleado"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Verificacion Contraseña"
-            android:textSize="20sp"
-            android:inputType="textPassword"
-            android:layout_marginTop="5dp"/>
-    </LinearLayout>
+            <EditText
+                android:id="@+id/editContrasena_AgregarEmpleado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Contraseña"
+                android:textSize="20sp"
+                android:inputType="textPassword"
+                android:layout_marginTop="5dp"/>
+
+            <EditText
+                android:id="@+id/editVerificacionContrasena_AgregarEmpleado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Verificacion Contraseña"
+                android:textSize="20sp"
+                android:inputType="textPassword"
+                android:layout_marginTop="5dp"/>
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

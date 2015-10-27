@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.billy.constantes.Constantes;
 import com.example.billy.inversiones.R;
 
 import java.util.List;
@@ -52,7 +53,26 @@ public class AdapterListaEmpleado extends ArrayAdapter
             @Override
             public void onClick(View view)
             {
+                ItemListaEmpleado posicion = (ItemListaEmpleado) getItem(position);
+                //long posLista = Empleados.listaEmpleado.getItemIdAtPosition(position);
+                //String idUsuario = Constantes.arrayListIdVendedor.get(0);
+
+                String idUsuario = posicion.getIdUsuario();
+                String cedula = posicion.getCedulaEmp();
+                String nombre = posicion.getNombre();
+                String direccion = posicion.getDireccionEmp();
+                String telefono = posicion.getTelefonoEmp();
+                String correo = posicion.getCorreoEmp();
+                String password = posicion.getPassword();
+
                 Intent intent = new Intent(getContext(), M_Empleado.class);
+                intent.putExtra("idUsuario", idUsuario);
+                intent.putExtra("cedula", cedula);
+                intent.putExtra("nombre", nombre);
+                intent.putExtra("direccion", direccion);
+                intent.putExtra("telefono", telefono);
+                intent.putExtra("correo", correo);
+                intent.putExtra("password", password);
                 getContext().startActivity(intent);
 
             }
@@ -90,7 +110,7 @@ public class AdapterListaEmpleado extends ArrayAdapter
                 adapter.remove(posicionItems);
                 //Se carga de nuevo la vista
                 Empleados.listaEmpleado.setAdapter(adapter);
-                Toast.makeText(getContext(), "Se Elimino el Cliente Correctamente", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Se Elimino Empleado Correctamente", Toast.LENGTH_SHORT).show();
             }
         });
 

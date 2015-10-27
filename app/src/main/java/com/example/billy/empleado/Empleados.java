@@ -1,6 +1,9 @@
 package com.example.billy.empleado;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,10 +15,30 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.billy.constantes.Constantes;
 import com.example.billy.inversiones.R;
+import com.example.billy.menu_principal.AdapterListaPersonalizada;
+import com.example.billy.menu_principal.ItemListaPersonalizada;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Empleados extends AppCompatActivity
 {
@@ -24,6 +47,11 @@ public class Empleados extends AppCompatActivity
     ImageView buscar;
 
     public static ArrayList<ItemListaEmpleado> arrayList = new ArrayList<ItemListaEmpleado>();
+
+
+    boolean existe = false;
+    String respuesta = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -39,7 +67,7 @@ public class Empleados extends AppCompatActivity
         listaEmpleado = (ListView)findViewById(R.id.listaEmpleados_Empleado);
         buscar = (ImageView)findViewById(R.id.imgBuscarEmpleado_Empleado);
 
-        ActualizarLista();
+        //ActualizarLista();
 
         listaEmpleado.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
@@ -50,14 +78,18 @@ public class Empleados extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
+        //Listado de Vendedores
+        TareaListado tareaListado = new TareaListado();
+        tareaListado.execute();
     }
 
     public void ActualizarLista()
     {
-        arrayList.clear();
+        //arrayList.clear();
 
-        arrayList.add(new ItemListaEmpleado("Jeniffer", R.mipmap.editar, R.mipmap.eliminar));
-        arrayList.add(new ItemListaEmpleado("Migue", R.mipmap.editar, R.mipmap.eliminar));
+        //arrayList.add(new ItemListaEmpleado("Jeniffer", R.mipmap.editar, R.mipmap.eliminar));
+        //arrayList.add(new ItemListaEmpleado("Migue", R.mipmap.editar, R.mipmap.eliminar));
 
         listaEmpleado.setAdapter(new AdapterListaEmpleado(this, arrayList));
     }
@@ -102,5 +134,88 @@ public class Empleados extends AppCompatActivity
         }
 
         return super.onKeyUp(keyCode, event);
+    }
+
+    //Clases Asyntask para login y rol del usuario que inicia sesion
+
+    private class TareaListado extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerLogin.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "listUssers"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+                //JSONObject obj = objItems.getJSONObject(0);
+
+                //String obj
+                respuesta= String.valueOf(objVendedores);
+
+                if(respuesta.equalsIgnoreCase("No Existe"))
+                {
+                    existe = false;
+                }
+                else
+                {
+                    arrayList.clear();
+                    for(int i=0; i<objVendedores.length(); i++)
+                    {
+                        JSONObject obj = objVendedores.getJSONObject(i);
+                        arrayList.add(new ItemListaEmpleado(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, obj.getString("idUsuario"), obj.getString("cedula"), obj.getString("nombre"), obj.getString("direccion"), obj.getString("telefono"), obj.getString("correo"), obj.getString("password")));
+                        existe = true;
+                    }
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(Empleados.this, respuesta, Toast.LENGTH_SHORT).show();
+            listaEmpleado.setAdapter(new AdapterListaEmpleado(Empleados.this, arrayList));
+        }
     }
 }

@@ -15,47 +15,80 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ImageView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher"/>
+                android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/editTextCedula"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Ingrese Cedula"
-                android:textSize="20sp"
-                android:inputType="number"
-                android:layout_marginTop="15dp"
-                android:drawableLeft="@mipmap/perfil"/>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_launcher"/>
 
-            <EditText
-                android:id="@+id/editTextContrasena"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Ingrese Contraseña"
-                android:textSize="20sp"
-                android:inputType="textPassword"
-                android:layout_marginTop="10dp"
-                android:drawableLeft="@mipmap/contrasena"/>
+            </LinearLayout>
 
-            <Button
-                android:id="@+id/buttonLogin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:text="Iniciar Sesion"/>
 
-            <TextView
-                android:id="@+id/texViewOlvidarContrasena"
+            <LinearLayout
+                android:id="@+id/layoutLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="¿Olvidar Contraseña?"
-                android:gravity="center"
-                android:textSize="20sp"
-                android:textColor="@android:color/holo_blue_light"/>
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/editTextCedula"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ingrese Cedula"
+                    android:textSize="20sp"
+                    android:inputType="number"
+                    android:layout_marginTop="15dp"
+                    android:drawableLeft="@mipmap/perfil"
+                    android:text="1088321328"/>
+
+                <EditText
+                    android:id="@+id/editTextContrasena"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ingrese Contraseña"
+                    android:textSize="20sp"
+                    android:inputType="textPassword"
+                    android:layout_marginTop="10dp"
+                    android:drawableLeft="@mipmap/contrasena"
+                    android:text="123"/>
+
+                <Button
+                    android:id="@+id/buttonLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="Iniciar Sesion"/>
+
+                <TextView
+                    android:id="@+id/texViewOlvidarContrasena"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="¿Olvidar Contraseña?"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@android:color/holo_blue_light"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layoutProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:id="@+id/progressLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

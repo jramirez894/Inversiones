@@ -6,76 +6,102 @@
     android:padding="20dp"
     android:gravity="center">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Mi Perfil"
-            android:textSize="25sp"
-            android:gravity="center"
-            android:textColor="@android:color/background_dark"
-            android:textStyle="bold"/>
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/editTextCedula_MiPerfil"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Cedula"
-            android:textSize="20sp"
-            android:inputType="number"
-            android:layout_marginTop="10dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/editTextNombre_MiPerfil"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nombre"
-            android:textSize="20sp"
-            android:inputType="textPersonName"
-            android:layout_marginTop="10dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Mi Perfil"
+                    android:textSize="25sp"
+                    android:gravity="center"
+                    android:textColor="@android:color/background_dark"
+                    android:textStyle="bold"/>
 
-        <EditText
-            android:id="@+id/editTextTelefono_MiPerfil"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Telefono"
-            android:textSize="20sp"
-            android:inputType="number"
-            android:layout_marginTop="10dp"/>
+                <EditText
+                    android:id="@+id/editTextCedula_MiPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Cedula"
+                    android:inputType="number"
+                    android:layout_marginTop="10dp"/>
 
-        <EditText
-            android:id="@+id/editTextCorreo_MiPerfil"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Correo"
-            android:textSize="20sp"
-            android:inputType="textEmailAddress"
-            android:layout_marginTop="10dp"/>
+                <EditText
+                    android:id="@+id/editTextNombre_MiPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nombre"
+                    android:inputType="textPersonName"/>
 
-        <EditText
-            android:id="@+id/editTextContrasena_MiPerfil"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Contraseña"
-            android:textSize="20sp"
-            android:inputType="textPassword"
-            android:layout_marginTop="10dp"/>
+                <EditText
+                    android:id="@+id/editTextTelefono_MiPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Telefono"
+                    android:inputType="number"/>
 
-        <EditText
-            android:id="@+id/editTextVerContrasena_MiPerfil"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Verificar Contraseña"
-            android:textSize="20sp"
-            android:inputType="textPassword"
-            android:layout_marginTop="10dp"/>
+                <EditText
+                    android:id="@+id/editTextCorreo_MiPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Correo"
+                    android:inputType="textEmailAddress"/>
+
+                <Button
+                    android:id="@+id/btnModificarContra_MiPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Modificar Contraseña"
+                    android:onClick="ModificarContra"
+                    android:layout_marginTop="5dp"/>
+
+            </LinearLayout>
 
 
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layoutContrasena"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="10dp"
+                android:visibility="gone">
 
+                <EditText
+                    android:id="@+id/editTextContrasenaActual_MiPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Contraseña Administrador"
+                    android:inputType="textPassword"/>
+
+                <EditText
+                    android:id="@+id/editTextContrasenaNueva_MiPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Nueva Contraseña"
+                    android:inputType="textPassword"/>
+
+                <EditText
+                    android:id="@+id/editTextVerifiContrasena_MiPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Verificar Contraseña"
+                    android:inputType="textPassword"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

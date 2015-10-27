@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +55,10 @@ public class MainActivity extends AppCompatActivity
 
     String respuesta = "";
 
+    ProgressBar progressLogin;
+    View layoutProgress;
+    View layoutLogin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -67,13 +73,31 @@ public class MainActivity extends AppCompatActivity
         ingresar=(Button)findViewById(R.id.buttonLogin);
         olvidar=(TextView)findViewById(R.id.texViewOlvidarContrasena);
 
+        progressLogin = (ProgressBar) findViewById(R.id.progressLogin);
+
+        //Vistas del login
+        layoutProgress = (View) findViewById(R.id.layoutProgress);
+        layoutLogin = (View) findViewById(R.id.layoutLogin);
+
         ingresar.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                TareaLogin tareaRol = new TareaLogin();
-                tareaRol.execute(cedula.getText().toString(), contrasena.getText().toString());
+                String cedu = cedula.getText().toString();
+                String contra = contrasena.getText().toString();
+
+                if(cedu.equalsIgnoreCase("") || contra.equalsIgnoreCase(""))
+                {
+                    Toast.makeText(MainActivity.this, "Faltan Campos por Rellenar", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    layoutProgress.setVisibility(View.VISIBLE);
+                    layoutLogin.setVisibility(View.GONE);
+                    TareaLogin tareaRol = new TareaLogin();
+                    tareaRol.execute(cedula.getText().toString(), contrasena.getText().toString());
+                }
             }
         });
 
@@ -115,53 +139,11 @@ public class MainActivity extends AppCompatActivity
         private String respStr;
         private JSONObject msg;
 
+        int progreso;
+
         @TargetApi(Build.VERSION_CODES.KITKAT)
         protected Boolean doInBackground(String... params)
         {
-            /*boolean resul = true;
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpPost login = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerLogin.php/");
-            login.setHeader("content-type", "application/json");
-
-            try
-            {
-                msg = new JSONObject();
-                msg.put("cedula", params[0]);
-                msg.put("password", params[1]);
-                msg.put("option", "signInUsser");
-
-                StringEntity entity = new StringEntity(msg.toString());
-                login.setEntity(entity);
-
-                HttpResponse resp = httpClient.execute(login);
-                respStr = EntityUtils.toString(resp.getEntity());
-
-                respuesta = respStr;
-
-                /*JSONObject respJSON = new JSONObject(respStr);
-                JSONObject objItems = respJSON.getJSONObject("items");
-
-                String obj = String.valueOf(objItems);
-
-                if(obj.equalsIgnoreCase("No Existe"))
-                {
-                    existe = false;
-                }
-                else
-                {
-                    SesionUsuarios.setRol(objItems.getString("tipoUsuario"));
-                    SesionUsuarios.setCedula(objItems.getString("cedula"));
-                    SesionUsuarios.setNombre(objItems.getString("nombre"));
-                    existe = true;
-                }
-            }
-            catch(Exception ex)
-            {
-                Log.e("ServicioRest", "Error!", ex);
-                resul = false;
-            }
-            return resul;*/
-
             boolean resul = true;
             HttpClient httpClient;
             List<NameValuePair> nameValuePairs;
@@ -200,6 +182,11 @@ public class MainActivity extends AppCompatActivity
                         SesionUsuarios.setRol(obj.getString("tipoUsuario"));
                         SesionUsuarios.setCedula(obj.getString("cedula"));
                         SesionUsuarios.setNombre(obj.getString("nombre"));
+                        SesionUsuarios.setCorreo(obj.getString("correo"));
+                        SesionUsuarios.setTelefono(obj.getString("telefono"));
+                        SesionUsuarios.setContrasena(obj.getString("password"));
+                        SesionUsuarios.setDireccion(obj.getString("direccion"));
+                        SesionUsuarios.setIdUsuario(obj.getString("idUsuario"));
                         existe = true;
                     }
                 }
@@ -229,13 +216,38 @@ public class MainActivity extends AppCompatActivity
 
             //return false;
 
+            while (progreso<100)
+            {
+                progreso++;
+                publishProgress(progreso);
+                SystemClock.sleep(20);
+            }
+
             return resul;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progreso = 0;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            progressLogin.setProgress(values[0]);
         }
 
         protected void onPostExecute(Boolean result)
         {
-            Toast.makeText(MainActivity.this, respuesta
-                    , Toast.LENGTH_SHORT).show();
+            /*Toast.makeText(MainActivity.this, SesionUsuarios.getCorreo() + "\n"
+                    + SesionUsuarios.getRol() + "\n"
+                    + SesionUsuarios.getCedula() + "\n"
+                    + SesionUsuarios.getContrasena() + "\n"
+                    + SesionUsuarios.getDireccion() + "\n"
+                    + SesionUsuarios.getIdUsuario() + "\n"
+                    + SesionUsuarios.getNombre() + "\n"
+                    + SesionUsuarios.getTelefono() + "\n", Toast.LENGTH_SHORT).show();*/
 
             if(existe)
             {
@@ -243,6 +255,8 @@ public class MainActivity extends AppCompatActivity
                 {
                     Intent clientApp = new Intent(MainActivity.this, PrincipalMenu.class);
                     startActivity(clientApp);
+                    layoutProgress.setVisibility(View.GONE);
+                    layoutLogin.setVisibility(View.VISIBLE);
                 }
                 else
                 {
@@ -250,12 +264,16 @@ public class MainActivity extends AppCompatActivity
                     {
                         Intent clientApp = new Intent(MainActivity.this, PrincipalEmpleado.class);
                         startActivity(clientApp);
+                        layoutProgress.setVisibility(View.GONE);
+                        layoutLogin.setVisibility(View.VISIBLE);
                     }
                 }
             }
             else
             {
                 Toast.makeText(MainActivity.this, "El Usuario no Existe", Toast.LENGTH_SHORT).show();
+                layoutProgress.setVisibility(View.GONE);
+                layoutLogin.setVisibility(View.VISIBLE);
             }
         }
     }

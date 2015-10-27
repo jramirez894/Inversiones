@@ -1,9 +1,13 @@
 package com.example.billy.menu_principal;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -14,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.billy.cancelados.Cancelados;
 import com.example.billy.clientes.AgregarCliente;
@@ -23,13 +28,31 @@ import com.example.billy.devolucion.Devolucion;
 import com.example.billy.empleado.Empleados;
 import com.example.billy.garantias_product.Garantia;
 import com.example.billy.gastos.Reg_Gasto;
+import com.example.billy.interfaces_empleado.PrincipalEmpleado;
 import com.example.billy.inversiones.MainActivity;
+import com.example.billy.inversiones.SesionUsuarios;
 import com.example.billy.perfil.Perfil;
 import com.example.billy.productos.Productos;
 import com.example.billy.inversiones.R;
 import com.example.billy.saldo_caja.SaldoCaja;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PrincipalMenu extends AppCompatActivity
 {
@@ -43,6 +66,10 @@ public class PrincipalMenu extends AppCompatActivity
     MenuItem menuGuardar;
     MenuItem menuAgregar;
     MenuItem menuOrdenar;
+
+    boolean existe = false;
+
+    String respuesta = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -67,7 +94,6 @@ public class PrincipalMenu extends AppCompatActivity
         listaDrawer = (ListView) findViewById(R.id.lista_menu_drawer);
 
         listaClientes=(ListView)findViewById(R.id.listaClienes_MenuPrincipal);
-        ActualizarLista();
 
         String[] titulos = getResources().getStringArray(R.array.array_menu_drawer);
 
@@ -171,13 +197,17 @@ public class PrincipalMenu extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
+        //Listado de Vendedores
+        TareaListado tareaListado = new TareaListado();
+        tareaListado.execute();
     }
 
     public void ActualizarLista()
     {
-        items.clear();
-        items.add(new ItemListaPersonalizada("jeniffer",R.mipmap.editar,R.mipmap.eliminar, ""));
-        items.add(new ItemListaPersonalizada("miguel", R.mipmap.editar, R.mipmap.eliminar, ""));
+        //items.clear();
+        //items.add(new ItemListaPersonalizada("jeniffer",R.mipmap.editar,R.mipmap.eliminar, ""));
+        //items.add(new ItemListaPersonalizada("miguel", R.mipmap.editar, R.mipmap.eliminar, ""));
 
         listaClientes.setAdapter(new AdapterListaPersonalizada(PrincipalMenu.this, items));
     }
@@ -224,8 +254,6 @@ public class PrincipalMenu extends AppCompatActivity
             return true;
         }
 
-
-
         switch (item.getItemId())
         {
             case R.id.agregarCliente:
@@ -270,5 +298,87 @@ public class PrincipalMenu extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //Clases Asyntask para login y rol del usuario que inicia sesion
+
+    private class TareaListado extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerLogin.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option",  "listUssers"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+
+                //String obj
+                respuesta= String.valueOf(objVendedores);
+
+                if(respuesta.equalsIgnoreCase("No Existe"))
+                {
+                    existe = false;
+                }
+                else
+                {
+                    items.clear();
+                    for(int i=0; i<objVendedores.length(); i++)
+                    {
+                        JSONObject obj = objVendedores.getJSONObject(i);
+                        items.add(new ItemListaPersonalizada(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, ""));
+                        existe = true;
+                    }
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(PrincipalMenu.this, respuesta, Toast.LENGTH_SHORT).show();
+            listaClientes.setAdapter(new AdapterListaPersonalizada(PrincipalMenu.this, items));
+        }
     }
 }
