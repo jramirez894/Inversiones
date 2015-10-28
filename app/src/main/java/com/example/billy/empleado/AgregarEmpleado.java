@@ -14,12 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.example.billy.interfaces_empleado.PrincipalEmpleado;
 import com.example.billy.inversiones.R;
-import com.example.billy.inversiones.SesionUsuarios;
-import com.example.billy.menu_principal.PrincipalMenu;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -29,7 +24,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -174,7 +168,6 @@ public class AgregarEmpleado extends AppCompatActivity
     private class TareaUpdadte extends AsyncTask<String,Integer,Boolean>
     {
         private String respStr;
-        private JSONObject msg;
         JSONObject respJSON;
 
         @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -184,6 +177,7 @@ public class AgregarEmpleado extends AppCompatActivity
             HttpClient httpClient;
             List<NameValuePair> nameValuePairs;
             HttpPost httpPost;
+
             httpClient= new DefaultHttpClient();
             httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerLogin.php");
 
@@ -226,7 +220,10 @@ public class AgregarEmpleado extends AppCompatActivity
             {
                 e.printStackTrace();
                 resul = false;
-            } catch (JSONException e) {
+            }
+
+            catch (JSONException e)
+            {
                 e.printStackTrace();
             }
 

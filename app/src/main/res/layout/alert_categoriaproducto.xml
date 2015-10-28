@@ -22,4 +22,12 @@
         android:layout_marginTop="20dp"
         android:inputType="text"/>
 
+    <EditText
+        android:id="@+id/editDescripcionCategoria_aler_producto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Descripcion"
+        android:layout_marginTop="10dp"
+        android:inputType="text"/>
+
 </LinearLayout>

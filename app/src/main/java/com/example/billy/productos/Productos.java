@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -27,6 +28,7 @@ public class Productos extends AppCompatActivity
     public static ArrayList<ItemsListaProductos_Productos> arrayList = new ArrayList<ItemsListaProductos_Productos>();
 
     Spinner categoria;
+    EditText descripcion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -41,6 +43,7 @@ public class Productos extends AppCompatActivity
         buscarProducto = (AutoCompleteTextView)findViewById(R.id.autocompleteBuscarProducto_Producto);
         buscar = (ImageView)findViewById(R.id.imgBuscarProducto_Producto);
         categoria =(Spinner)findViewById(R.id.spinnerCategoria_FiltarProducto);
+        descripcion =(EditText)findViewById(R.id.textDescripcion_Producto);
         listaProductos = (ListView)findViewById(R.id.listaProductos_Producto);
         ActualizarLista();
 

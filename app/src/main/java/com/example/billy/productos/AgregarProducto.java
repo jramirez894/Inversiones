@@ -59,18 +59,19 @@ public class AgregarProducto extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                AlertaAgregar();
+                AlertaAgregarCategoria();
             }
         });
     }
 
     //Alerta para agregar una nueva categoria
-    public void AlertaAgregar()
+    public void AlertaAgregarCategoria()
     {
         LayoutInflater inflaterAlert = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialoglayout = inflaterAlert.inflate(R.layout.alert_categoriaproducto, null);
 
         final EditText categoria = (EditText)dialoglayout.findViewById(R.id.editCategoria_aler_producto);
+        final EditText descripcion = (EditText)dialoglayout.findViewById(R.id.editDescripcionCategoria_aler_producto);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(R.mipmap.guardar);
@@ -81,7 +82,9 @@ public class AgregarProducto extends AppCompatActivity
             public void onClick(DialogInterface dialogInterface, int i)
             {
                 String capCategoria = categoria.getText().toString();
-                if (capCategoria.equals(""))
+                String capDescripcion = descripcion.getText().toString();
+                if (capCategoria.equals("")||
+                        capDescripcion.equals(""))
                 {
                     Toast.makeText(AgregarProducto.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
                 }
