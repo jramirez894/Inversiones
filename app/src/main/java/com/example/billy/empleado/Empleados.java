@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -47,6 +48,7 @@ public class Empleados extends AppCompatActivity
     ImageView buscar;
 
     public static ArrayList<ItemListaEmpleado> arrayList = new ArrayList<ItemListaEmpleado>();
+    public static ArrayList<String> arrayListNombresVe = new ArrayList<String>();
 
 
     boolean existe = false;
@@ -86,15 +88,39 @@ public class Empleados extends AppCompatActivity
         //Listado de Vendedores
         TareaListado tareaListado = new TareaListado();
         tareaListado.execute();
+
+        //AutocompleteView
+        buscarEmpleado.setAdapter(new ArrayAdapter<String>(Empleados.this, android.R.layout.simple_dropdown_item_1line, arrayListNombresVe));
+
+        buscarEmpleado.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                String nombre = buscarEmpleado.getText().toString();
+                int posicion = 0;
+
+                for(int i = 0; i < arrayList.size(); i++)
+                {
+                    if(nombre.equalsIgnoreCase(arrayList.get(i).getNombre()))
+                    {
+                        posicion = i;
+                        break;
+                    }
+                }
+
+                ItemListaEmpleado empleado = arrayList.get(posicion);
+
+                Intent intent = new Intent(Empleados.this, V_Empleado.class);
+                intent.putExtra("nombre", empleado.getNombreEmp());
+                intent.putExtra("telefono", empleado.getTelefonoEmp());
+                startActivity(intent);
+            }
+        });
     }
 
     public void ActualizarLista()
     {
-        //arrayList.clear();
-
-        //arrayList.add(new ItemListaEmpleado("Jeniffer", R.mipmap.editar, R.mipmap.eliminar));
-        //arrayList.add(new ItemListaEmpleado("Migue", R.mipmap.editar, R.mipmap.eliminar));
-
         listaEmpleado.setAdapter(new AdapterListaEmpleado(this, arrayList));
     }
 
@@ -182,10 +208,12 @@ public class Empleados extends AppCompatActivity
                 else
                 {
                     arrayList.clear();
+                    arrayListNombresVe.clear();
                     for(int i=0; i<objVendedores.length(); i++)
                     {
                         JSONObject obj = objVendedores.getJSONObject(i);
                         arrayList.add(new ItemListaEmpleado(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, obj.getString("idUsuario"), obj.getString("cedula"), obj.getString("nombre"), obj.getString("direccion"), obj.getString("telefono"), obj.getString("correo"), obj.getString("password")));
+                        arrayListNombresVe.add(obj.getString("nombre"));
                         existe = true;
                     }
                 }

@@ -1,9 +1,12 @@
 package com.example.billy.empleado;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,21 @@ import android.widget.Toast;
 import com.example.billy.constantes.Constantes;
 import com.example.billy.inversiones.R;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +41,8 @@ import java.util.List;
 public class AdapterListaEmpleado extends ArrayAdapter
 {
     public static ItemListaEmpleado posicionItems;
+    boolean resul;
+    Object respuesta = "";
 
     public AdapterListaEmpleado(Context context,List objects)
     {
@@ -54,8 +74,6 @@ public class AdapterListaEmpleado extends ArrayAdapter
             public void onClick(View view)
             {
                 ItemListaEmpleado posicion = (ItemListaEmpleado) getItem(position);
-                //long posLista = Empleados.listaEmpleado.getItemIdAtPosition(position);
-                //String idUsuario = Constantes.arrayListIdVendedor.get(0);
 
                 String idUsuario = posicion.getIdUsuario();
                 String cedula = posicion.getCedulaEmp();
@@ -103,11 +121,10 @@ public class AdapterListaEmpleado extends ArrayAdapter
                 //Captura la Posicion del item de la lista
 
                 //Borrar un item de la lista
-                ArrayAdapter adapter = new AdapterListaEmpleado(getContext(), Empleados.arrayList);
-                adapter.remove(posicionItems);
-                //Se carga de nuevo la vista
-                Empleados.listaEmpleado.setAdapter(adapter);
-                Toast.makeText(getContext(), "Se Elimino Empleado Correctamente", Toast.LENGTH_SHORT).show();
+                String idUsuario = posicionItems.getIdUsuario();
+
+                TareaDelete delete = new TareaDelete();
+                delete.execute(idUsuario);
             }
         });
 
@@ -116,5 +133,82 @@ public class AdapterListaEmpleado extends ArrayAdapter
         builder.show();
     }
 
+    //Clases Asyntask para login y rol del usuario que inicia sesion
 
+    private class TareaDelete extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+        JSONObject respJSON;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerLogin.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("idUsuario", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("option", "deleteUsser"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                respJSON = new JSONObject(respStr);
+
+                respuesta= respJSON.get("items");
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            String resp = respuesta.toString();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setIcon(android.R.drawable.ic_menu_save);
+            builder.setTitle("Eliminar");
+            builder.setMessage(resp);
+            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ArrayAdapter adapter = new AdapterListaEmpleado(getContext(), Empleados.arrayList);
+                    adapter.remove(posicionItems);
+                    //Se carga de nuevo la vista
+                    Empleados.listaEmpleado.setAdapter(adapter);
+                }
+            });
+            builder.setCancelable(false);
+            builder.show();
+        }
+    }
 }
