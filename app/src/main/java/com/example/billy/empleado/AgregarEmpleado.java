@@ -164,7 +164,6 @@ public class AgregarEmpleado extends AppCompatActivity
     }
 
     //Clases Asyntask para login y rol del usuario que inicia sesion
-
     private class TareaUpdadte extends AsyncTask<String,Integer,Boolean>
     {
         private String respStr;

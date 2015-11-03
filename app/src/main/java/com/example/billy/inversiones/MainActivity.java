@@ -121,7 +121,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -137,7 +138,6 @@ public class MainActivity extends AppCompatActivity
     private class TareaLogin extends AsyncTask<String,Integer,Boolean>
     {
         private String respStr;
-        private JSONObject msg;
 
         int progreso;
 
@@ -210,7 +210,8 @@ public class MainActivity extends AppCompatActivity
                 e.printStackTrace();
                 resul = false;
             }
-            catch (JSONException e) {
+            catch (JSONException e)
+            {
                 e.printStackTrace();
             }
 
@@ -227,13 +228,15 @@ public class MainActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onPreExecute() {
+        protected void onPreExecute()
+        {
             super.onPreExecute();
             progreso = 0;
         }
 
         @Override
-        protected void onProgressUpdate(Integer... values) {
+        protected void onProgressUpdate(Integer... values)
+        {
             super.onProgressUpdate(values);
             progressLogin.setProgress(values[0]);
         }
