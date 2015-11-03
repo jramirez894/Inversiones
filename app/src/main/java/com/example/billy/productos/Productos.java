@@ -83,10 +83,20 @@ public class Productos extends AppCompatActivity
                 startActivity(intent);
             }
         });
+    }
 
+    public void cargarCategorias()
+    {
         arrayListCategoria.clear();
+        arrayListNombresCategoria.clear();
         TareaCategorias categorias = new TareaCategorias();
         categorias.execute();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        cargarCategorias();
     }
 
     public void ActualizarLista()

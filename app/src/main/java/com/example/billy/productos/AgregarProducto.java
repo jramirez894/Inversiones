@@ -78,9 +78,7 @@ public class AgregarProducto extends AppCompatActivity
         precioCompra = (EditText)findViewById(R.id.editTextPrecioCompra_Producto);
         precioVenta = (EditText)findViewById(R.id.editTextPrecioVenta_Producto);
 
-        arrayListCategoria.clear();
-        TareaCategorias categorias = new TareaCategorias();
-        categorias.execute();
+        cargarCategorias();
 
         agregarCat.setOnClickListener(new View.OnClickListener()
         {
@@ -90,6 +88,14 @@ public class AgregarProducto extends AppCompatActivity
                 AlertaAgregarCategoria();
             }
         });
+    }
+
+    public void cargarCategorias()
+    {
+        arrayListCategoria.clear();
+        arrayListNombresCategoria.clear();
+        TareaCategorias categorias = new TareaCategorias();
+        categorias.execute();
     }
 
     //Alerta para agregar una nueva categoria
@@ -353,6 +359,7 @@ public class AgregarProducto extends AppCompatActivity
                     if(resp.equalsIgnoreCase("Categoria agregada exitosamente"))
                     {
                         Toast.makeText(AgregarProducto.this, resp, Toast.LENGTH_SHORT).show();
+                        cargarCategorias();
                     }
                 }
             }
