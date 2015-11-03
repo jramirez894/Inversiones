@@ -22,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.billy.clientes.M_DatosCobro;
+import com.example.billy.empleado.AgregarEmpleado;
 import com.example.billy.empleado.Empleados;
 import com.example.billy.inversiones.R;
 
@@ -56,6 +57,9 @@ public class AgregarProducto extends AppCompatActivity
     public static ArrayList<ItemsListaCategoria> arrayListCategoria = new ArrayList<ItemsListaCategoria>();
     public static ArrayList<String> arrayListNombresCategoria = new ArrayList<String>();
 
+    boolean resul;
+    Object respuesta = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -74,6 +78,7 @@ public class AgregarProducto extends AppCompatActivity
         precioCompra = (EditText)findViewById(R.id.editTextPrecioCompra_Producto);
         precioVenta = (EditText)findViewById(R.id.editTextPrecioVenta_Producto);
 
+        arrayListCategoria.clear();
         TareaCategorias categorias = new TareaCategorias();
         categorias.execute();
 
@@ -113,7 +118,9 @@ public class AgregarProducto extends AppCompatActivity
                 }
                 else
                 {
-                    Toast.makeText(AgregarProducto.this, "Categoria Agregada Correctamente", Toast.LENGTH_SHORT).show();
+                    TareaCreateCategoria createCategoria = new TareaCreateCategoria();
+                    createCategoria.execute(capCategoria, capDescripcion);
+                    //Toast.makeText(AgregarProducto.this, "Categoria Agregada Correctamente", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -231,11 +238,6 @@ public class AgregarProducto extends AppCompatActivity
                 JSONObject respJSON = new JSONObject(respStr);
                 JSONArray objItems = respJSON.getJSONArray("items");
                 JSONArray objVendedores = objItems.getJSONArray(0);
-                //JSONObject obj = objItems.getJSONObject(0);
-
-                //String obj
-
-                arrayListCategoria.clear();
 
                 for(int i=0; i<objVendedores.length(); i++)
                 {
@@ -275,6 +277,89 @@ public class AgregarProducto extends AppCompatActivity
         {
             //Toast.makeText(Productos.this, respStr, Toast.LENGTH_SHORT).show();
             categoria.setAdapter(new ArrayAdapter<String>(AgregarProducto.this, android.R.layout.simple_spinner_dropdown_item, arrayListNombresCategoria));
+        }
+    }
+
+    //Clases Asyntask para login y rol del usuario que inicia sesion
+    private class TareaCreateCategoria extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        JSONObject respJSON;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerCategoria.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("nombre", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("descripcion", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("option", "createCategory"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                respJSON = new JSONObject(respStr);
+                respuesta= respJSON.get("items");
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(AgregarProducto.this, respStr.toString(), Toast.LENGTH_SHORT).show();
+
+            String resp = respuesta.toString();
+
+            if(resul)
+            {
+                if(resp.equalsIgnoreCase("La Categoria ya existe"))
+                {
+                    Toast.makeText(AgregarProducto.this, resp, Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    if(resp.equalsIgnoreCase("Categoria agregada exitosamente"))
+                    {
+                        Toast.makeText(AgregarProducto.this, resp, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            else
+            {
+                Toast.makeText(AgregarProducto.this, "Error al Agregar Vendedor", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

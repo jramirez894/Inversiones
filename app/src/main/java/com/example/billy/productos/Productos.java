@@ -84,6 +84,7 @@ public class Productos extends AppCompatActivity
             }
         });
 
+        arrayListCategoria.clear();
         TareaCategorias categorias = new TareaCategorias();
         categorias.execute();
     }
@@ -169,8 +170,6 @@ public class Productos extends AppCompatActivity
                 //JSONObject obj = objItems.getJSONObject(0);
 
                 //String obj
-
-                arrayListCategoria.clear();
 
                 for(int i=0; i<objVendedores.length(); i++)
                 {
