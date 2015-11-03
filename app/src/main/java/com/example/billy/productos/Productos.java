@@ -1,6 +1,9 @@
 package com.example.billy.productos;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,10 +19,29 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.billy.empleado.AdapterListaEmpleado;
+import com.example.billy.empleado.ItemListaEmpleado;
 import com.example.billy.inversiones.R;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Productos extends AppCompatActivity
 {
@@ -28,8 +50,14 @@ public class Productos extends AppCompatActivity
     public static ListView listaProductos;
     public static ArrayList<ItemsListaProductos_Productos> arrayList = new ArrayList<ItemsListaProductos_Productos>();
 
+    public static ArrayList<ItemsListaCategoria> arrayListCategoria = new ArrayList<ItemsListaCategoria>();
+    public static ArrayList<String> arrayListNombresCategoria = new ArrayList<String>();
+
     Spinner categoria;
     TextView descripcion;
+
+    boolean existe = false;
+    String respuesta = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -56,8 +84,8 @@ public class Productos extends AppCompatActivity
             }
         });
 
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(this,R.array.categoria_producto,android.R.layout.simple_spinner_dropdown_item);
-        categoria.setAdapter(adapter);
+        TareaCategorias categorias = new TareaCategorias();
+        categorias.execute();
     }
 
     public void ActualizarLista()
@@ -106,5 +134,82 @@ public class Productos extends AppCompatActivity
         }
 
         return super.onKeyUp(keyCode, event);
+    }
+
+    //Clases Asyntask para traer los datos de la tabla categorias
+
+    private class TareaCategorias extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerCategoria.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "getAllCategory"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+                //JSONObject obj = objItems.getJSONObject(0);
+
+                //String obj
+
+                arrayListCategoria.clear();
+
+                for(int i=0; i<objVendedores.length(); i++)
+                {
+                    JSONObject obj = objVendedores.getJSONObject(i);
+                    arrayListCategoria.add(new ItemsListaCategoria(obj.getString("idCategoria"), obj.getString("nombre"), obj.getString("descripcion")));
+                    arrayListNombresCategoria.add(obj.getString("nombre"));
+                    resul = true;
+                }
+
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(Productos.this, respStr, Toast.LENGTH_SHORT).show();
+            categoria.setAdapter(new ArrayAdapter<String>(Productos.this, android.R.layout.simple_spinner_dropdown_item, arrayListNombresCategoria));
+        }
     }
 }

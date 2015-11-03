@@ -50,7 +50,6 @@ public class Empleados extends AppCompatActivity
     public static ArrayList<ItemListaEmpleado> arrayList = new ArrayList<ItemListaEmpleado>();
     public static ArrayList<String> arrayListNombresVe = new ArrayList<String>();
 
-
     boolean existe = false;
     String respuesta = "";
 
