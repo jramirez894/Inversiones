@@ -1,7 +1,11 @@
 package com.example.billy.gastos;
 
+import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,11 +20,32 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.billy.constantes.Constantes;
+import com.example.billy.interfaces_empleado.PrincipalEmpleado;
 import com.example.billy.inversiones.R;
+import com.example.billy.inversiones.SesionUsuarios;
+import com.example.billy.menu_principal.PrincipalMenu;
+import com.example.billy.productos.ItemsListaCategoria;
 import com.example.billy.saldo_caja.SaldoCaja;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class Historial extends AppCompatActivity implements View.OnClickListener {
@@ -34,6 +59,12 @@ public class Historial extends AppCompatActivity implements View.OnClickListener
     private SimpleDateFormat dateFormatterFin;
     private DatePickerDialog datePickerDialogFin;
 
+    String respuesta = "";
+
+    public static ArrayList<ItemLista_InfHistorial> arrayList = new ArrayList<ItemLista_InfHistorial>();
+
+    String capInicio;
+    String capFin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -69,25 +100,26 @@ public class Historial extends AppCompatActivity implements View.OnClickListener
             @Override
             public void onClick(View view)
             {
-                String capInico = fechaInicio.getText().toString();
-                String capFin = fechaFin.getText().toString();
+                capInicio = fechaInicio.getText().toString().replace("-", "");
+                capFin = fechaFin.getText().toString().replace("-", "");
 
-                Constantes.fechaInicio = capInico;
-                Constantes.fechaFin = capFin;
+                String capInicio2 = fechaInicio.getText().toString();
+                String capFin2 = fechaInicio.getText().toString();
 
-                if (capInico.equals("")||
+                Constantes.fechaInicio = capInicio2;
+                Constantes.fechaFin = capFin2;
+
+                if (capInicio.equals("")||
                         capFin.equals(""))
                 {
                     Toast.makeText(Historial.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    Intent intent = new Intent(Historial.this,Inf_Historial.class);
-                    intent.putExtra("Inicio",capInico);
-                    intent.putExtra("Fin",capFin);
-                    startActivity(intent);
+                    arrayList.clear();
+                    TareaFecha tareaFecha = new TareaFecha();
+                    tareaFecha.execute(capInicio, capFin);
                 }
-
             }
         });
     }
@@ -193,5 +225,82 @@ public class Historial extends AppCompatActivity implements View.OnClickListener
         }
 
         return super.onKeyUp(keyCode, event);
+    }
+
+    //Clases Asyntask para filtrar por fecha
+
+    private class TareaFecha extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+
+        int progreso;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerGastos.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("fechaUno", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("fechaDos", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("option", "getAllDate"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objFechas = objItems.getJSONArray(0);
+                //JSONObject obj = objItems.getJSONObject(0);
+
+                //String obj
+
+                for(int i=0; i<objFechas.length(); i++)
+                {
+                    JSONObject obj = objFechas.getJSONObject(i);
+                    arrayList.add(new ItemLista_InfHistorial(obj.getString("descripcion"), obj.getString("valor"), obj.getString("idTipoGasto")));
+                    resul = true;
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+
+        protected void onPostExecute(Boolean result)
+        {
+            Intent intent = new Intent(Historial.this,Inf_Historial.class);
+            startActivity(intent);
+        }
     }
 }

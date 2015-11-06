@@ -5,9 +5,9 @@ package com.example.billy.gastos;
  */
 public class ItemLista_InfHistorial
 {
-    String tipoGasto;
-    String valor;
     String descripcion;
+    String valor;
+    String tipoGasto;
 
     public ItemLista_InfHistorial(String descripcion, String valor, String tipoGasto)
     {

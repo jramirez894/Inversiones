@@ -148,7 +148,6 @@ public class AgregarProducto extends AppCompatActivity
         int id = item.getItemId();
 
         String nom = nombre.getText().toString();
-        String cate = categoria.getSelectedItem().toString();
         String des = descripcion.getText().toString();
         String cant = cantidad.getText().toString();
         String preCom = precioCompra.getText().toString();

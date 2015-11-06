@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.example.billy.constantes.Constantes;
 import com.example.billy.inversiones.R;
 
+import java.util.ArrayList;
+
 public class Inf_Historial extends AppCompatActivity
 {
     TextView rango;
@@ -32,6 +34,8 @@ public class Inf_Historial extends AppCompatActivity
     ImageView imaGasolina;
     ImageView imaComida;
     Intent intent;
+
+    public static ArrayList<ItemLista_InfHistorial> arrayList = new ArrayList<ItemLista_InfHistorial>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -57,7 +61,7 @@ public class Inf_Historial extends AppCompatActivity
         imaGasolina = (ImageView)findViewById(R.id.imageInfGasolina_InfHistorial);
         imaComida = (ImageView)findViewById(R.id.imageInfComida_InfHistorial);
 
-        rango.setText(Constantes.fechaInicio + "//" + Constantes.fechaFin);
+        rango.setText(Constantes.fechaInicio + " // " + Constantes.fechaFin);
 
 
 
@@ -66,6 +70,26 @@ public class Inf_Historial extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
+                arrayList.clear();
+
+                String idTipoGasto = "";
+
+                for(int i = 0; i < Reg_Gasto.arrayListTipoGasto.size(); i++)
+                {
+                    if("Renta".equalsIgnoreCase(Reg_Gasto.arrayListTipoGasto.get(i).getNombre()))
+                    {
+                        idTipoGasto = Reg_Gasto.arrayListTipoGasto.get(i).getIdTipoGasto();
+                    }
+                }
+
+                for(int i = 0; i < Historial.arrayList.size(); i++)
+                {
+                    if(idTipoGasto.equalsIgnoreCase(Historial.arrayList.get(i).getTipoGasto()))
+                    {
+                        arrayList.add(new ItemLista_InfHistorial("Descripción: " + Historial.arrayList.get(i).getDescripcion(), "Valor: $" +  Historial.arrayList.get(i).getValor(), "Renta"));
+                    }
+                }
+
                 intent = new Intent(Inf_Historial.this,Lista_InfHistorial.class);
                 intent.putExtra("Titulo","Renta");
                 startActivity(intent);
@@ -77,6 +101,26 @@ public class Inf_Historial extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
+                arrayList.clear();
+
+                String idTipoGasto = "";
+
+                for(int i = 0; i < Reg_Gasto.arrayListTipoGasto.size(); i++)
+                {
+                    if("Servicios".equalsIgnoreCase(Reg_Gasto.arrayListTipoGasto.get(i).getNombre()))
+                    {
+                        idTipoGasto = Reg_Gasto.arrayListTipoGasto.get(i).getIdTipoGasto();
+                    }
+                }
+
+                for(int i = 0; i < Historial.arrayList.size(); i++)
+                {
+                    if(idTipoGasto.equalsIgnoreCase(Historial.arrayList.get(i).getTipoGasto()))
+                    {
+                        arrayList.add(new ItemLista_InfHistorial("Descripción: " + Historial.arrayList.get(i).getDescripcion(), "Valor: $" +  Historial.arrayList.get(i).getValor(), "Servicios"));
+                    }
+                }
+
                 intent = new Intent(Inf_Historial.this,Lista_InfHistorial.class);
                 intent.putExtra("Titulo","Servicios");
                 startActivity(intent);
@@ -88,6 +132,26 @@ public class Inf_Historial extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
+                arrayList.clear();
+
+                String idTipoGasto = "";
+
+                for(int i = 0; i < Reg_Gasto.arrayListTipoGasto.size(); i++)
+                {
+                    if("Empleados".equalsIgnoreCase(Reg_Gasto.arrayListTipoGasto.get(i).getNombre()))
+                    {
+                        idTipoGasto = Reg_Gasto.arrayListTipoGasto.get(i).getIdTipoGasto();
+                    }
+                }
+
+                for(int i = 0; i < Historial.arrayList.size(); i++)
+                {
+                    if(idTipoGasto.equalsIgnoreCase(Historial.arrayList.get(i).getTipoGasto()))
+                    {
+                        arrayList.add(new ItemLista_InfHistorial("Descripción: " + Historial.arrayList.get(i).getDescripcion(), "Valor: $" +  Historial.arrayList.get(i).getValor(), "Empleados"));
+                    }
+                }
+
                 intent = new Intent(Inf_Historial.this,Lista_InfHistorial.class);
                 intent.putExtra("Titulo","Empleados");
                 startActivity(intent);

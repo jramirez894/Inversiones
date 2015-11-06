@@ -64,11 +64,10 @@ public class Lista_InfHistorial extends AppCompatActivity
 
     public void ActualizarLista()
     {
-        arrayList.clear();
+        //arrayList.clear();
+        //arrayList.add(new ItemLista_InfHistorial("Descripcion: " + "Se gasto Mucho", "Valor: " + "20.000", "Gasolina"));
 
-        arrayList.add(new ItemLista_InfHistorial("Descripcion: " + "Se gasto Mucho", "Valor: " + "20.000", "Gasolina"));
-
-        listaInf.setAdapter(new Adapter_InfHistorial(Lista_InfHistorial.this, arrayList));
+        listaInf.setAdapter(new Adapter_InfHistorial(Lista_InfHistorial.this, Inf_Historial.arrayList));
     }
 
     @Override
