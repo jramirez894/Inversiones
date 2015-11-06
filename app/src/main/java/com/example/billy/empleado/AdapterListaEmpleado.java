@@ -133,7 +133,7 @@ public class AdapterListaEmpleado extends ArrayAdapter
         builder.show();
     }
 
-    //Clases Asyntask para login y rol del usuario que inicia sesion
+    //Clases Asyntask para eliminar un empleado
 
     private class TareaDelete extends AsyncTask<String,Integer,Boolean>
     {

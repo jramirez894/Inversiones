@@ -19,6 +19,12 @@ public class V_Producto extends AppCompatActivity
     TextView precioCompra;
     TextView precioVenta;
 
+    String nom = "";
+    String idC = "";
+    String des = "";
+    String can = "";
+    String preC = "";
+    String preV = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -36,6 +42,21 @@ public class V_Producto extends AppCompatActivity
         cantidad = (TextView)findViewById(R.id.textCantidad_VProducto);
         precioCompra = (TextView)findViewById(R.id.textPrecioCompra_VProducto);
         precioVenta = (TextView)findViewById(R.id.textPrecioVenta_VProducto);
+
+        Bundle extra = getIntent().getExtras();
+        nom = extra.getString("nombre");
+        idC = extra.getString("idCategoria");
+        des = extra.getString("descripcion");
+        can = extra.getString("cantidad");
+        preC = extra.getString("precioCompra");
+        preV = extra.getString("precioVenta");
+
+        nombre.setText("Nombre: " + nom);
+        categoria.setText("Categoria: " + idC);
+        descripcion.setText("Descripcion: " + des);
+        cantidad.setText("Cantidad: " + can);
+        precioCompra.setText("Precio Compra: " + preC);
+        precioVenta.setText("Precio Venta: " + preV);
     }
 
     @Override

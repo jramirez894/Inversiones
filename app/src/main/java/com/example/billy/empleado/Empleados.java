@@ -165,7 +165,7 @@ public class Empleados extends AppCompatActivity
         return super.onKeyUp(keyCode, event);
     }
 
-    //Clases Asyntask para login y rol del usuario que inicia sesion
+    //Clases Asyntask para listar los empleados que hay actualmente en el servidor
 
     private class TareaListado extends AsyncTask<String,Integer,Boolean>
     {

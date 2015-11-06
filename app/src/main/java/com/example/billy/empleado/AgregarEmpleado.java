@@ -140,8 +140,8 @@ public class AgregarEmpleado extends AppCompatActivity
                 String cor = correo.getText().toString();
                 String cont = contrasena.getText().toString();
 
-                TareaUpdadte tareaUpdadte = new TareaUpdadte();
-                tareaUpdadte.execute(ced, nom, dir, tel, cor, cont);
+                TareaCreate tareaCreate = new TareaCreate();
+                tareaCreate.execute(ced, nom, dir, tel, cor, cont);
             }
         });
 
@@ -163,8 +163,8 @@ public class AgregarEmpleado extends AppCompatActivity
         return super.onKeyUp(keyCode, event);
     }
 
-    //Clases Asyntask para login y rol del usuario que inicia sesion
-    private class TareaUpdadte extends AsyncTask<String,Integer,Boolean>
+    //Clases Asyntask para agregar un empleado
+    private class TareaCreate extends AsyncTask<String,Integer,Boolean>
     {
         private String respStr;
         JSONObject respJSON;

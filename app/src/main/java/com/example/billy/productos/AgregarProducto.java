@@ -113,17 +113,13 @@ public class AgregarProducto extends AppCompatActivity
         builder.setView(dialoglayout);
         builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i)
-            {
+            public void onClick(DialogInterface dialogInterface, int i) {
                 String capCategoria = categoria.getText().toString();
                 String capDescripcion = descripcion.getText().toString();
-                if (capCategoria.equals("")||
-                        capDescripcion.equals(""))
-                {
+                if (capCategoria.equals("") ||
+                        capDescripcion.equals("")) {
                     Toast.makeText(AgregarProducto.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
+                } else {
                     TareaCreateCategoria createCategoria = new TareaCreateCategoria();
                     createCategoria.execute(capCategoria, capDescripcion);
                     //Toast.makeText(AgregarProducto.this, "Categoria Agregada Correctamente", Toast.LENGTH_SHORT).show();
@@ -154,9 +150,9 @@ public class AgregarProducto extends AppCompatActivity
         String nom = nombre.getText().toString();
         String cate = categoria.getSelectedItem().toString();
         String des = descripcion.getText().toString();
-        String cant = nombre.getText().toString();
-        String preCom = nombre.getText().toString();
-        String preVen = nombre.getText().toString();
+        String cant = cantidad.getText().toString();
+        String preCom = precioCompra.getText().toString();
+        String preVen = precioVenta.getText().toString();
 
 
         switch (item.getItemId())
@@ -180,19 +176,44 @@ public class AgregarProducto extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    public String cargarCategoriaActual()
+    {
+        String id = "";
+        String nombreCategoria = categoria.getSelectedItem().toString();
+
+        for(int i = 0; i < arrayListCategoria.size(); i++)
+        {
+            if(nombreCategoria.equalsIgnoreCase(arrayListCategoria.get(i).getNombre()))
+            {
+                id = arrayListCategoria.get(i).getIdCategoria();
+            }
+        }
+
+        return id;
+    }
+
     public void guardarProducto()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(android.R.drawable.ic_menu_save);
         builder.setTitle("Guardar");
         builder.setMessage("¿Agregar Producto?");
-        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
+        {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(AgregarProducto.this, "Su Registro fue Exitoso", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(AgregarProducto.this, Productos.class);
-                startActivity(intent);
-                finish();
+            public void onClick(DialogInterface dialog, int which)
+            {
+                String nom = nombre.getText().toString();
+                String des = descripcion.getText().toString();
+                String cant = cantidad.getText().toString();
+                String preCom = precioCompra.getText().toString();
+                String preVen = precioVenta.getText().toString();
+
+                //Nombre de la categoria
+                String cat = cargarCategoriaActual();
+
+                TareaCreateProducto tareaCreate = new TareaCreateProducto();
+                tareaCreate.execute(nom, des, cant, preCom, preVen, cat);
             }
         });
 
@@ -360,6 +381,101 @@ public class AgregarProducto extends AppCompatActivity
                     {
                         Toast.makeText(AgregarProducto.this, resp, Toast.LENGTH_SHORT).show();
                         cargarCategorias();
+                    }
+                }
+            }
+            else
+            {
+                Toast.makeText(AgregarProducto.this, "Error al Agregar Vendedor", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    //Clases Asyntask para agregar un producto
+    private class TareaCreateProducto extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        JSONObject respJSON;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerProducto.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("nombre", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("descripcion", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("cantidad", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("precioCompra", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("precioVenta", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("idCategoria", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("option", "createProducto"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                respJSON = new JSONObject(respStr);
+                //JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                respuesta= respJSON.get("items");
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(AgregarProducto.this, respStr.toString(), Toast.LENGTH_SHORT).show();
+
+            String resp = respuesta.toString();
+
+            if(resul)
+            {
+                if(resp.equalsIgnoreCase("El Producto ya existe"))
+                {
+                    Toast.makeText(AgregarProducto.this, resp, Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    if(resp.equalsIgnoreCase("Producto agregado exitosamente"))
+                    {
+                        Toast.makeText(AgregarProducto.this, resp, Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(AgregarProducto.this, Productos.class);
+                        startActivity(intent);
+                        finish();
                     }
                 }
             }

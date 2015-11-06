@@ -5,87 +5,93 @@
     android:orientation="vertical"
     android:padding="20dp">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Datos Producto"
-            android:textSize="25sp"
-            android:gravity="center"
-            android:textColor="@android:color/background_dark"
-            android:textStyle="bold"/>
-
-        <EditText
-            android:id="@+id/editTextNombre_Producto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nombre Producto"
-            android:textSize="20sp"
-            android:layout_marginTop="60dp"
-            android:inputType="text"/>
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <Spinner
-                android:id="@+id/spinnerCategoria_Producto"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="5dp">
-            </Spinner>
+                android:text="Datos Producto"
+                android:textSize="25sp"
+                android:gravity="center"
+                android:textColor="@android:color/background_dark"
+                android:textStyle="bold"/>
 
-            <ImageView
-                android:id="@+id/imageAddCategoria_Producto"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/editTextNombre_Producto"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/mas"
-                android:layout_gravity="center"/>
+                android:hint="Nombre Producto"
+                android:textSize="20sp"
+                android:layout_marginTop="60dp"
+                android:inputType="text"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/spinnerCategoria_Producto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="5dp">
+                </Spinner>
+
+                <ImageView
+                    android:id="@+id/imageAddCategoria_Producto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/mas"
+                    android:layout_gravity="center"/>
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/editTextDescripcion_Producto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Descripcion Producto"
+                android:textSize="20sp"
+                android:layout_marginTop="5dp"
+                android:inputType="text"/>
+
+            <EditText
+                android:id="@+id/editTextCantidad_Producto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Cantidad"
+                android:textSize="20sp"
+                android:layout_marginTop="10dp"
+                android:inputType="number"/>
+
+            <EditText
+                android:id="@+id/editTextPrecioCompra_Producto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Precio de Compra"
+                android:textSize="20sp"
+                android:layout_marginTop="10dp"
+                android:inputType="number"/>
+
+            <EditText
+                android:id="@+id/editTextPrecioVenta_Producto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Precio de Venta"
+                android:textSize="20sp"
+                android:layout_marginTop="10dp"
+                android:inputType="number"/>
 
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/editTextDescripcion_Producto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Descripcion Producto"
-            android:textSize="20sp"
-            android:layout_marginTop="5dp"
-            android:inputType="text"/>
-
-        <EditText
-            android:id="@+id/editTextCantidad_Producto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Cantidad"
-            android:textSize="20sp"
-            android:layout_marginTop="10dp"
-            android:inputType="number"/>
-
-        <EditText
-            android:id="@+id/editTextPrecioCompra_Producto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Precio de Compra"
-            android:textSize="20sp"
-            android:layout_marginTop="10dp"
-            android:inputType="number"/>
-
-        <EditText
-            android:id="@+id/editTextPrecioVenta_Producto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Precio de Venta"
-            android:textSize="20sp"
-            android:layout_marginTop="10dp"
-            android:inputType="number"/>
-
-    </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

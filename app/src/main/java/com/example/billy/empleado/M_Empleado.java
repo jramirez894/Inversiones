@@ -197,7 +197,7 @@ public class M_Empleado extends AppCompatActivity
         return super.onKeyUp(keyCode, event);
     }
 
-    //Clases Asyntask para login y rol del usuario que inicia sesion
+    //Clases Asyntask para actualizar un empleado
 
     private class TareaUpdadte extends AsyncTask<String,Integer,Boolean>
     {
