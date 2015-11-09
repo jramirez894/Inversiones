@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class Lista_InfHistorial extends AppCompatActivity
 {
     TextView titulo;
+    TextView total;
     ArrayList<ItemLista_InfHistorial> arrayList = new ArrayList<ItemLista_InfHistorial>();
     ListView listaInf;
     String txtTitulo;
@@ -34,6 +35,7 @@ public class Lista_InfHistorial extends AppCompatActivity
         txtTitulo = bundle.getString("Titulo");
 
         titulo = (TextView)findViewById(R.id.texviewDetalle_ListaInfHistorial);
+        total = (TextView)findViewById(R.id.texviewTotal_ListaInfHistorial);
         listaInf = (ListView)findViewById(R.id.lisViewListaInfHistorial);
 
         ActualizarLista();
@@ -60,6 +62,23 @@ public class Lista_InfHistorial extends AppCompatActivity
                 titulo.setText("Detalle Comida");
                 break;
         }
+
+        //mostrar totales
+        total.setText("Total: " + String.valueOf(sumarTotales()));
+    }
+
+    public int sumarTotales()
+    {
+        int suma = 0;
+
+        for(int i = 0; i < Inf_Historial.arrayList.size(); i++)
+        {
+            String split = Inf_Historial.arrayList.get(i).getValor();
+            String[] separar = split.split(" ");
+            suma = suma + Integer.valueOf(separar[1]);
+        }
+
+        return suma;
     }
 
     public void ActualizarLista()

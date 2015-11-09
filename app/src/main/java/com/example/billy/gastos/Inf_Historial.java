@@ -86,7 +86,7 @@ public class Inf_Historial extends AppCompatActivity
                 {
                     if(idTipoGasto.equalsIgnoreCase(Historial.arrayList.get(i).getTipoGasto()))
                     {
-                        arrayList.add(new ItemLista_InfHistorial("Descripción: " + Historial.arrayList.get(i).getDescripcion(), "Valor: $" +  Historial.arrayList.get(i).getValor(), "Renta"));
+                        arrayList.add(new ItemLista_InfHistorial("Descripción: " + Historial.arrayList.get(i).getDescripcion(), "Valor: " +  Historial.arrayList.get(i).getValor(), "Renta"));
                     }
                 }
 
@@ -117,7 +117,7 @@ public class Inf_Historial extends AppCompatActivity
                 {
                     if(idTipoGasto.equalsIgnoreCase(Historial.arrayList.get(i).getTipoGasto()))
                     {
-                        arrayList.add(new ItemLista_InfHistorial("Descripción: " + Historial.arrayList.get(i).getDescripcion(), "Valor: $" +  Historial.arrayList.get(i).getValor(), "Servicios"));
+                        arrayList.add(new ItemLista_InfHistorial("Descripción: " + Historial.arrayList.get(i).getDescripcion(), "Valor: " +  Historial.arrayList.get(i).getValor(), "Servicios"));
                     }
                 }
 
@@ -148,7 +148,7 @@ public class Inf_Historial extends AppCompatActivity
                 {
                     if(idTipoGasto.equalsIgnoreCase(Historial.arrayList.get(i).getTipoGasto()))
                     {
-                        arrayList.add(new ItemLista_InfHistorial("Descripción: " + Historial.arrayList.get(i).getDescripcion(), "Valor: $" +  Historial.arrayList.get(i).getValor(), "Empleados"));
+                        arrayList.add(new ItemLista_InfHistorial("Descripción: " + Historial.arrayList.get(i).getDescripcion(), "Valor: " +  Historial.arrayList.get(i).getValor(), "Empleados"));
                     }
                 }
 
