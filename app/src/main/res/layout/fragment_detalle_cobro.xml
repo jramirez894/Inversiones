@@ -4,12 +4,8 @@
     android:layout_height="match_parent"
     tools:context="com.example.billy.clientes.DetalleCobro"
     android:orientation="vertical"
-    android:padding="20dp">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    android:padding="20dp"
+    style="@style/fondo">
 
         <TextView
             android:layout_width="match_parent"
@@ -20,52 +16,62 @@
             android:textColor="@android:color/background_dark"
             android:textStyle="bold"/>
 
-        <AutoCompleteTextView
-            android:id="@+id/autoCompleteBuscarEmpleado_DetalleCobro"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableRight="@android:drawable/ic_menu_search"
-            android:hint="Nombre Empleado"
-            android:layout_marginTop="15dp"/>
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textViewnomEmpleado_DetalleCobro"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="20sp"
-            android:textColor="@android:color/background_dark"
-            android:layout_marginTop="5dp"/>
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteBuscarEmpleado_DetalleCobro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@android:drawable/ic_menu_search"
+                android:hint="Nombre Empleado"
+                android:layout_marginTop="15dp"/>
 
-        <TextView
-            android:id="@+id/textViewtelEmpleado_DetalleCobro"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="20sp"
-            android:textColor="@android:color/background_dark"
-            android:layout_marginTop="5dp"/>
+            <TextView
+                android:id="@+id/textViewnomEmpleado_DetalleCobro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="20sp"
+                android:textColor="@android:color/background_dark"
+                android:layout_marginTop="5dp"/>
 
-        <Spinner
-            android:id="@+id/spinnerFechaCobro_DetalleCobro"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-        </Spinner>
+            <TextView
+                android:id="@+id/textViewtelEmpleado_DetalleCobro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="20sp"
+                android:textColor="@android:color/background_dark"
+                android:layout_marginTop="5dp"/>
 
-        <Spinner
-            android:id="@+id/spinnerDiaCobro_DetalleCobro"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-        </Spinner>
+            <Spinner
+                android:id="@+id/spinnerFechaCobro_DetalleCobro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+            </Spinner>
 
-        <Spinner
-            android:id="@+id/spinnerHoraCobro_DetalleCobro"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
-        </Spinner>
+            <Spinner
+                android:id="@+id/spinnerDiaCobro_DetalleCobro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+            </Spinner>
 
-    </LinearLayout>
+            <Spinner
+                android:id="@+id/spinnerHoraCobro_DetalleCobro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+            </Spinner>
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

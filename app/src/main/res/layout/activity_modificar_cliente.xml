@@ -2,7 +2,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/fondito">
+    style="@style/fondo">
 
     <TabHost
         android:id="@android:id/tabhost"

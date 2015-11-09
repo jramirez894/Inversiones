@@ -11,4 +11,8 @@
         <item name="android:background">@drawable/fondito</item>
     </style>
 
+    <style name="fondo_alerta">
+        <item name="android:background">@drawable/fondo_alert</item>
+    </style>
+
 </resources>
