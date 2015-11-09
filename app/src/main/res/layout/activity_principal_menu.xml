@@ -49,6 +49,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"
-        android:background="#a0b9b8"/>
+        android:background="#efe9e9"/>
 
 </android.support.v4.widget.DrawerLayout>
