@@ -316,10 +316,10 @@ public class PrincipalMenu extends AppCompatActivity
             List<NameValuePair> nameValuePairs;
             HttpPost httpPost;
             httpClient= new DefaultHttpClient();
-            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerLogin.php");
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerCliente.php");
 
             nameValuePairs = new ArrayList<NameValuePair>();
-            nameValuePairs.add(new BasicNameValuePair("option",  "listUssers"));
+            nameValuePairs.add(new BasicNameValuePair("option",  "getAllClient"));
 
             try
             {
@@ -395,4 +395,5 @@ public class PrincipalMenu extends AppCompatActivity
 
         return super.onKeyUp(keyCode, event);
     }
+
 }

@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.billy.clientes.DatosCobro"
     android:orientation="vertical"
-    android:padding="20dp"
-    style="@style/fondo">
+    android:padding="20dp">
 
     <TextView
         android:layout_width="match_parent"

@@ -104,7 +104,7 @@ public class Historial extends AppCompatActivity implements View.OnClickListener
                 capFin = fechaFin.getText().toString().replace("-", "");
 
                 String capInicio2 = fechaInicio.getText().toString();
-                String capFin2 = fechaInicio.getText().toString();
+                String capFin2 = fechaFin.getText().toString();
 
                 Constantes.fechaInicio = capInicio2;
                 Constantes.fechaFin = capFin2;
@@ -267,7 +267,7 @@ public class Historial extends AppCompatActivity implements View.OnClickListener
                 for(int i=0; i<objFechas.length(); i++)
                 {
                     JSONObject obj = objFechas.getJSONObject(i);
-                    arrayList.add(new ItemLista_InfHistorial(obj.getString("descripcion"), obj.getString("valor"), obj.getString("idTipoGasto")));
+                    arrayList.add(new ItemLista_InfHistorial(obj.getString("descripcion"), obj.getString("valor"), obj.getString("idTipoGasto"), R.mipmap.informacion));
                     resul = true;
                 }
 

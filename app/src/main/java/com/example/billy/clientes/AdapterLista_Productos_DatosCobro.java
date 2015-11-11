@@ -42,9 +42,11 @@ public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
 
         TextView nomProducto=(TextView)convertView.findViewById(R.id.textViewNombreProducto_DatosCobro);
         ImageView eliminar=(ImageView)convertView.findViewById(R.id.imageViewEliminarProducto_DatosCobro);
+        ImageView info=(ImageView)convertView.findViewById(R.id.imageViewInfoProducto_DatosCobro);
 
         nomProducto.setText(items.getNomProducto());
         eliminar.setImageResource(items.getEliminar());
+        info.setImageResource(items.getInfo());
 
         eliminar.setOnClickListener(new View.OnClickListener()
         {
@@ -55,6 +57,8 @@ public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
                 EliminarProducto();
             }
         });
+
+
         return convertView;
     }
 

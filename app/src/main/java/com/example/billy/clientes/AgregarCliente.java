@@ -49,7 +49,6 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
 
     //Variables del tab DatosCobro
         String buscarProducto="";
-        String valorProducto="";
         String fechaVenta="";
         String totalPagar="";
         String abono="";
@@ -165,7 +164,7 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
         try
         {
             //Variables Asociadas tab DatosPersonales
-            cedula = DatosPersonales.ced.getText().toString();
+            cedula = DatosPersonales.buscarCedula.getText().toString();
             nombre = DatosPersonales.nom.getText().toString();
             direccion = DatosPersonales.direccion.getText().toString();
             telefono = DatosPersonales.telefono.getText().toString();
@@ -175,7 +174,6 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
 
             //Variables Asociadas tab DatosCobro
             buscarProducto =DatosCobro.buscarProducto.getText().toString();
-            valorProducto =DatosCobro.valorProducto.getText().toString();
             fechaVenta =DatosCobro.fechaVenta.getText().toString();
             totalPagar =DatosCobro.totalPagar.getText().toString();
             abono =DatosCobro.abono.getText().toString();
@@ -198,7 +196,6 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
                             nomEmpresa.equals("")||
                             dirEmpresa.equals("")||
                             buscarProducto.equals("")||
-                            valorProducto.equals("")||
                             totalPagar.equals("")||
                             valorRestante.equals("")||
                             nomEmpleado.equals("")||

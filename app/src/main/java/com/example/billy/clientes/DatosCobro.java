@@ -31,7 +31,6 @@ public class DatosCobro extends Fragment implements View.OnClickListener
     private SimpleDateFormat dateFormatter;
 
     public static AutoCompleteTextView buscarProducto;
-    public static EditText valorProducto;
     public static EditText fechaVenta;
     public static EditText totalPagar;
     public static EditText abono;
@@ -45,7 +44,6 @@ public class DatosCobro extends Fragment implements View.OnClickListener
         view = inflater.inflate(R.layout.fragment_datos_cobro, container, false);
 
         buscarProducto=(AutoCompleteTextView)view.findViewById(R.id.autoCompleteBuscarProducto_DatosCobro);
-        valorProducto=(EditText)view.findViewById(R.id.editPrecioProducto_DatosCobro);
         totalPagar=(EditText)view.findViewById(R.id.editTotalPagar_DatosCobro);
         abono=(EditText)view.findViewById(R.id.editTextAbono_DatosCobro);
         valorRestante=(EditText)view.findViewById(R.id.editTextValorRestante_DatosCobro);
@@ -127,7 +125,7 @@ public class DatosCobro extends Fragment implements View.OnClickListener
     {
         arrayList.clear();
 
-        arrayList.add(new ItemListaProdutos_DatosCobro("Sabana", R.mipmap.eliminar));
+        arrayList.add(new ItemListaProdutos_DatosCobro("Sabana",R.mipmap.informacion, R.mipmap.eliminar));
 
         lista.setAdapter(new AdapterLista_Productos_DatosCobro(getActivity() , arrayList));
     }

@@ -4,8 +4,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.billy.clientes.DatosCobro"
     android:orientation="vertical"
-    android:padding="20dp"
-    style="@style/fondo">
+    android:padding="20dp">
 
     <TextView
     android:layout_width="match_parent"
@@ -41,14 +40,6 @@
                     android:layout_height="100dp"/>
 
                 <EditText
-                    android:id="@+id/editPrecioProducto_DatosCobro"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Precio Producto"
-                    android:layout_marginTop="5dp"
-                    android:inputType="number"/>
-
-                <EditText
                     android:id="@+id/editFechaVenta_DatosCobro"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -81,7 +72,8 @@
                     android:layout_weight="1"
                     android:layout_marginTop="5dp"
                     android:hint="Valor Restante"
-                    android:inputType="number"/>
+                    android:inputType="number"
+                    android:enabled="false"/>
 
             </LinearLayout>
         </ScrollView>

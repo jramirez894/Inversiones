@@ -6,10 +6,12 @@ package com.example.billy.clientes;
 public class ItemListaProdutos_DatosCobro
 {
     String nomProducto;
+    int info;
     int eliminar;
 
-    public ItemListaProdutos_DatosCobro(String nomProducto, int eliminar) {
+    public ItemListaProdutos_DatosCobro(String nomProducto, int info, int eliminar) {
         this.nomProducto = nomProducto;
+        this.info = info;
         this.eliminar = eliminar;
     }
 
@@ -19,6 +21,14 @@ public class ItemListaProdutos_DatosCobro
 
     public void setNomProducto(String nomProducto) {
         this.nomProducto = nomProducto;
+    }
+
+    public int getInfo() {
+        return info;
+    }
+
+    public void setInfo(int info) {
+        this.info = info;
     }
 
     public int getEliminar() {

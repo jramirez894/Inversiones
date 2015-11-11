@@ -1,13 +1,18 @@
 package com.example.billy.gastos;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.billy.inversiones.R;
+import com.example.billy.inversiones.SesionUsuarios;
 
 import java.util.List;
 
@@ -23,7 +28,7 @@ public class Adapter_InfHistorial extends ArrayAdapter
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
+    public View getView(final int position, View convertView, ViewGroup parent)
     {
         if (convertView == null)
         {
@@ -35,11 +40,38 @@ public class Adapter_InfHistorial extends ArrayAdapter
 
         TextView tipo = (TextView)convertView.findViewById(R.id.textViewTipo_ListaInfHistorial);
         TextView valor = (TextView)convertView.findViewById(R.id.textViewValor_ListaInfHistorial);
-        TextView descripcion = (TextView)convertView.findViewById(R.id.textViewDescripcion_ListaInfHistorial);
+        ImageView icono = (ImageView)convertView.findViewById(R.id.imgIcono_ListaInfHistorial);
 
         tipo.setText(items.getTipoGasto());
         valor.setText(items.getValor());
-        descripcion.setText(items.getDescripcion());
+
+        icono.setImageResource(items.getIcono());
+
+        icono.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                //ItemLista_InfHistorial itemDescripcion = (ItemLista_InfHistorial)getItem(position);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setIcon(R.mipmap.informacion);
+                builder.setTitle("Descripción");
+                builder.setMessage(Inf_Historial.arrayList.get(position).getDescripcion());
+                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+                    }
+                });
+                
+                builder.setCancelable(false);
+                builder.show();
+            }
+        });
+
         return convertView;
     }
 }

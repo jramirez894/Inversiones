@@ -19,8 +19,6 @@ import java.util.ArrayList;
 public class Inf_Historial extends AppCompatActivity
 {
     TextView rango;
-    String inicio;
-    String fin;
 
     TextView renta;
     TextView servicios;
@@ -86,7 +84,7 @@ public class Inf_Historial extends AppCompatActivity
                 {
                     if(idTipoGasto.equalsIgnoreCase(Historial.arrayList.get(i).getTipoGasto()))
                     {
-                        arrayList.add(new ItemLista_InfHistorial("Descripción: " + Historial.arrayList.get(i).getDescripcion(), "Valor: " +  Historial.arrayList.get(i).getValor(), "Renta"));
+                        arrayList.add(new ItemLista_InfHistorial("Descripción: " + Historial.arrayList.get(i).getDescripcion(), "Valor: " +  Historial.arrayList.get(i).getValor(), "Renta", R.mipmap.informacion));
                     }
                 }
 
@@ -117,7 +115,7 @@ public class Inf_Historial extends AppCompatActivity
                 {
                     if(idTipoGasto.equalsIgnoreCase(Historial.arrayList.get(i).getTipoGasto()))
                     {
-                        arrayList.add(new ItemLista_InfHistorial("Descripción: " + Historial.arrayList.get(i).getDescripcion(), "Valor: " +  Historial.arrayList.get(i).getValor(), "Servicios"));
+                        arrayList.add(new ItemLista_InfHistorial("Descripción: " + Historial.arrayList.get(i).getDescripcion(), "Valor: " +  Historial.arrayList.get(i).getValor(), "Servicios", R.mipmap.informacion));
                     }
                 }
 
@@ -148,7 +146,7 @@ public class Inf_Historial extends AppCompatActivity
                 {
                     if(idTipoGasto.equalsIgnoreCase(Historial.arrayList.get(i).getTipoGasto()))
                     {
-                        arrayList.add(new ItemLista_InfHistorial("Descripción: " + Historial.arrayList.get(i).getDescripcion(), "Valor: " +  Historial.arrayList.get(i).getValor(), "Empleados"));
+                        arrayList.add(new ItemLista_InfHistorial("Descripción: " + Historial.arrayList.get(i).getDescripcion(), "Valor: " +  Historial.arrayList.get(i).getValor(), "Empleados", R.mipmap.informacion));
                     }
                 }
 

@@ -14,7 +14,6 @@ import com.example.billy.inversiones.R;
 public class DatosPersonales extends Fragment
 {
     public static EditText buscarCedula;
-    public static EditText ced;
     public static EditText nom;
     public static EditText direccion;
     public static EditText telefono;
@@ -33,8 +32,6 @@ public class DatosPersonales extends Fragment
 
         //Mostrar Alerta Si existe o el cliente inactivo o activo
         buscarCedula = (AutoCompleteTextView)view.findViewById(R.id.autoCompleteCedulaCliente_AgregarCliente);
-
-        ced=(EditText)view.findViewById(R.id.editCedula_AgregarCliente);
         nom=(EditText)view.findViewById(R.id.editNombre_AgregarCliente);
         direccion=(EditText)view.findViewById(R.id.editDireccion_AgregarCliente);
         telefono=(EditText)view.findViewById(R.id.editTelefono_AgregarCliente);
