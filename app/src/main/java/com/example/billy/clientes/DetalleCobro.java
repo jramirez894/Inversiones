@@ -25,8 +25,6 @@ public class DetalleCobro extends Fragment
     public static Spinner diaCobro;
     public static Spinner horaCobro;
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {

@@ -301,7 +301,7 @@ public class PrincipalMenu extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    //Clases Asyntask para login y rol del usuario que inicia sesion
+    //Clases Asyntask para traer los clientes
 
     private class TareaListado extends AsyncTask<String,Integer,Boolean>
     {
