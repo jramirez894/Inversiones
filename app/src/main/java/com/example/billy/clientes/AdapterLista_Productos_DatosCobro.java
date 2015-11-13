@@ -50,8 +50,7 @@ public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
         eliminar.setImageResource(items.getEliminar());
         info.setImageResource(items.getInfo());
 
-        eliminar.setOnClickListener(new View.OnClickListener()
-        {
+        eliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 posicionItems = (ItemListaProdutos_DatosCobro) getItem(position);
@@ -59,22 +58,18 @@ public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
             }
         });
 
-        info.setOnClickListener(new View.OnClickListener()
-        {
+        info.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 posicionItems = (ItemListaProdutos_DatosCobro) getItem(position);
                 String nombreProducto = posicionItems.getNomProducto();
                 String cantidad = posicionItems.getCantidad();
 
-                String descripcion ="";
-                String precioVenta ="";
+                String descripcion = "";
+                String precioVenta = "";
 
-                for (int i = 0; i < DatosCobro.arrayList.size(); i++)
-                {
-                    if (nombreProducto.equalsIgnoreCase(DatosCobro.arrayList.get(i).getNombre()))
-                    {
+                for (int i = 0; i < DatosCobro.arrayList.size(); i++) {
+                    if (nombreProducto.equalsIgnoreCase(DatosCobro.arrayList.get(i).getNombre())) {
                         descripcion = DatosCobro.arrayList.get(i).getDescripcion();
                         precioVenta = DatosCobro.arrayList.get(i).getPrecioVenta();
 
@@ -82,7 +77,7 @@ public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
                     }
                 }
 
-                AlertaInfoProducto(nombreProducto,descripcion,precioVenta,cantidad);
+                AlertaInfoProducto(nombreProducto, descripcion, precioVenta, cantidad);
             }
         });
 
@@ -106,6 +101,32 @@ public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
                 adapter.remove(posicionItems);
                 //Se carga de nuevo la vista
                 DatosCobro.lista.setAdapter(adapter);
+
+
+                int precioVenta = 0;
+
+                for (int i = 0; i <DatosCobro.arrayList.size(); i++)
+                {
+                    if (posicionItems.getNomProducto().equalsIgnoreCase(DatosCobro.arrayList.get(i).getNombre()))
+                    {
+                        precioVenta = Integer.valueOf(DatosCobro.arrayList.get(i).getPrecioVenta());
+                    }
+                }
+
+                int precioActual = 0;
+
+                if (Integer.valueOf(posicionItems.getCantidad()) > 1)
+                {
+                    precioActual = Integer.valueOf(posicionItems.getCantidad()) * precioVenta;
+
+                    DatosCobro.total = DatosCobro.total - precioActual;
+                    DatosCobro.totalPagar.setText(String.valueOf(DatosCobro.total));
+                }
+                else
+                {
+                    DatosCobro.total = DatosCobro.total - precioVenta;
+                    DatosCobro.totalPagar.setText(String.valueOf(DatosCobro.total));
+                }
             }
         });
 
@@ -119,7 +140,7 @@ public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
         LayoutInflater inflaterAlert = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialoglayout = inflaterAlert.inflate(R.layout.alert_info_producto, null);
 
-        final EditText descripcion = (EditText)dialoglayout.findViewById(R.id.editDescripcion_AlertInfo);
+        final TextView descripcion = (TextView)dialoglayout.findViewById(R.id.txtDescripcion_AlertInfo);
         final EditText precioVenta = (EditText)dialoglayout.findViewById(R.id.editPrecioVenta_AlertInfo);
         final EditText cantidad = (EditText)dialoglayout.findViewById(R.id.editCantidad_AlertInfo);
 
@@ -131,27 +152,48 @@ public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
         builder.setIcon(R.mipmap.productos);
         builder.setTitle(nom);
         builder.setView(dialoglayout);
-        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
-        {
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i)
-            {
+            public void onClick(DialogInterface dialogInterface, int i) {
                 String capVenta = precioVenta.getText().toString();
                 String capCantidad = cantidad.getText().toString();
 
                 if (capVenta.equals("") ||
-                        capCantidad.equals(""))
-                {
+                        capCantidad.equals("")) {
                     Toast.makeText(getContext(), "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    posicionItems.setCantidad(capCantidad);
-                    DatosCobro.lista.setAdapter(new AdapterLista_Productos_DatosCobro(getContext(), DatosCobro.arrayListItems));
-                    //posicionItems.set(capCantidad);
-                    //Toast.makeText(AgregarProducto.this, "Categoria Agregada Correctamente", Toast.LENGTH_SHORT).show();
-                }
+                    if (posicionItems.getCantidad().equalsIgnoreCase(capCantidad))
+                    {
+                        //Nada
+                    }
+                    else
+                    {
+                        //Metodo para sumar al total, en caso de que un producto sea mas de uno
+                        if (Integer.valueOf(capCantidad) >= 1)
+                        {
+                            int precioVenta = 0;
 
+                            for (int j = 0; j < DatosCobro.arrayList.size(); j++)
+                            {
+                                if (posicionItems.getNomProducto().equalsIgnoreCase(DatosCobro.arrayList.get(j).getNombre()))
+                                {
+                                    precioVenta = Integer.valueOf(DatosCobro.arrayList.get(j).getPrecioVenta());
+                                }
+                            }
+
+                            DatosCobro.total = DatosCobro.total - (Integer.valueOf(posicionItems.getCantidad()) * precioVenta);
+
+                            posicionItems.setCantidad(capCantidad);
+                            DatosCobro.lista.setAdapter(new AdapterLista_Productos_DatosCobro(getContext(), DatosCobro.arrayListItems));
+
+                            int precioNuevo = Integer.valueOf(posicionItems.getCantidad()) * precioVenta;
+                            DatosCobro.total = DatosCobro.total + precioNuevo;
+                            DatosCobro.totalPagar.setText(String.valueOf(DatosCobro.total));
+                        }
+                    }
+                }
             }
         });
         builder.setCancelable(false);

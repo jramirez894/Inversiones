@@ -48,14 +48,32 @@
                     android:inputType="date"
                     android:layout_marginTop="5dp"/>
 
-                <EditText
-                    android:id="@+id/editTotalPagar_DatosCobro"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Total a Pagar"
-                    android:text="0"
-                    android:layout_marginTop="5dp"
-                    android:inputType="number"/>
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/editTotalPagar_DatosCobro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Total a Pagar"
+                        android:text="0"
+                        android:layout_marginTop="5dp"
+                        android:inputType="number"
+                        android:enabled="false"/>
+
+                    <ImageView
+                        android:id="@+id/imgEditar_DatosCobro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/editar"
+                        android:layout_gravity="center" />
+
+                </LinearLayout>
+
+
 
                 <EditText
                     android:id="@+id/editTextAbono_DatosCobro"
@@ -64,7 +82,7 @@
                     android:layout_weight="1"
                     android:layout_marginTop="5dp"
                     android:hint="Abono"
-                    android:inputType="number"/>
+                    android:inputType="number" />
 
                 <EditText
                     android:id="@+id/editTextValorRestante_DatosCobro"

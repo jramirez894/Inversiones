@@ -6,14 +6,15 @@
     android:padding="5dp"
     android:gravity="center">
 
-    <EditText
-        android:id="@+id/editDescripcion_AlertInfo"
+    <TextView
+        android:id="@+id/txtDescripcion_AlertInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Descripcion"
+        android:textSize="20sp"
         android:gravity="center"
         android:layout_marginTop="5dp"
-        android:enabled="false"/>
+        android:enabled="false"
+        android:textColor="@android:color/background_dark"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,7 +37,8 @@
             android:layout_weight="1"
             android:inputType="number"
             android:gravity="center"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="5dp"
+            android:enabled="false"/>
 
     </LinearLayout>
 

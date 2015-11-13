@@ -345,7 +345,7 @@ public class PrincipalMenu extends AppCompatActivity
                     for(int i=0; i<objVendedores.length(); i++)
                     {
                         JSONObject obj = objVendedores.getJSONObject(i);
-                        items.add(new ItemListaPersonalizada(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, ""));
+                        items.add(new ItemListaPersonalizada(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, "", obj.getString("idCliente"), obj.getString("cedula"), obj.getString("direccion"), obj.getString("telefono"), obj.getString("correo"), obj.getString("nombreEmpresa"), obj.getString("direccionEmpresa"), obj.getString("estado"), obj.getString("calificacion")));
                         existe = true;
                     }
                 }

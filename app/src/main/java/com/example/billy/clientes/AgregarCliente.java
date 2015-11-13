@@ -1,9 +1,12 @@
 package com.example.billy.clientes;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -18,10 +21,31 @@ import android.widget.Toast;
 
 import com.example.billy.empleado.Empleados;
 import com.example.billy.interfaces_empleado.PrincipalEmpleado;
+import com.example.billy.menu_principal.AdapterListaPersonalizada;
+import com.example.billy.menu_principal.ItemListaPersonalizada;
 import com.example.billy.menu_principal.PagerAdapter;
 import com.example.billy.inversiones.R;
 import com.example.billy.menu_principal.PrincipalMenu;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
@@ -39,26 +63,37 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
      */
 
     //Variables del tab Datos Personales
-        String cedula="";
-        String nombre="";
-        String direccion="";
-        String telefono="";
-        String correo="";
-        String nomEmpresa="";
-        String dirEmpresa="";
+    String cedula="";
+    String nombre="";
+    String direccion="";
+    String telefono="";
+    String correo="";
+    String nomEmpresa="";
+    String dirEmpresa="";
 
     //Variables del tab DatosCobro
-        String buscarProducto="";
-        String fechaVenta="";
-        String totalPagar="";
-        String abono="";
-        String valorRestante="";
+    String buscarProducto="";
+    String fechaVenta="";
+    String totalPagar="";
+    String abono="";
+    String valorRestante="";
 
     //Variables del tab DetalleCobro
-        String nomEmpleado="";
-        String fechaCobro="";
-        String diaCobro="";
-        String horaCobro="";
+    String nomEmpleado="";
+    String fechaCobro="";
+    String diaCobro="";
+    String horaCobro="";
+
+    //Varibales createClient
+    boolean resul;
+    Object respuesta = "";
+
+    //Variables listadoClientes
+    boolean existe = false;
+    public static ArrayList<ItemListaPersonalizada> items = new ArrayList<ItemListaPersonalizada>();
+
+    //Variable para saber el id de la factura que se creo
+    String idFactura = "";
 
     private class TabInfo
     {
@@ -173,7 +208,6 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
             dirEmpresa = DatosPersonales.dircEmpresa.getText().toString();
 
             //Variables Asociadas tab DatosCobro
-            buscarProducto =DatosCobro.buscarProducto.getText().toString();
             fechaVenta =DatosCobro.fechaVenta.getText().toString();
             totalPagar =DatosCobro.totalPagar.getText().toString();
             abono =DatosCobro.abono.getText().toString();
@@ -195,9 +229,8 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
                             correo.equals("")||
                             nomEmpresa.equals("")||
                             dirEmpresa.equals("")||
-                            buscarProducto.equals("")||
+                            fechaVenta.equals("")||
                             totalPagar.equals("")||
-                            valorRestante.equals("")||
                             nomEmpleado.equals("")||
                             fechaCobro.equalsIgnoreCase("Fecha de Cobro")||
                             diaCobro.equalsIgnoreCase("Dia de Cobro")||
@@ -207,13 +240,14 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
                     }
                     else
                     {
-                        guardarCliente();
+                        guardarCliente(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa);
                     }
                     break;
             }
         }
         catch (Exception e)
         {
+            Toast.makeText(AgregarCliente.this,"Faltan Datos Por Llenar",Toast.LENGTH_SHORT).show();
 
         }
 
@@ -323,7 +357,7 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
     }
 
     //Alerta de Confirmacion
-    public void guardarCliente()
+    public void guardarCliente(final String cedula, final String nombre, final String direccion, final String telefono, final String correo, final String nombreEmpresa, final String direccionEmpresa)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(android.R.drawable.ic_menu_save);
@@ -334,21 +368,8 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                switch (interfaz)
-                {
-                    case "Administrador":
-                        Intent intent = new Intent(AgregarCliente.this, PrincipalMenu.class);
-                        startActivity(intent);
-                        finish();
-                        break;
-
-                    case "Empleado":
-                        Intent intent1 = new Intent(AgregarCliente.this, PrincipalEmpleado.class);
-                        startActivity(intent1);
-                        finish();
-                        break;
-                }
-
+                TareaCreateCient createCient = new TareaCreateCient();
+                createCient.execute(cedula, nombre, direccion, telefono, correo, nombreEmpresa, direccionEmpresa);
             }
         });
 
@@ -368,5 +389,429 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
         }
 
         return super.onKeyUp(keyCode, event);
+    }
+
+    //Clases Asyntask para agregar un cliente
+    private class TareaCreateCient extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        JSONObject respJSON;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerCliente.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("cedula", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("nombre", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("direccion", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("telefono", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("correo", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("nombreEmpresa", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("direccionEmpresa", params[6]));
+            nameValuePairs.add(new BasicNameValuePair("estado", "Activo"));
+            nameValuePairs.add(new BasicNameValuePair("calificacion", ""));
+            nameValuePairs.add(new BasicNameValuePair("option", "createClient"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                respJSON = new JSONObject(respStr);
+                //JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                respuesta= respJSON.get("items");
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(AgregarEmpleado.this, respuesta.toString(), Toast.LENGTH_SHORT).show();
+            TareaListado listado = new TareaListado();
+            listado.execute();
+        }
+    }
+
+    //Clases Asyntask para traer los clientes
+
+    private class TareaListado extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerCliente.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option",  "getAllClient"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+
+                //String obj
+                String respuesta= String.valueOf(objVendedores);
+
+                if(respuesta.equalsIgnoreCase("No Existe"))
+                {
+                    existe = false;
+                }
+                else
+                {
+                    items.clear();
+                    for(int i=0; i<objVendedores.length(); i++)
+                    {
+                        JSONObject obj = objVendedores.getJSONObject(i);
+                        items.add(new ItemListaPersonalizada(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, "", obj.getString("idCliente"), obj.getString("cedula"), obj.getString("direccion"), obj.getString("telefono"), obj.getString("correo"), obj.getString("nombreEmpresa"), obj.getString("direccionEmpresa"), obj.getString("estado"), obj.getString("calificacion")));
+                        existe = true;
+                    }
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            String idCliente = "";
+            //Toast.makeText(PrincipalMenu.this, respuesta, Toast.LENGTH_SHORT).show();
+            for (int i = 0; i < items.size(); i++)
+            {
+                if(nombre.equalsIgnoreCase(items.get(i).getNombreLista()))
+                {
+                    idCliente = items.get(i).getIdCliente();
+                }
+            }
+
+            Date date = new Date();
+            DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
+            String fechaVentaModificada = fechaVenta + " " + hourFormat.format(date);
+
+            TareaCreateBill createBill = new TareaCreateBill();
+            createBill.execute(fechaVentaModificada, totalPagar, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idCliente);
+        }
+    }
+
+    //Clases Asyntask para agregar una factura
+    private class TareaCreateBill extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        JSONObject respJSON;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerFactura.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("fecha", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("total", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("fechaCobro", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("diaCobro", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("horaCobro", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("idCliente", params[6]));
+            nameValuePairs.add(new BasicNameValuePair("option", "createBill"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                respJSON = new JSONObject(respStr);
+                //JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                respuesta= respJSON.get("items");
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(AgregarCliente.this, respStr.toString(), Toast.LENGTH_SHORT).show();
+
+            TareaListadoBill listadoBill = new TareaListadoBill();
+            listadoBill.execute();
+        }
+    }
+
+    //Clases Asyntask para traer los clientes
+
+    private class TareaListadoBill extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerFactura.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option",  "getAllBill"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objFacturas = objItems.getJSONArray(0);
+
+                //String obj
+                String respuesta= String.valueOf(objFacturas);
+
+                if(respuesta.equalsIgnoreCase("No Existe"))
+                {
+                    existe = false;
+                }
+                else
+                {
+                    for(int i=0; i<objFacturas.length(); i++)
+                    {
+                        JSONObject obj = objFacturas.getJSONObject(i);
+                        idFactura = obj.getString("idFactura");
+                        existe = true;
+                    }
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(AgregarCliente.this, respStr.toString(), Toast.LENGTH_SHORT).show();
+
+            for (int i = 0; i < DatosCobro.arrayListItems.size(); i++)
+            {
+                String nombre = DatosCobro.arrayListItems.get(i).getNomProducto();
+                int precioProducto = 0;
+                int posicionProducto = 0;
+
+                for (int j = 0; j < DatosCobro.arrayList.size(); j++)
+                {
+                    if(nombre.equalsIgnoreCase(DatosCobro.arrayList.get(j).getNombre()))
+                    {
+                        precioProducto = Integer.valueOf(DatosCobro.arrayList.get(j).getPrecioVenta());
+                        posicionProducto = j;
+                    }
+                }
+
+                int totalPorProducto = 0;
+
+                totalPorProducto = Integer.valueOf(DatosCobro.arrayListItems.get(i).getCantidad()) * precioProducto;
+
+                TareaCreateSale createSale = new TareaCreateSale();
+                createSale.execute(String.valueOf(totalPorProducto), DatosCobro.arrayListItems.get(i).getCantidad(), "En Venta", idFactura, DatosCobro.arrayList.get(posicionProducto).getIdProducto());
+            }
+        }
+    }
+
+    //Clases Asyntask para agregar una factura
+    private class TareaCreateSale extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        JSONObject respJSON;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerVenta.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("total", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("cantidad", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("estado", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("idFactura", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("idProducto", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("option",  "createSale"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                respJSON = new JSONObject(respStr);
+                //JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                respuesta= respJSON.get("items");
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(AgregarCliente.this, respStr.toString(), Toast.LENGTH_SHORT).show();
+
+
+        }
     }
 }

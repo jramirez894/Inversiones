@@ -18,6 +18,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.billy.inversiones.R;
@@ -62,7 +63,11 @@ public class DatosCobro extends Fragment implements View.OnClickListener
     public static EditText abono;
     public static EditText valorRestante;
 
-    int total =0;
+    public static int total =0;
+
+    ImageView imgEditar;
+
+    String habilitar = "Habilitar";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -74,6 +79,7 @@ public class DatosCobro extends Fragment implements View.OnClickListener
         totalPagar=(EditText)view.findViewById(R.id.editTotalPagar_DatosCobro);
         abono=(EditText)view.findViewById(R.id.editTextAbono_DatosCobro);
         valorRestante=(EditText)view.findViewById(R.id.editTextValorRestante_DatosCobro);
+        imgEditar = (ImageView) view.findViewById(R.id.imgEditar_DatosCobro);
 
         //Fecha Personalizada
         dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
@@ -87,34 +93,29 @@ public class DatosCobro extends Fragment implements View.OnClickListener
         setDateTimeField();
 
         //Metodo para restar el abono ingresado al valor total
-        abono.addTextChangedListener(new TextWatcher()
-        {
+        abono.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
-            {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                try
-                {
+                try {
                     //con la variable charSequence se captura y se convierte a entero lo que se esta escribiendo en el EditText de abono
                     int abonoIngresado = Integer.valueOf(charSequence.toString());
                     int totalAPagar = Integer.parseInt(totalPagar.getText().toString());
                     int resta = totalAPagar - abonoIngresado;
 
                     valorRestante.setText(String.valueOf(resta));
-                } catch (Exception e)
-                {
+                } catch (Exception e) {
                     valorRestante.setText("");
                 }
 
             }
 
             @Override
-            public void afterTextChanged(Editable editable)
-            {
+            public void afterTextChanged(Editable editable) {
 
             }
         });
@@ -123,16 +124,13 @@ public class DatosCobro extends Fragment implements View.OnClickListener
 
         buscarProducto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String nombre = buscarProducto.getText().toString();
 
                 int posicion = 0;
 
-                for (int i = 0; i < arrayList.size(); i++)
-                {
-                    if (nombre.equalsIgnoreCase(arrayList.get(i).getNombre()))
-                    {
+                for (int i = 0; i < arrayList.size(); i++) {
+                    if (nombre.equalsIgnoreCase(arrayList.get(i).getNombre())) {
                         posicion = i;
                         break;
                     }
@@ -145,25 +143,53 @@ public class DatosCobro extends Fragment implements View.OnClickListener
                 lista.setAdapter(new AdapterLista_Productos_DatosCobro(getActivity(), arrayListItems));
 
                 //Filtrar Los Precios De los Producto Para Multiplicarlos Por La Cantidad
-                for (int i =0; i <arrayListItems.size(); i++)
-                {
-                    String nombreProducto = nombre;
 
-                    for (int j =0; j <arrayList.size(); j++)
-                    {
-                        if (nombre.equalsIgnoreCase(arrayList.get(j).getNombre()))
-                        {
-                            int precio = Integer.valueOf(arrayList.get(j).getPrecioVenta());
-                            int resultado = precio * Integer.valueOf(arrayListItems.get(i).getCantidad());
+                for (int j = 0; j < arrayList.size(); j++) {
+                    if (nombre.equalsIgnoreCase(arrayList.get(j).getNombre())) {
+                        int precio = Integer.valueOf(arrayList.get(j).getPrecioVenta());
+                        int cantidad = 0;
 
-                            total = Integer.valueOf(totalPagar.getText().toString());
-
-                            total = total + resultado;
-
-                            totalPagar.setText(String.valueOf(total));
+                        for (int i = 0; i < arrayListItems.size(); i++) {
+                            if (nombre.equalsIgnoreCase(arrayListItems.get(i).getNomProducto())) {
+                                cantidad = Integer.valueOf(arrayListItems.get(i).getCantidad());
+                            }
                         }
+
+                        int resultado = precio * cantidad;
+                        total = Integer.valueOf(totalPagar.getText().toString());
+                        total = total + resultado;
+                        totalPagar.setText(String.valueOf(total));
                     }
                 }
+            }
+        });
+
+
+
+        imgEditar.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                switch (habilitar)
+                {
+                    case "Habilitar":
+
+                        totalPagar.setEnabled(true);
+                        habilitar = "Desabilitar";
+
+                        break;
+
+                    case "Desabilitar":
+
+                        totalPagar.setEnabled(false
+                        );
+                        habilitar = "Habilitar";
+
+                        break;
+                }
+
+
             }
         });
 
