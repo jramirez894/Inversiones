@@ -69,6 +69,15 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
 
     long posicion;
 
+    public static String cedula;
+    public static String nombre;
+    public static String direccion;
+    public static String telefono;
+    public static String correo;
+    public static String nombreEmpresa;
+    public static String direccionEmpresa;
+    public static String idCliente;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -79,8 +88,18 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
         actionBar.setTitle("Volver");
         actionBar.show();
 
+        //Datos personales
         Bundle bundle = getIntent().getExtras();
-        posicion = bundle.getLong("Posicion");
+        cedula = bundle.getString("cedula");
+        nombre = bundle.getString("nombre");
+        direccion = bundle.getString("direccion");
+        telefono = bundle.getString("telefono");
+        correo = bundle.getString("correo");
+        nombreEmpresa = bundle.getString("nombreEmpresa");
+        direccionEmpresa = bundle.getString("direccionEmpresa");
+        idCliente = bundle.getString("idCliente");
+
+        //Datos del cobro
 
         this.initialiseTabHost(savedInstanceState);
 
@@ -112,6 +131,8 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
         String fechaCobro = V_DetalleCobro.fechaCobro.getText().toString();
         String diaCobro = V_DetalleCobro.diaCobro.getText().toString();
         String horaCobro = V_DetalleCobro.horaCobro.getText().toString();
+
+
     }
     protected void onResume(Bundle savedInstanceState)
     {

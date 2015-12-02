@@ -18,11 +18,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.billy.cancelados.Cancelados;
 import com.example.billy.clientes.AgregarCliente;
+import com.example.billy.clientes.DatosCobro;
+import com.example.billy.clientes.ItemFactura_AgregarCliente;
 import com.example.billy.clientes.VisualizarCliente;
 import com.example.billy.constantes.Constantes;
 import com.example.billy.devolucion.Devolucion;
@@ -33,8 +37,10 @@ import com.example.billy.interfaces_empleado.PrincipalEmpleado;
 import com.example.billy.inversiones.MainActivity;
 import com.example.billy.inversiones.SesionUsuarios;
 import com.example.billy.perfil.Perfil;
+import com.example.billy.productos.ItemsListaProductos_Productos;
 import com.example.billy.productos.Productos;
 import com.example.billy.inversiones.R;
+import com.example.billy.productos.V_Producto;
 import com.example.billy.saldo_caja.SaldoCaja;
 
 import org.apache.http.HttpResponse;
@@ -63,6 +69,7 @@ public class PrincipalMenu extends AppCompatActivity
 
     public static ListView listaClientes;
     public static ArrayList<ItemListaPersonalizada> items = new ArrayList<ItemListaPersonalizada>();
+    public static ArrayList<String> itemsNombreCliente = new ArrayList<String>();
 
     MenuItem menuGuardar;
     MenuItem menuAgregar;
@@ -71,6 +78,26 @@ public class PrincipalMenu extends AppCompatActivity
     boolean existe = false;
 
     String respuesta = "";
+
+    AutoCompleteTextView autocompleteBuscarClientes_MenuPrincipal;
+
+    //Variables para almacenar los datos del cliente que se van a visualizar
+
+    //Tabla Cliente
+    String cedula;
+    String nombre;
+    String direccion;
+    String telefono;
+    String correo;
+    String nombreEmpresa;
+    String direccionEmpresa;
+    String idCliente;
+
+    //Tabla Factura
+
+
+    //Array que guardara todas las factura del servidor
+    public static ArrayList<ItemFactura_AgregarCliente> itemsFactura = new ArrayList<ItemFactura_AgregarCliente>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -98,20 +125,20 @@ public class PrincipalMenu extends AppCompatActivity
 
         String[] titulos = getResources().getStringArray(R.array.array_menu_drawer);
 
-        ArrayList<ItemsMenuDrawer> items = new ArrayList<ItemsMenuDrawer>();
-        items.add(new ItemsMenuDrawer(titulos[0], R.mipmap.personas));
-        items.add(new ItemsMenuDrawer(titulos[1], R.mipmap.personas));
-        items.add(new ItemsMenuDrawer(titulos[2], R.mipmap.productos));
-        items.add(new ItemsMenuDrawer(titulos[3], R.mipmap.capital));
-        items.add(new ItemsMenuDrawer(titulos[4], R.mipmap.saldocaja));
-        items.add(new ItemsMenuDrawer(titulos[5], R.mipmap.cancelado));
-        items.add(new ItemsMenuDrawer(titulos[6], R.mipmap.garantia));
-        items.add(new ItemsMenuDrawer(titulos[7], R.mipmap.devolucion));
-        items.add(new ItemsMenuDrawer(titulos[8], R.mipmap.perfil));
-        items.add(new ItemsMenuDrawer(titulos[9], R.mipmap.cerrar));
+        final ArrayList<ItemsMenuDrawer> itemsdrawer = new ArrayList<ItemsMenuDrawer>();
+        itemsdrawer.add(new ItemsMenuDrawer(titulos[0], R.mipmap.personas));
+        itemsdrawer.add(new ItemsMenuDrawer(titulos[1], R.mipmap.personas));
+        itemsdrawer.add(new ItemsMenuDrawer(titulos[2], R.mipmap.productos));
+        itemsdrawer.add(new ItemsMenuDrawer(titulos[3], R.mipmap.capital));
+        itemsdrawer.add(new ItemsMenuDrawer(titulos[4], R.mipmap.saldocaja));
+        itemsdrawer.add(new ItemsMenuDrawer(titulos[5], R.mipmap.cancelado));
+        itemsdrawer.add(new ItemsMenuDrawer(titulos[6], R.mipmap.garantia));
+        itemsdrawer.add(new ItemsMenuDrawer(titulos[7], R.mipmap.devolucion));
+        itemsdrawer.add(new ItemsMenuDrawer(titulos[8], R.mipmap.perfil));
+        itemsdrawer.add(new ItemsMenuDrawer(titulos[9], R.mipmap.cerrar));
 
         // Relacionar el adaptador y la escucha de la lista del drawer
-        listaDrawer.setAdapter(new AdapterMenuDrawer(this, items));
+        listaDrawer.setAdapter(new AdapterMenuDrawer(this, itemsdrawer));
 
         //Activar icono del menu que se despliega
         toggle = new ActionBarDrawerToggle(this, menuDrawer, R.string.drawer_inicio, R.string.drawer_fin);
@@ -192,16 +219,30 @@ public class PrincipalMenu extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
             {
-                long cap = listaClientes.getItemIdAtPosition(position);
-                Intent intent = new Intent(PrincipalMenu.this, VisualizarCliente.class);
-                intent.putExtra("Posicion",cap);
-                startActivity(intent);
+
+                ItemListaPersonalizada cliente = items.get(position);
+
+                cedula = cliente.getCedula();
+                nombre = cliente.getNombreLista();
+                direccion = cliente.getDireccion();
+                telefono = cliente.getTelefono();
+                correo = cliente.getCorreo();
+                nombreEmpresa = cliente.getNombreEmpresa();
+                direccionEmpresa = cliente.getDireccionEmpresa();
+                idCliente = cliente.getIdCliente();
+
+                TareaGetBill tareaGetBill = new TareaGetBill();
+                tareaGetBill.execute();
             }
         });
 
         //Listado de Vendedores
         TareaListado tareaListado = new TareaListado();
         tareaListado.execute();
+
+        //Filtro de los clientes
+        autocompleteBuscarClientes_MenuPrincipal = (AutoCompleteTextView) findViewById(R.id.autocompleteBuscarClientes_MenuPrincipal);
+
     }
 
     public void ActualizarLista()
@@ -342,10 +383,12 @@ public class PrincipalMenu extends AppCompatActivity
                 else
                 {
                     items.clear();
+                    itemsNombreCliente.clear();
                     for(int i=0; i<objVendedores.length(); i++)
                     {
                         JSONObject obj = objVendedores.getJSONObject(i);
                         items.add(new ItemListaPersonalizada(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, "", obj.getString("idCliente"), obj.getString("cedula"), obj.getString("direccion"), obj.getString("telefono"), obj.getString("correo"), obj.getString("nombreEmpresa"), obj.getString("direccionEmpresa"), obj.getString("estado"), obj.getString("calificacion")));
+                        itemsNombreCliente.add(obj.getString("nombre"));
                         existe = true;
                     }
                 }
@@ -380,6 +423,87 @@ public class PrincipalMenu extends AppCompatActivity
         {
             //Toast.makeText(PrincipalMenu.this, respuesta, Toast.LENGTH_SHORT).show();
             listaClientes.setAdapter(new AdapterListaPersonalizada(PrincipalMenu.this, items));
+            autocompleteBuscarClientes_MenuPrincipal.setAdapter(new ArrayAdapter<String>(PrincipalMenu.this, android.R.layout.simple_dropdown_item_1line, itemsNombreCliente));
+        }
+    }
+
+    //Clases Asyntask para traer los clientes
+
+    private class TareaGetBill extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerFactura.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option",  "getAllBill"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objFacturas = objItems.getJSONArray(0);
+
+                //String obj
+                String respuesta= String.valueOf(objFacturas);
+
+                if(respuesta.equalsIgnoreCase("No Existe"))
+                {
+                    existe = false;
+                }
+                else
+                {
+                    itemsFactura.clear();
+                    for(int i=0; i<objFacturas.length(); i++)
+                    {
+                        JSONObject obj = objFacturas.getJSONObject(i);
+                        itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("fecha"), obj.getString("total"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("diaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
+                        existe = true;
+                    }
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(AgregarCliente.this, respStr.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 

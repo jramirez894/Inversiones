@@ -76,9 +76,11 @@ public class Productos extends AppCompatActivity
 
         ActualizarLista();
 
-        listaProductos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listaProductos.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
+            {
                 ItemsListaProductos_Productos producto = arrayList.get(position);
 
                 Intent intent = new Intent(Productos.this, V_Producto.class);
