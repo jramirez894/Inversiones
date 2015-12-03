@@ -5,6 +5,7 @@ package com.example.billy.clientes;
  */
 public class ItemFactura_AgregarCliente
 {
+    public String idFactura;
     public String fecha;
     public String total;
     public String estado;
@@ -14,7 +15,8 @@ public class ItemFactura_AgregarCliente
     public String idVendedor;
     public String idCliente;
 
-    public ItemFactura_AgregarCliente(String fecha, String total, String estado, String fechaCobro, String diaCobro, String horaCobro, String idVendedor, String idCliente) {
+    public ItemFactura_AgregarCliente(String idFactura, String fecha, String total, String estado, String fechaCobro, String diaCobro, String horaCobro, String idVendedor, String idCliente) {
+        this.idFactura = idFactura;
         this.fecha = fecha;
         this.total = total;
         this.estado = estado;
@@ -23,7 +25,14 @@ public class ItemFactura_AgregarCliente
         this.horaCobro = horaCobro;
         this.idVendedor = idVendedor;
         this.idCliente = idCliente;
+    }
 
+    public String getIdFactura() {
+        return idFactura;
+    }
+
+    public void setIdFactura(String idFactura) {
+        this.idFactura = idFactura;
     }
 
     public String getFecha() {

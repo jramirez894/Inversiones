@@ -27,16 +27,21 @@ import com.example.billy.cancelados.Cancelados;
 import com.example.billy.clientes.AgregarCliente;
 import com.example.billy.clientes.DatosCobro;
 import com.example.billy.clientes.ItemFactura_AgregarCliente;
+import com.example.billy.clientes.ItemsCobro_AgregarCliente;
+import com.example.billy.clientes.ItemsVenta_AgregarCliente;
 import com.example.billy.clientes.VisualizarCliente;
 import com.example.billy.constantes.Constantes;
 import com.example.billy.devolucion.Devolucion;
+import com.example.billy.empleado.AdapterListaEmpleado;
 import com.example.billy.empleado.Empleados;
+import com.example.billy.empleado.ItemListaEmpleado;
 import com.example.billy.garantias_product.Garantia;
 import com.example.billy.gastos.Reg_Gasto;
 import com.example.billy.interfaces_empleado.PrincipalEmpleado;
 import com.example.billy.inversiones.MainActivity;
 import com.example.billy.inversiones.SesionUsuarios;
 import com.example.billy.perfil.Perfil;
+import com.example.billy.productos.AdapterListaProductos_Productos;
 import com.example.billy.productos.ItemsListaProductos_Productos;
 import com.example.billy.productos.Productos;
 import com.example.billy.inversiones.R;
@@ -81,23 +86,42 @@ public class PrincipalMenu extends AppCompatActivity
 
     AutoCompleteTextView autocompleteBuscarClientes_MenuPrincipal;
 
+    //Array que guardara todas las factura del servidor
+    public static ArrayList<ItemFactura_AgregarCliente> itemsFactura = new ArrayList<ItemFactura_AgregarCliente>();
+
     //Variables para almacenar los datos del cliente que se van a visualizar
 
     //Tabla Cliente
-    String cedula;
-    String nombre;
-    String direccion;
-    String telefono;
-    String correo;
-    String nombreEmpresa;
-    String direccionEmpresa;
-    String idCliente;
+    String cedulaCliente;
+    String nombreCliente;
+    String direccionCliente;
+    String telefonoCliente;
+    String correoCliente;
+    String nombreEmpresaCliente;
+    String direccionEmpresaCliente;
+    String idClienteCliente;
 
     //Tabla Factura
+    String idFactura;
+    String fechaFactura;
+    String totalFactura;
+    String fechaCobroFactura;
+    String diaCobroFactura;
+    String horaCobroFactura;
+    String idVendedorFactura;
+    String idClienteFactura;
 
+    //Tabla Venta
+    public static ArrayList<ItemsVenta_AgregarCliente> itemsVenta = new ArrayList<ItemsVenta_AgregarCliente>();
 
-    //Array que guardara todas las factura del servidor
-    public static ArrayList<ItemFactura_AgregarCliente> itemsFactura = new ArrayList<ItemFactura_AgregarCliente>();
+    //Tabla Productos
+    public static ArrayList<ItemsListaProductos_Productos> itemsProductos = new ArrayList<ItemsListaProductos_Productos>();
+
+    //Tabla Usuarios
+    String nombreVendedorUsuarios;
+
+    //Tabla Cobro
+    public static ArrayList<ItemsCobro_AgregarCliente> itemsCobro = new ArrayList<ItemsCobro_AgregarCliente>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -222,14 +246,14 @@ public class PrincipalMenu extends AppCompatActivity
 
                 ItemListaPersonalizada cliente = items.get(position);
 
-                cedula = cliente.getCedula();
-                nombre = cliente.getNombreLista();
-                direccion = cliente.getDireccion();
-                telefono = cliente.getTelefono();
-                correo = cliente.getCorreo();
-                nombreEmpresa = cliente.getNombreEmpresa();
-                direccionEmpresa = cliente.getDireccionEmpresa();
-                idCliente = cliente.getIdCliente();
+                cedulaCliente = cliente.getCedula();
+                nombreCliente = cliente.getNombreLista();
+                direccionCliente = cliente.getDireccion();
+                telefonoCliente = cliente.getTelefono();
+                correoCliente = cliente.getCorreo();
+                nombreEmpresaCliente = cliente.getNombreEmpresa();
+                direccionEmpresaCliente = cliente.getDireccionEmpresa();
+                idClienteCliente = cliente.getIdCliente();
 
                 TareaGetBill tareaGetBill = new TareaGetBill();
                 tareaGetBill.execute();
@@ -427,7 +451,7 @@ public class PrincipalMenu extends AppCompatActivity
         }
     }
 
-    //Clases Asyntask para traer los clientes
+    //Clases Asyntask para traer las facturas
 
     private class TareaGetBill extends AsyncTask<String,Integer,Boolean>
     {
@@ -471,7 +495,7 @@ public class PrincipalMenu extends AppCompatActivity
                     for(int i=0; i<objFacturas.length(); i++)
                     {
                         JSONObject obj = objFacturas.getJSONObject(i);
-                        itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("fecha"), obj.getString("total"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("diaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
+                        itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("diaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
                         existe = true;
                     }
                 }
@@ -504,6 +528,365 @@ public class PrincipalMenu extends AppCompatActivity
         protected void onPostExecute(Boolean result)
         {
             //Toast.makeText(AgregarCliente.this, respStr.toString(), Toast.LENGTH_SHORT).show();
+            if (existe)
+            {
+                for(int i = 0; i < itemsFactura.size(); i++)
+                {
+                    if(idClienteCliente.equalsIgnoreCase(itemsFactura.get(i).getIdCliente()))
+                    {
+                        idFactura = itemsFactura.get(i).getIdFactura();
+                        fechaFactura= itemsFactura.get(i).getFecha();
+                        totalFactura= itemsFactura.get(i).getTotal();
+                        fechaCobroFactura= itemsFactura.get(i).getFechaCobro();
+                        diaCobroFactura= itemsFactura.get(i).getDiaCobro();
+                        horaCobroFactura= itemsFactura.get(i).getHoraCobro();
+                        idVendedorFactura= itemsFactura.get(i).getIdVendedor();
+                        idClienteFactura= itemsFactura.get(i).getIdCliente();
+
+                        TareaGetSale tareaGetSale = new TareaGetSale();
+                        tareaGetSale.execute();
+                    }
+                }
+            }
+        }
+    }
+
+    //Clases Asyntask para traer las ventas
+
+    private class TareaGetSale extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerVenta.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option",  "getAllSale"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objFacturas = objItems.getJSONArray(0);
+
+                //String obj
+                String respuesta= String.valueOf(objFacturas);
+
+                if(respuesta.equalsIgnoreCase("No Existen Ventas"))
+                {
+                    existe = false;
+                }
+                else
+                {
+                    itemsVenta.clear();
+                    for(int i=0; i<objFacturas.length(); i++)
+                    {
+                        JSONObject obj = objFacturas.getJSONObject(i);
+
+                        if(idFactura.equalsIgnoreCase(obj.getString("idFactura")))
+                        {
+                            itemsVenta.add(new ItemsVenta_AgregarCliente(obj.getString("idVenta"),obj.getString("total"),obj.getString("cantidad"),obj.getString("estado"),obj.getString("idFactura"),obj.getString("idProducto")));
+                        }
+
+                        existe = true;
+                    }
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(AgregarCliente.this, respStr.toString(), Toast.LENGTH_SHORT).show();
+            if (existe)
+            {
+                TareaProductos tarea = new TareaProductos();
+                tarea.execute();
+            }
+        }
+    }
+
+    //Clases Asyntask para traer los datos de la tabla productos
+
+    private class TareaProductos extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerProducto.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "getAllProduct"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+
+                itemsProductos.clear();
+
+                for(int i = 0; i < itemsVenta.size(); i++)
+                {
+                    for(int j=0; j<objVendedores.length(); j++)
+                    {
+                        JSONObject obj = objVendedores.getJSONObject(j);
+
+                        if(obj.getString("idProducto").equalsIgnoreCase(itemsVenta.get(i).getIdProducto()))
+                        {
+                            itemsProductos.add(new ItemsListaProductos_Productos(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, obj.getString("idProducto"), obj.getString("descripcion"), obj.getString("cantidad"), obj.getString("precioCompra"), obj.getString("precioVenta"), obj.getString("idCategoria")));
+                        }
+
+                        resul = true;
+                    }
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(Productos.this, respStr, Toast.LENGTH_SHORT).show();
+            if(existe)
+            {
+                TareaListadoVendedores tarea = new TareaListadoVendedores();
+                tarea.execute();
+            }
+        }
+    }
+
+    //Clases Asyntask para listar los empleados que hay actualmente en el servidor
+
+    private class TareaListadoVendedores extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerLogin.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "listUssers"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+                //JSONObject obj = objItems.getJSONObject(0);
+
+                //String obj
+                respuesta= String.valueOf(objVendedores);
+
+                if(respuesta.equalsIgnoreCase("No Existe"))
+                {
+                    existe = false;
+                }
+                else
+                {
+                    for(int i=0; i<objVendedores.length(); i++)
+                    {
+                        JSONObject obj = objVendedores.getJSONObject(i);
+                        if(obj.getString("idUsuario").equalsIgnoreCase(idVendedorFactura))
+                        {
+                            nombreVendedorUsuarios = obj.getString("nombre");
+                        }
+                        existe = true;
+                    }
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(Empleados.this, respuesta, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //Clases Asyntask para traer los datos de la tabla productos
+
+    private class TareaCobro extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerCobro.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "getAllCharge"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+
+                itemsCobro.clear();
+
+                for(int j=0; j<objVendedores.length(); j++)
+                {
+                    JSONObject obj = objVendedores.getJSONObject(j);
+
+                    if(obj.getString("idFactura").equalsIgnoreCase(idFactura))
+                    {
+                        itemsCobro.add(new ItemsCobro_AgregarCliente(obj.getString("idCobro"),obj.getString("fecha"),obj.getString("abono"),obj.getString("idVendedor"),obj.getString("idFactura")));
+                    }
+
+                    resul = true;
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(Productos.this, respStr, Toast.LENGTH_SHORT).show();
+            if(existe)
+            {
+                TareaListadoVendedores tarea = new TareaListadoVendedores();
+                tarea.execute();
+            }
         }
     }
 

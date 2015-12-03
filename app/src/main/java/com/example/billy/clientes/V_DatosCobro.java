@@ -55,6 +55,4 @@ public class V_DatosCobro extends Fragment
 
         lista.setAdapter(new AdapterLista_Productos_VDatosCobro(getActivity(),arrayList));
     }
-
-
 }
