@@ -138,4 +138,5 @@
         <item>Perfumeria</item>
         <item>Decoracion</item>
     </string-array>
+    <string name="title_activity_prueba_volley">PruebaVolley</string>
 </resources>
