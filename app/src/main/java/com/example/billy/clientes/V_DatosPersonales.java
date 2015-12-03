@@ -35,13 +35,13 @@ public class V_DatosPersonales extends Fragment
         nomEmpresa = (TextView)view.findViewById(R.id.textViewNombreEmpresa_VCliente);
         dirEmpresa = (TextView)view.findViewById(R.id.textViewDireccionEmpresa_VCliente);
 
-        cedula.setText("Cedula: \n" + VisualizarCliente.cedula);
-        nombre.setText("Nombre: \n" + VisualizarCliente.nombre);
-        direccion.setText("Dirección: \n" + VisualizarCliente.direccion);
-        telefono.setText("Telefono: \n" + VisualizarCliente.telefono);
-        correo.setText("Correo: \n" + VisualizarCliente.correo);
-        nomEmpresa.setText("Nombre Empresa: \n" + VisualizarCliente.nombreEmpresa);
-        dirEmpresa.setText("Dirección Empresa: \n" + VisualizarCliente.direccionEmpresa);
+        cedula.setText("Cedula: \n" + VisualizarCliente.cedulaCliente);
+        nombre.setText("Nombre: \n" + VisualizarCliente.nombreCliente);
+        direccion.setText("Dirección: \n" + VisualizarCliente.direccionCliente);
+        telefono.setText("Telefono: \n" + VisualizarCliente.telefonoCliente);
+        correo.setText("Correo: \n" + VisualizarCliente.correoCliente);
+        nomEmpresa.setText("Nombre Empresa: \n" + VisualizarCliente.nombreEmpresaCliente);
+        dirEmpresa.setText("Dirección Empresa: \n" + VisualizarCliente.direccionEmpresaCliente);
 
         return view;
     }

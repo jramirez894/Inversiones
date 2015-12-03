@@ -27,6 +27,11 @@ public class V_DetalleCobro extends Fragment
         fechaCobro =(TextView)view.findViewById(R.id.textViewfechaCobro_VDetalleCobro);
         diaCobro =(TextView)view.findViewById(R.id.textViewDiaCobro_VDetalleCobro);
         horaCobro =(TextView)view.findViewById(R.id.textViewtHoraCobro_VDetalleCobro);
+
+        nomEmpleado.setText("Nombre Empleado: \n" + VisualizarCliente.nombreVendedorUsuarios);
+        fechaCobro.setText("Fecha de Cobro:: \n" + VisualizarCliente.fechaCobroFactura);
+        diaCobro.setText("Dia de Cobro: \n" + VisualizarCliente.diaCobroFactura);
+        horaCobro.setText("hora de Cobro: \n" + VisualizarCliente.horaCobroFactura);
         return view;
     }
 

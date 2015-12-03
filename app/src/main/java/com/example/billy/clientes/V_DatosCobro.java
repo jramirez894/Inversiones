@@ -43,6 +43,9 @@ public class V_DatosCobro extends Fragment
             }
         });
 
+        fechaVenta.setText("Fecha de Venta: " + VisualizarCliente.fechaFactura);
+        totalPagar.setText("Total a Pagar: $ " + VisualizarCliente.totalFactura);
+
         return view;
     }
 

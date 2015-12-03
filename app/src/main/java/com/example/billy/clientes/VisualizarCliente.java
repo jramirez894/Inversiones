@@ -69,14 +69,28 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
 
     long posicion;
 
-    public static String cedula;
-    public static String nombre;
-    public static String direccion;
-    public static String telefono;
-    public static String correo;
-    public static String nombreEmpresa;
-    public static String direccionEmpresa;
-    public static String idCliente;
+    //Tabla Cliente
+    public static String cedulaCliente;
+    public static String nombreCliente;
+    public static String direccionCliente;
+    public static String telefonoCliente;
+    public static String correoCliente;
+    public static String nombreEmpresaCliente;
+    public static String direccionEmpresaCliente;
+    public static String idClienteCliente;
+
+    //Tabla Factura
+    public static  String idFactura;
+    public static String fechaFactura;
+    public static String totalFactura;
+    public static String fechaCobroFactura;
+    public static String diaCobroFactura;
+    public static String horaCobroFactura;
+    public static String idVendedorFactura;
+    public static String idClienteFactura;
+
+    //Tabla Usuarios
+    public static String nombreVendedorUsuarios;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -90,16 +104,23 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
 
         //Datos personales
         Bundle bundle = getIntent().getExtras();
-        cedula = bundle.getString("cedula");
-        nombre = bundle.getString("nombre");
-        direccion = bundle.getString("direccion");
-        telefono = bundle.getString("telefono");
-        correo = bundle.getString("correo");
-        nombreEmpresa = bundle.getString("nombreEmpresa");
-        direccionEmpresa = bundle.getString("direccionEmpresa");
-        idCliente = bundle.getString("idCliente");
-
-        //Datos del cobro
+        cedulaCliente = bundle.getString("cedulaCliente");
+        nombreCliente = bundle.getString("nombreCliente");
+        direccionCliente = bundle.getString("direccionCliente");
+        telefonoCliente = bundle.getString("telefonoCliente");
+        correoCliente = bundle.getString("correoCliente");
+        nombreEmpresaCliente = bundle.getString("nombreEmpresaCliente");
+        direccionEmpresaCliente = bundle.getString("direccionEmpresaCliente");
+        idClienteCliente = bundle.getString("idClienteCliente");
+        idFactura = bundle.getString("idFactura");
+        fechaFactura = bundle.getString("fechaFactura");
+        totalFactura = bundle.getString("totalFactura");
+        fechaCobroFactura = bundle.getString("fechaCobroFactura");
+        diaCobroFactura = bundle.getString("diaCobroFactura");
+        horaCobroFactura = bundle.getString("horaCobroFactura");
+        idVendedorFactura = bundle.getString("idVendedorFactura");
+        idClienteFactura = bundle.getString("idClienteFactura");
+        nombreVendedorUsuarios = bundle.getString("nombreVendedorUsuarios");
 
         this.initialiseTabHost(savedInstanceState);
 

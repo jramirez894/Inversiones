@@ -111,14 +111,14 @@ public class PrincipalMenu extends AppCompatActivity
     String idVendedorFactura;
     String idClienteFactura;
 
+    //Tabla Usuarios
+    String nombreVendedorUsuarios;
+
     //Tabla Venta
     public static ArrayList<ItemsVenta_AgregarCliente> itemsVenta = new ArrayList<ItemsVenta_AgregarCliente>();
 
     //Tabla Productos
     public static ArrayList<ItemsListaProductos_Productos> itemsProductos = new ArrayList<ItemsListaProductos_Productos>();
-
-    //Tabla Usuarios
-    String nombreVendedorUsuarios;
 
     //Tabla Cobro
     public static ArrayList<ItemsCobro_AgregarCliente> itemsCobro = new ArrayList<ItemsCobro_AgregarCliente>();
@@ -806,6 +806,11 @@ public class PrincipalMenu extends AppCompatActivity
         protected void onPostExecute(Boolean result)
         {
             //Toast.makeText(Empleados.this, respuesta, Toast.LENGTH_SHORT).show();
+            if(existe)
+            {
+                TareaCobro tareaCobro = new TareaCobro();
+                tareaCobro.execute();
+            }
         }
     }
 
@@ -884,8 +889,27 @@ public class PrincipalMenu extends AppCompatActivity
             //Toast.makeText(Productos.this, respStr, Toast.LENGTH_SHORT).show();
             if(existe)
             {
-                TareaListadoVendedores tarea = new TareaListadoVendedores();
-                tarea.execute();
+                Intent intent = new Intent(PrincipalMenu.this, VisualizarCliente.class);
+
+                intent.putExtra("cedulaCliente", cedulaCliente);
+                intent.putExtra("nombreCliente", nombreCliente);
+                intent.putExtra("direccionCliente", direccionCliente);
+                intent.putExtra("telefonoCliente", telefonoCliente);
+                intent.putExtra("correoCliente", correoCliente);
+                intent.putExtra("nombreEmpresaCliente", nombreEmpresaCliente);
+                intent.putExtra("direccionEmpresaCliente", direccionEmpresaCliente);
+                intent.putExtra("idClienteCliente", idClienteCliente);
+                intent.putExtra("idFactura", idFactura);
+                intent.putExtra("fechaFactura", fechaFactura);
+                intent.putExtra("totalFactura", totalFactura);
+                intent.putExtra("fechaCobroFactura", fechaCobroFactura);
+                intent.putExtra("diaCobroFactura", diaCobroFactura);
+                intent.putExtra("horaCobroFactura", horaCobroFactura);
+                intent.putExtra("idVendedorFactura", idVendedorFactura);
+                intent.putExtra("idClienteFactura", idClienteFactura);
+                intent.putExtra("nombreVendedorUsuarios", nombreVendedorUsuarios);
+
+                startActivity(intent);
             }
         }
     }
