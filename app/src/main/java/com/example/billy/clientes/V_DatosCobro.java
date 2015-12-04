@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.billy.inversiones.R;
+import com.example.billy.menu_principal.PrincipalMenu;
 
 import java.util.ArrayList;
 
@@ -53,9 +54,11 @@ public class V_DatosCobro extends Fragment
     {
         arrayList.clear();
 
-        arrayList.add(new ItemsLista_Productos_ViDatosCobro("Nombre: " + "Sabanas", "Precio:$ " + "5.000"));
-        arrayList.add(new ItemsLista_Productos_ViDatosCobro("Nombre: " + "Sabanas", "Precio:$ " + "5.000"));
+        for(int i = 0; i < PrincipalMenu.itemsVenta.size(); i++)
+        {
+            arrayList.add(new ItemsLista_Productos_ViDatosCobro("Nombre: " + PrincipalMenu.itemsProductos.get(i).getNombre(), "Total:$ " + PrincipalMenu.itemsVenta.get(i).getTotal(), "Cantidad: " + PrincipalMenu.itemsVenta.get(i).getCantidad()));
+        }
 
-        lista.setAdapter(new AdapterLista_Productos_VDatosCobro(getActivity(),arrayList));
+        lista.setAdapter(new AdapterLista_Productos_VDatosCobro(getActivity(), arrayList));
     }
 }

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.example.billy.inversiones.R;
+import com.example.billy.menu_principal.PrincipalMenu;
 
 import java.util.ArrayList;
 
@@ -35,7 +36,14 @@ public class ClientesHistorial extends Fragment
     {
         arrayList.clear();
 
-        arrayList.add(new Item_ClienteHistorial("Fecha: " + "2015/10/06", "Valor:$ "+ "20000"));
+        for(int i = 0; i < PrincipalMenu.itemsCobro.size(); i++)
+        {
+            String fecha = PrincipalMenu.itemsCobro.get(i).getFecha();
+            String[] separated = fecha.split(" ");
+            String fechaSplit = separated[0]; // this will contain "Fruit"
+
+            arrayList.add(new Item_ClienteHistorial("Fecha: " + fechaSplit, "Valor: $"+ PrincipalMenu.itemsCobro.get(i).getAbono()));
+        }
 
         lista.setAdapter(new AdapterLista_ClienteHistorial(getActivity(), arrayList));
     }

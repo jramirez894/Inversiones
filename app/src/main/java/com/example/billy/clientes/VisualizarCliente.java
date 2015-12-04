@@ -11,9 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import com.example.billy.menu_principal.PagerAdapter;
 import com.example.billy.inversiones.R;
+import com.example.billy.menu_principal.PrincipalMenu;
 
 import java.util.HashMap;
 import java.util.List;
@@ -127,6 +129,15 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
         // Intialise ViewPager
         this.intialiseViewPager();
         
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        PrincipalMenu.itemsVenta.clear();
+        PrincipalMenu.itemsProductos.clear();
+        PrincipalMenu.itemsCobro.clear();
     }
 
     //Variables de los Tab

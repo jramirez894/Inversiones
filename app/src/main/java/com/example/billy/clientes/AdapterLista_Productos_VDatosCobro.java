@@ -35,9 +35,11 @@ public class AdapterLista_Productos_VDatosCobro extends ArrayAdapter
         ItemsLista_Productos_ViDatosCobro items =(ItemsLista_Productos_ViDatosCobro)getItem(position);
 
         TextView nombre = (TextView)convertView.findViewById(R.id.textViewNombre_listaDatosCobro);
+        TextView cantidad = (TextView)convertView.findViewById(R.id.textViewCantidad_listaDatosCobro);
         TextView precio = (TextView)convertView.findViewById(R.id.textViewPrecio_listaDatosCobro);
 
         nombre.setText(items.getNombre());
+        cantidad.setText(items.getCantidad());
         precio.setText(items.getPrecio());
 
         return convertView;

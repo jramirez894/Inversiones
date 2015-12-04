@@ -2,18 +2,19 @@ package com.example.billy.menu_principal;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.SystemClock;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,31 +22,25 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.billy.cancelados.Cancelados;
 import com.example.billy.clientes.AgregarCliente;
-import com.example.billy.clientes.DatosCobro;
 import com.example.billy.clientes.ItemFactura_AgregarCliente;
 import com.example.billy.clientes.ItemsCobro_AgregarCliente;
 import com.example.billy.clientes.ItemsVenta_AgregarCliente;
 import com.example.billy.clientes.VisualizarCliente;
 import com.example.billy.constantes.Constantes;
 import com.example.billy.devolucion.Devolucion;
-import com.example.billy.empleado.AdapterListaEmpleado;
 import com.example.billy.empleado.Empleados;
-import com.example.billy.empleado.ItemListaEmpleado;
 import com.example.billy.garantias_product.Garantia;
 import com.example.billy.gastos.Reg_Gasto;
-import com.example.billy.interfaces_empleado.PrincipalEmpleado;
 import com.example.billy.inversiones.MainActivity;
-import com.example.billy.inversiones.SesionUsuarios;
 import com.example.billy.perfil.Perfil;
-import com.example.billy.productos.AdapterListaProductos_Productos;
 import com.example.billy.productos.ItemsListaProductos_Productos;
 import com.example.billy.productos.Productos;
 import com.example.billy.inversiones.R;
-import com.example.billy.productos.V_Producto;
 import com.example.billy.saldo_caja.SaldoCaja;
 
 import org.apache.http.HttpResponse;
@@ -122,6 +117,9 @@ public class PrincipalMenu extends AppCompatActivity
 
     //Tabla Cobro
     public static ArrayList<ItemsCobro_AgregarCliente> itemsCobro = new ArrayList<ItemsCobro_AgregarCliente>();
+
+    //Alerta Cargando
+    AlertDialog alert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -255,6 +253,18 @@ public class PrincipalMenu extends AppCompatActivity
                 direccionEmpresaCliente = cliente.getDireccionEmpresa();
                 idClienteCliente = cliente.getIdCliente();
 
+                //Alerta personalizada
+                LayoutInflater inflaterAlert = (LayoutInflater) PrincipalMenu.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View dialoglayout = inflaterAlert.inflate(R.layout.alerta_cargando, null);
+
+                final AlertDialog.Builder builder = new AlertDialog.Builder(PrincipalMenu.this);
+                builder.setTitle("Cargando");
+                builder.setView(dialoglayout);
+                builder.setCancelable(false);
+
+                alert = builder.create();
+                alert.show();
+
                 TareaGetBill tareaGetBill = new TareaGetBill();
                 tareaGetBill.execute();
             }
@@ -267,6 +277,50 @@ public class PrincipalMenu extends AppCompatActivity
         //Filtro de los clientes
         autocompleteBuscarClientes_MenuPrincipal = (AutoCompleteTextView) findViewById(R.id.autocompleteBuscarClientes_MenuPrincipal);
 
+        autocompleteBuscarClientes_MenuPrincipal.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                String nombre = autocompleteBuscarClientes_MenuPrincipal.getText().toString();
+                int posicion = 0;
+
+                for(int i = 0; i < items.size(); i++)
+                {
+                    if(nombre.equalsIgnoreCase(items.get(i).getNombreLista()))
+                    {
+                        posicion = i;
+                        break;
+                    }
+                }
+
+                ItemListaPersonalizada cliente = items.get(posicion);
+
+                cedulaCliente = cliente.getCedula();
+                nombreCliente = cliente.getNombreLista();
+                direccionCliente = cliente.getDireccion();
+                telefonoCliente = cliente.getTelefono();
+                correoCliente = cliente.getCorreo();
+                nombreEmpresaCliente = cliente.getNombreEmpresa();
+                direccionEmpresaCliente = cliente.getDireccionEmpresa();
+                idClienteCliente = cliente.getIdCliente();
+
+                //Alerta personalizada
+                LayoutInflater inflaterAlert = (LayoutInflater) PrincipalMenu.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View dialoglayout = inflaterAlert.inflate(R.layout.alerta_cargando, null);
+
+                final AlertDialog.Builder builder = new AlertDialog.Builder(PrincipalMenu.this);
+                builder.setTitle("Cargando");
+                builder.setView(dialoglayout);
+                builder.setCancelable(false);
+
+                alert = builder.create();
+                alert.show();
+
+                TareaGetBill tareaGetBill = new TareaGetBill();
+                tareaGetBill.execute();
+            }
+        });
     }
 
     public void ActualizarLista()
@@ -499,30 +553,29 @@ public class PrincipalMenu extends AppCompatActivity
                         existe = true;
                     }
                 }
-
-                resul = true;
             }
             catch(UnsupportedEncodingException e)
             {
                 e.printStackTrace();
-                resul = false;
+                existe = false;
             }
 
             catch(ClientProtocolException e)
             {
                 e.printStackTrace();
-                resul = false;
+                existe = false;
             }
 
             catch (IOException e)
             {
                 e.printStackTrace();
-                resul = false;
+                existe = false;
             } catch (JSONException e) {
                 e.printStackTrace();
+                existe = false;
             }
 
-            return resul;
+            return existe;
         }
 
         protected void onPostExecute(Boolean result)
@@ -548,6 +601,11 @@ public class PrincipalMenu extends AppCompatActivity
                     }
                 }
             }
+            else
+            {
+                alert.cancel();
+                Toast.makeText(PrincipalMenu.this, "Error al cargar el cliente", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -561,7 +619,6 @@ public class PrincipalMenu extends AppCompatActivity
         @TargetApi(Build.VERSION_CODES.KITKAT)
         protected Boolean doInBackground(String... params)
         {
-            boolean resul = true;
             HttpClient httpClient;
             List<NameValuePair> nameValuePairs;
             HttpPost httpPost;
@@ -604,30 +661,31 @@ public class PrincipalMenu extends AppCompatActivity
                         existe = true;
                     }
                 }
-
-                resul = true;
             }
             catch(UnsupportedEncodingException e)
             {
                 e.printStackTrace();
-                resul = false;
+                existe = false;
             }
 
             catch(ClientProtocolException e)
             {
                 e.printStackTrace();
-                resul = false;
+                existe = false;
             }
 
             catch (IOException e)
             {
                 e.printStackTrace();
-                resul = false;
-            } catch (JSONException e) {
+                existe = false;
+            }
+            catch (JSONException e)
+            {
                 e.printStackTrace();
+                existe = false;
             }
 
-            return resul;
+            return existe;
         }
 
         protected void onPostExecute(Boolean result)
@@ -637,6 +695,11 @@ public class PrincipalMenu extends AppCompatActivity
             {
                 TareaProductos tarea = new TareaProductos();
                 tarea.execute();
+            }
+            else
+            {
+                alert.cancel();
+                Toast.makeText(PrincipalMenu.this, "Error al cargar el cliente", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -651,7 +714,6 @@ public class PrincipalMenu extends AppCompatActivity
         @TargetApi(Build.VERSION_CODES.KITKAT)
         protected Boolean doInBackground(String... params)
         {
-            boolean resul = true;
             HttpClient httpClient;
             List<NameValuePair> nameValuePairs;
             HttpPost httpPost;
@@ -685,33 +747,32 @@ public class PrincipalMenu extends AppCompatActivity
                             itemsProductos.add(new ItemsListaProductos_Productos(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, obj.getString("idProducto"), obj.getString("descripcion"), obj.getString("cantidad"), obj.getString("precioCompra"), obj.getString("precioVenta"), obj.getString("idCategoria")));
                         }
 
-                        resul = true;
+                        existe = true;
                     }
                 }
-
-                resul = true;
             }
             catch(UnsupportedEncodingException e)
             {
                 e.printStackTrace();
-                resul = false;
+                existe = false;
             }
 
             catch(ClientProtocolException e)
             {
                 e.printStackTrace();
-                resul = false;
+                existe = false;
             }
 
             catch (IOException e)
             {
                 e.printStackTrace();
-                resul = false;
+                existe = false;
             } catch (JSONException e) {
                 e.printStackTrace();
+                existe = false;
             }
 
-            return resul;
+            return existe;
         }
 
         protected void onPostExecute(Boolean result)
@@ -721,6 +782,11 @@ public class PrincipalMenu extends AppCompatActivity
             {
                 TareaListadoVendedores tarea = new TareaListadoVendedores();
                 tarea.execute();
+            }
+            else
+            {
+                alert.cancel();
+                Toast.makeText(PrincipalMenu.this, "Error al cargar el cliente", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -735,7 +801,6 @@ public class PrincipalMenu extends AppCompatActivity
         @TargetApi(Build.VERSION_CODES.KITKAT)
         protected Boolean doInBackground(String... params)
         {
-            boolean resul = true;
             HttpClient httpClient;
             List<NameValuePair> nameValuePairs;
             HttpPost httpPost;
@@ -776,31 +841,30 @@ public class PrincipalMenu extends AppCompatActivity
                         existe = true;
                     }
                 }
-
-                resul = true;
             }
             catch(UnsupportedEncodingException e)
             {
                 e.printStackTrace();
-                resul = false;
+                existe = false;
             }
 
             catch(ClientProtocolException e)
             {
                 e.printStackTrace();
-                resul = false;
+                existe = false;
             }
 
             catch (IOException e)
             {
                 e.printStackTrace();
-                resul = false;
+                existe = false;
             }
             catch (JSONException e) {
                 e.printStackTrace();
+                existe = false;
             }
 
-            return resul;
+            return existe;
         }
 
         protected void onPostExecute(Boolean result)
@@ -810,6 +874,11 @@ public class PrincipalMenu extends AppCompatActivity
             {
                 TareaCobro tareaCobro = new TareaCobro();
                 tareaCobro.execute();
+            }
+            else
+            {
+                alert.cancel();
+                Toast.makeText(PrincipalMenu.this, "Error al cargar el cliente", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -824,7 +893,6 @@ public class PrincipalMenu extends AppCompatActivity
         @TargetApi(Build.VERSION_CODES.KITKAT)
         protected Boolean doInBackground(String... params)
         {
-            boolean resul = true;
             HttpClient httpClient;
             List<NameValuePair> nameValuePairs;
             HttpPost httpPost;
@@ -856,32 +924,31 @@ public class PrincipalMenu extends AppCompatActivity
                         itemsCobro.add(new ItemsCobro_AgregarCliente(obj.getString("idCobro"),obj.getString("fecha"),obj.getString("abono"),obj.getString("idVendedor"),obj.getString("idFactura")));
                     }
 
-                    resul = true;
+                    existe= true;
                 }
-
-                resul = true;
             }
             catch(UnsupportedEncodingException e)
             {
                 e.printStackTrace();
-                resul = false;
+                existe= false;
             }
 
             catch(ClientProtocolException e)
             {
                 e.printStackTrace();
-                resul = false;
+                existe= false;
             }
 
             catch (IOException e)
             {
                 e.printStackTrace();
-                resul = false;
+                existe= false;
             } catch (JSONException e) {
                 e.printStackTrace();
+                existe= false;
             }
 
-            return resul;
+            return existe;
         }
 
         protected void onPostExecute(Boolean result)
@@ -889,6 +956,8 @@ public class PrincipalMenu extends AppCompatActivity
             //Toast.makeText(Productos.this, respStr, Toast.LENGTH_SHORT).show();
             if(existe)
             {
+                alert.cancel();
+
                 Intent intent = new Intent(PrincipalMenu.this, VisualizarCliente.class);
 
                 intent.putExtra("cedulaCliente", cedulaCliente);
@@ -910,6 +979,11 @@ public class PrincipalMenu extends AppCompatActivity
                 intent.putExtra("nombreVendedorUsuarios", nombreVendedorUsuarios);
 
                 startActivity(intent);
+            }
+            else
+            {
+                alert.cancel();
+                Toast.makeText(PrincipalMenu.this, "Error al cargar el cliente", Toast.LENGTH_LONG).show();
             }
         }
     }
