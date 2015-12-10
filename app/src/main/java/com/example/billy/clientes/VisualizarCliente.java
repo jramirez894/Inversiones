@@ -137,7 +137,6 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
         super.onStop();
         PrincipalMenu.itemsVenta.clear();
         PrincipalMenu.itemsProductos.clear();
-        PrincipalMenu.itemsCobro.clear();
     }
 
     //Variables de los Tab

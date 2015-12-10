@@ -115,9 +115,6 @@ public class PrincipalMenu extends AppCompatActivity
     //Tabla Productos
     public static ArrayList<ItemsListaProductos_Productos> itemsProductos = new ArrayList<ItemsListaProductos_Productos>();
 
-    //Tabla Cobro
-    public static ArrayList<ItemsCobro_AgregarCliente> itemsCobro = new ArrayList<ItemsCobro_AgregarCliente>();
-
     //Alerta Cargando
     AlertDialog alert;
 
@@ -127,6 +124,8 @@ public class PrincipalMenu extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal_menu);
 
+        items.clear();
+
         Constantes.EDITAR_LISTA = "Botones";
 
         ActionBar actionBar = getSupportActionBar();
@@ -134,7 +133,6 @@ public class PrincipalMenu extends AppCompatActivity
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.invalidateOptionsMenu();
         actionBar.setTitle("Menu");
-
 
         actionBar.setHomeAsUpIndicator(R.drawable.ic_drawer);
 
@@ -870,90 +868,6 @@ public class PrincipalMenu extends AppCompatActivity
         protected void onPostExecute(Boolean result)
         {
             //Toast.makeText(Empleados.this, respuesta, Toast.LENGTH_SHORT).show();
-            if(existe)
-            {
-                TareaCobro tareaCobro = new TareaCobro();
-                tareaCobro.execute();
-            }
-            else
-            {
-                alert.cancel();
-                Toast.makeText(PrincipalMenu.this, "Error al cargar el cliente", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    //Clases Asyntask para traer los datos de la tabla productos
-
-    private class TareaCobro extends AsyncTask<String,Integer,Boolean>
-    {
-        private String respStr;
-        private JSONObject msg;
-
-        @TargetApi(Build.VERSION_CODES.KITKAT)
-        protected Boolean doInBackground(String... params)
-        {
-            HttpClient httpClient;
-            List<NameValuePair> nameValuePairs;
-            HttpPost httpPost;
-            httpClient= new DefaultHttpClient();
-            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerCobro.php");
-
-            nameValuePairs = new ArrayList<NameValuePair>();
-            nameValuePairs.add(new BasicNameValuePair("option", "getAllCharge"));
-
-            try
-            {
-                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                HttpResponse resp= httpClient.execute(httpPost);
-
-                respStr = EntityUtils.toString(resp.getEntity());
-
-                JSONObject respJSON = new JSONObject(respStr);
-                JSONArray objItems = respJSON.getJSONArray("items");
-                JSONArray objVendedores = objItems.getJSONArray(0);
-
-                itemsCobro.clear();
-
-                for(int j=0; j<objVendedores.length(); j++)
-                {
-                    JSONObject obj = objVendedores.getJSONObject(j);
-
-                    if(obj.getString("idFactura").equalsIgnoreCase(idFactura))
-                    {
-                        itemsCobro.add(new ItemsCobro_AgregarCliente(obj.getString("idCobro"),obj.getString("fecha"),obj.getString("abono"),obj.getString("idVendedor"),obj.getString("idFactura")));
-                    }
-
-                    existe= true;
-                }
-            }
-            catch(UnsupportedEncodingException e)
-            {
-                e.printStackTrace();
-                existe= false;
-            }
-
-            catch(ClientProtocolException e)
-            {
-                e.printStackTrace();
-                existe= false;
-            }
-
-            catch (IOException e)
-            {
-                e.printStackTrace();
-                existe= false;
-            } catch (JSONException e) {
-                e.printStackTrace();
-                existe= false;
-            }
-
-            return existe;
-        }
-
-        protected void onPostExecute(Boolean result)
-        {
-            //Toast.makeText(Productos.this, respStr, Toast.LENGTH_SHORT).show();
             if(existe)
             {
                 alert.cancel();
