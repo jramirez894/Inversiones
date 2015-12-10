@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.example.billy.clientes.ModificarCliente;
 import com.example.billy.constantes.Constantes;
 import com.example.billy.inversiones.R;
+import com.example.billy.productos.M_Producto;
 import com.example.billy.productos.Productos;
 
 import org.apache.http.HttpResponse;
@@ -96,7 +97,26 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                         posicionItems = (ItemListaPersonalizada) getItem(position);
 
                         //Abrir ModificarCliente
-                        Intent intent= new Intent(getContext(),ModificarCliente.class);
+                        String idCliente = posicionItems.getIdCliente();
+                        String cedula =  posicionItems.getCedula();
+                        String nombre =  posicionItems.getNombreLista();
+                        String direccion = posicionItems.getDireccion();
+                        String telefono = posicionItems.getTelefono();
+                        String correo = posicionItems.getCorreo();
+                        String nombreEmpresa = posicionItems.getNombreEmpresa();
+                        String direccionEmpresa = posicionItems.getDireccionEmpresa();
+
+                        Intent intent = new Intent(getContext(),ModificarCliente.class);
+
+                        intent.putExtra("idCliente",idCliente);
+                        intent.putExtra("cedula", cedula);
+                        intent.putExtra("nombre", nombre);
+                        intent.putExtra("direccion", direccion);
+                        intent.putExtra("telefono", telefono);
+                        intent.putExtra("correo", correo);
+                        intent.putExtra("nombreEmpresa", nombreEmpresa);
+                        intent.putExtra("direccionEmpresa", direccionEmpresa);
+
                         intent.putExtra("Interfaz","Administrador");
                         getContext().startActivity(intent);
                     }

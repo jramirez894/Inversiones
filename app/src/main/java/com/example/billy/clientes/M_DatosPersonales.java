@@ -36,6 +36,14 @@ public class M_DatosPersonales extends Fragment
         correo=(EditText)view.findViewById(R.id.editCorreo_DatoPersonales_Mcliente);
         nomEmpresa=(EditText)view.findViewById(R.id.editNombreEmpresa_DatoPersonales_Mcliente);
         dircEmpresa=(EditText)view.findViewById(R.id.editDireccionEmpresa_DatoPersonales_Mcliente);
+
+        cedula.setText(ModificarCliente.cedulaCliente);
+        nombre.setText(ModificarCliente.nombreCliente);
+        direccion.setText(ModificarCliente.direccionCliente);
+        telefono.setText(ModificarCliente.telefonoCliente);
+        correo.setText(ModificarCliente.correoCliente);
+        nomEmpresa.setText(ModificarCliente.nombreEmpresaCliente);
+        dircEmpresa.setText(ModificarCliente.direccionEmpresaCliente);
         return view;
     }
 }

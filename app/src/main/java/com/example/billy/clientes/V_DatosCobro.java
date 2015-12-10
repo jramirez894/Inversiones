@@ -37,9 +37,11 @@ public class V_DatosCobro extends Fragment
         totalPagar = (TextView)view.findViewById(R.id.textViewTotalPagar_VDatosCobro);
         valorRestante = (TextView)view.findViewById(R.id.textViewValorRestante_VDatosCobro);
 
-        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lista.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
+            {
 
             }
         });
