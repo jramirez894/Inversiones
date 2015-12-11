@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +18,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.billy.clientes.ItemFactura_AgregarCliente;
+import com.example.billy.clientes.ItemsVenta_AgregarCliente;
 import com.example.billy.clientes.ModificarCliente;
+import com.example.billy.clientes.VisualizarCliente;
 import com.example.billy.constantes.Constantes;
 import com.example.billy.inversiones.R;
+import com.example.billy.productos.ItemsListaProductos_Productos;
 import com.example.billy.productos.M_Producto;
 import com.example.billy.productos.Productos;
 
@@ -32,6 +37,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,14 +60,51 @@ public class AdapterListaPersonalizada extends ArrayAdapter
     public static Spinner spinOrden;
 
     boolean resul;
-    Object respuesta = "";
+
+    String respuesta = "";
+    Object respuestaObj = "";
     String idCliente;
+
+    //Alerta Cargando
+    AlertDialog alert;
+    boolean existe = false;
 
 
     public AdapterListaPersonalizada(Context context, List objects)
     {
         super(context, 0, objects);
     }
+    //Tabla Usuarios
+    String nombreVendedorUsuarios;
+
+    //Array que guardara todas las factura del servidor
+    public static ArrayList<ItemFactura_AgregarCliente> itemsFactura = new ArrayList<ItemFactura_AgregarCliente>();
+
+    //Tabla Venta
+    public static ArrayList<ItemsVenta_AgregarCliente> itemsVenta = new ArrayList<ItemsVenta_AgregarCliente>();
+
+    //Tabla Productos
+    public static ArrayList<ItemsListaProductos_Productos> itemsProductos = new ArrayList<ItemsListaProductos_Productos>();
+
+    //Tabla DatosPersonales
+    String idClienteCliente = "";
+    String cedula = "";
+    String nombre = "";
+    String direccion = "";
+    String telefono = "";
+    String correo = "";
+    String nombreEmpresa = "";
+    String direccionEmpresa = "";
+
+    //Tabla Factura
+    String idFactura;
+    String fechaFactura;
+    String totalFactura;
+    String fechaCobroFactura;
+    String diaCobroFactura;
+    String horaCobroFactura;
+    String idVendedorFactura;
+    String idClienteFactura;
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent)
@@ -97,16 +140,31 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                         posicionItems = (ItemListaPersonalizada) getItem(position);
 
                         //Abrir ModificarCliente
-                        String idCliente = posicionItems.getIdCliente();
-                        String cedula =  posicionItems.getCedula();
-                        String nombre =  posicionItems.getNombreLista();
-                        String direccion = posicionItems.getDireccion();
-                        String telefono = posicionItems.getTelefono();
-                        String correo = posicionItems.getCorreo();
-                        String nombreEmpresa = posicionItems.getNombreEmpresa();
-                        String direccionEmpresa = posicionItems.getDireccionEmpresa();
+                        idClienteCliente = posicionItems.getIdCliente();
+                        cedula =  posicionItems.getCedula();
+                        nombre =  posicionItems.getNombreLista();
+                        direccion = posicionItems.getDireccion();
+                        telefono = posicionItems.getTelefono();
+                        correo = posicionItems.getCorreo();
+                        nombreEmpresa = posicionItems.getNombreEmpresa();
+                        direccionEmpresa = posicionItems.getDireccionEmpresa();
 
-                        Intent intent = new Intent(getContext(),ModificarCliente.class);
+                        //Alerta personalizada
+                        LayoutInflater inflaterAlert = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View dialoglayout = inflaterAlert.inflate(R.layout.alerta_cargando, null);
+
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle("Cargando");
+                        builder.setView(dialoglayout);
+                        builder.setCancelable(false);
+
+                        alert = builder.create();
+                        alert.show();
+
+                        TareaGetBill tareaGetBill = new TareaGetBill();
+                        tareaGetBill.execute();
+
+                        /*Intent intent = new Intent(getContext(),ModificarCliente.class);
 
                         intent.putExtra("idCliente",idCliente);
                         intent.putExtra("cedula", cedula);
@@ -118,7 +176,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                         intent.putExtra("direccionEmpresa", direccionEmpresa);
 
                         intent.putExtra("Interfaz","Administrador");
-                        getContext().startActivity(intent);
+                        getContext().startActivity(intent);*/
                     }
                 });
 
@@ -261,7 +319,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
 
                 respJSON = new JSONObject(respStr);
 
-                respuesta= respJSON.get("items");
+                respuestaObj= respJSON.get("items");
                 resul = true;
             }
             catch(UnsupportedEncodingException e)
@@ -309,4 +367,403 @@ public class AdapterListaPersonalizada extends ArrayAdapter
             builder.show();
         }
     }
+
+    //Clases Asyntask para traer las facturas
+    private class TareaGetBill extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerFactura.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option",  "getAllBill"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objFacturas = objItems.getJSONArray(0);
+
+                //String obj
+                String respuesta= String.valueOf(objFacturas);
+
+                if(respuesta.equalsIgnoreCase("No Existe"))
+                {
+                    existe = false;
+                }
+
+                else
+                {
+                    itemsFactura.clear();
+                    for(int i=0; i<objFacturas.length(); i++)
+                    {
+                        JSONObject obj = objFacturas.getJSONObject(i);
+                        itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("diaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
+                        existe = true;
+                    }
+                }
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                existe = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                existe = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                existe = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                existe = false;
+            }
+
+            return existe;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(AgregarCliente.this, respStr.toString(), Toast.LENGTH_SHORT).show();
+            if (existe)
+            {
+                for(int i = 0; i < itemsFactura.size(); i++)
+                {
+                    if(idClienteCliente.equalsIgnoreCase(itemsFactura.get(i).getIdCliente()))
+                    {
+                        idFactura = itemsFactura.get(i).getIdFactura();
+                        fechaFactura= itemsFactura.get(i).getFecha();
+                        totalFactura= itemsFactura.get(i).getTotal();
+                        fechaCobroFactura= itemsFactura.get(i).getFechaCobro();
+                        diaCobroFactura= itemsFactura.get(i).getDiaCobro();
+                        horaCobroFactura= itemsFactura.get(i).getHoraCobro();
+                        idVendedorFactura= itemsFactura.get(i).getIdVendedor();
+                        idClienteFactura= itemsFactura.get(i).getIdCliente();
+
+                        TareaGetSale tareaGetSale = new TareaGetSale();
+                        tareaGetSale.execute();
+                    }
+                }
+            }
+            else
+            {
+                alert.cancel();
+                Toast.makeText(getContext(), "Error al cargar el cliente", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    //Clases Asyntask para traer las ventas
+
+    private class TareaGetSale extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerVenta.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option",  "getAllSale"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objFacturas = objItems.getJSONArray(0);
+
+                //String obj
+                String respuesta= String.valueOf(objFacturas);
+
+                if(respuesta.equalsIgnoreCase("No Existen Ventas"))
+                {
+                    existe = false;
+                }
+                else
+                {
+                    itemsVenta.clear();
+                    for(int i=0; i<objFacturas.length(); i++)
+                    {
+                        JSONObject obj = objFacturas.getJSONObject(i);
+
+                        if(idFactura.equalsIgnoreCase(obj.getString("idFactura")))
+                        {
+                            itemsVenta.add(new ItemsVenta_AgregarCliente(obj.getString("idVenta"),obj.getString("total"),obj.getString("cantidad"),obj.getString("estado"),obj.getString("idFactura"),obj.getString("idProducto")));
+                        }
+
+                        existe = true;
+                    }
+                }
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                existe = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                existe = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                existe = false;
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+                existe = false;
+            }
+
+            return existe;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            if (existe)
+            {
+                TareaProductos tarea = new TareaProductos();
+                tarea.execute();
+            }
+            else
+            {
+                alert.cancel();
+                Toast.makeText(getContext(), "Error al cargar el cliente", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    //Clases Asyntask para traer los datos de la tabla productos
+
+    private class TareaProductos extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerProducto.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "getAllProduct"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+
+                itemsProductos.clear();
+
+                for(int i = 0; i < itemsVenta.size(); i++)
+                {
+                    for(int j=0; j<objVendedores.length(); j++)
+                    {
+                        JSONObject obj = objVendedores.getJSONObject(j);
+
+                        if(obj.getString("idProducto").equalsIgnoreCase(itemsVenta.get(i).getIdProducto()))
+                        {
+                            itemsProductos.add(new ItemsListaProductos_Productos(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, obj.getString("idProducto"), obj.getString("descripcion"), obj.getString("cantidad"), obj.getString("precioCompra"), obj.getString("precioVenta"), obj.getString("idCategoria")));
+                        }
+
+                        existe = true;
+                    }
+                }
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                existe = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                existe = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                existe = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                existe = false;
+            }
+
+            return existe;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(Productos.this, respStr, Toast.LENGTH_SHORT).show();
+            if(existe)
+            {
+                TareaListadoVendedores tarea = new TareaListadoVendedores();
+                tarea.execute();
+            }
+            else
+            {
+                alert.cancel();
+                Toast.makeText(getContext(), "Error al cargar el cliente", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    //Clases Asyntask para listar los empleados que hay actualmente en el servidor
+
+    private class TareaListadoVendedores extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerLogin.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "listUssers"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+                //JSONObject obj = objItems.getJSONObject(0);
+
+                //String obj
+                respuesta= String.valueOf(objVendedores);
+
+                if(respuesta.equalsIgnoreCase("No Existe"))
+                {
+                    existe = false;
+                }
+                else
+                {
+                    for(int i=0; i<objVendedores.length(); i++)
+                    {
+                        JSONObject obj = objVendedores.getJSONObject(i);
+                        if(obj.getString("idUsuario").equalsIgnoreCase(idVendedorFactura))
+                        {
+                            nombreVendedorUsuarios = obj.getString("nombre");
+                        }
+                        existe = true;
+                    }
+                }
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                existe = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                existe = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                existe = false;
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+                existe = false;
+            }
+
+            return existe;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(Empleados.this, respuesta, Toast.LENGTH_SHORT).show();
+            if(existe)
+            {
+                alert.cancel();
+
+                Intent intent = new Intent(getContext(), ModificarCliente.class);
+
+                intent.putExtra("cedulaCliente", cedula);
+                intent.putExtra("nombreCliente", nombre);
+                intent.putExtra("direccionCliente", direccion);
+                intent.putExtra("telefonoCliente", telefono);
+                intent.putExtra("correoCliente", correo);
+                intent.putExtra("nombreEmpresaCliente", nombreEmpresa);
+                intent.putExtra("direccionEmpresaCliente", direccionEmpresa);
+                intent.putExtra("idClienteCliente", idClienteCliente);
+                intent.putExtra("idFactura", idFactura);
+                intent.putExtra("fechaFactura", fechaFactura);
+                intent.putExtra("totalFactura", totalFactura);
+                intent.putExtra("fechaCobroFactura", fechaCobroFactura);
+                intent.putExtra("diaCobroFactura", diaCobroFactura);
+                intent.putExtra("horaCobroFactura", horaCobroFactura);
+                intent.putExtra("idVendedorFactura", idVendedorFactura);
+                intent.putExtra("idClienteFactura", idClienteFactura);
+                intent.putExtra("nombreVendedorUsuarios", nombreVendedorUsuarios);
+                intent.putExtra("Interfaz","Administrador");
+                getContext().startActivity(intent);
+            }
+            else
+            {
+                alert.cancel();
+                Toast.makeText(getContext(), "Error al cargar el cliente", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
 }

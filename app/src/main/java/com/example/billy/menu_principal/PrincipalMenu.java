@@ -504,7 +504,6 @@ public class PrincipalMenu extends AppCompatActivity
     }
 
     //Clases Asyntask para traer las facturas
-
     private class TareaGetBill extends AsyncTask<String,Integer,Boolean>
     {
         private String respStr;
@@ -914,5 +913,4 @@ public class PrincipalMenu extends AppCompatActivity
 
         return super.onKeyUp(keyCode, event);
     }
-
 }
