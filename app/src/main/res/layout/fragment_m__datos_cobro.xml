@@ -29,6 +29,7 @@
                 android:id="@+id/autoCompleteBuscarProducto_DatoCobro_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:completionThreshold="1"
                 android:hint="Nombre Producto"
                 android:layout_marginTop="15dp"
                 android:drawableRight="@android:drawable/ic_menu_search"
@@ -38,6 +39,30 @@
                 android:id="@+id/listViewListaProductos_DatosCobro_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"/>
+
+            <LinearLayout
+                android:id="@+id/layoutProductosNuevos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="5dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Productos Nuevos"
+                    android:textSize="20sp"
+                    android:gravity="left"
+                    android:textColor="@android:color/background_dark"
+                    android:textStyle="bold"/>
+
+                <ListView
+                    android:id="@+id/listViewListaProductosNuevos_DatosCobro_Mcliente"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"/>
+
+            </LinearLayout>
 
             <EditText
                 android:id="@+id/editPrecioProducto_DatosCobro_Mcliente"
@@ -53,7 +78,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Fecha de Venta"
                 android:inputType="date"
-                android:layout_marginTop="5dp"/>
+                android:layout_marginTop="5dp"
+                android:enabled="false"/>
 
             <EditText
                 android:id="@+id/editTotalPagar_DatosCobro_Mcliente"
@@ -102,7 +128,8 @@
                 android:layout_weight="1"
                 android:layout_marginTop="5dp"
                 android:hint="Valor Restante"
-                android:inputType="number"/>
+                android:inputType="number"
+                android:enabled="false"/>
 
         </LinearLayout>
     </ScrollView>

@@ -23,6 +23,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.billy.constantes.Constantes;
 import com.example.billy.interfaces_empleado.PrincipalEmpleado;
 import com.example.billy.menu_principal.PagerAdapter;
 import com.example.billy.menu_principal.PrincipalMenu;
@@ -110,48 +111,11 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         }
     }
 
-    String interfaz ="";
-
-    //Tabla Cliente
-    public static String idClienteCliente;
-    public static String cedulaCliente;
-    public static String nombreCliente;
-    public static String direccionCliente;
-    public static String telefonoCliente;
-    public static String correoCliente;
-    public static String nombreEmpresaCliente;
-    public static String direccionEmpresaCliente;
-
-
-    //Tabla Factura
-    String idFactura;
-    String fechaFactura;
-    String totalFactura;
-    String fechaCobroFactura;
-    String diaCobroFactura;
-    String horaCobroFactura;
-    String idVendedorFactura;
-    String idClienteFactura;
-
-    //Tabla Usuarios
-    String nombreVendedorUsuarios;
-
         @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modificar_cliente);
-
-        Bundle bundle = getIntent().getExtras();
-        interfaz = bundle.getString("Interfaz");
-        idClienteCliente = bundle.getString("idCliente");
-        cedulaCliente = bundle.getString("cedula");
-        nombreCliente = bundle.getString("nombre");
-        direccionCliente = bundle.getString("direccion");
-        telefonoCliente = bundle.getString("telefono");
-        correoCliente = bundle.getString("correo");
-        nombreEmpresaCliente = bundle.getString("nombreEmpresa");
-        direccionEmpresaCliente = bundle.getString("direccionEmpresa");
 
         ActionBar actionBar =getSupportActionBar();
         actionBar.setTitle("Volver");
@@ -300,7 +264,7 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                 {
                     fecha = editFecha_AlertaMCliente.getText().toString();
                     calificacion = editCalificacion_AlertaMCliente.getText().toString();
-                    switch (interfaz) {
+                    switch (Constantes.interfaz) {
                         case "Administrador":
                             if (valorRestante != 0) {
                                 if (fecha.equals("")) {

@@ -76,15 +76,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
     }
     //Tabla Usuarios
     String nombreVendedorUsuarios;
-
-    //Array que guardara todas las factura del servidor
-    public static ArrayList<ItemFactura_AgregarCliente> itemsFactura = new ArrayList<ItemFactura_AgregarCliente>();
-
-    //Tabla Venta
-    public static ArrayList<ItemsVenta_AgregarCliente> itemsVenta = new ArrayList<ItemsVenta_AgregarCliente>();
-
-    //Tabla Productos
-    public static ArrayList<ItemsListaProductos_Productos> itemsProductos = new ArrayList<ItemsListaProductos_Productos>();
+    String telefonoVendedorUsuarios;
 
     //Tabla DatosPersonales
     String idClienteCliente = "";
@@ -155,6 +147,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
 
                         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setTitle("Cargando");
+                        //builder.setMessage(idClienteCliente + " " + cedula + " " + nombre+ " " + direccion+ " " +telefono+ " " +correo);
                         builder.setView(dialoglayout);
                         builder.setCancelable(false);
 
@@ -408,11 +401,11 @@ public class AdapterListaPersonalizada extends ArrayAdapter
 
                 else
                 {
-                    itemsFactura.clear();
+                    Constantes.itemsFactura.clear();
                     for(int i=0; i<objFacturas.length(); i++)
                     {
                         JSONObject obj = objFacturas.getJSONObject(i);
-                        itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("diaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
+                        Constantes.itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("diaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
                         existe = true;
                     }
                 }
@@ -446,18 +439,18 @@ public class AdapterListaPersonalizada extends ArrayAdapter
             //Toast.makeText(AgregarCliente.this, respStr.toString(), Toast.LENGTH_SHORT).show();
             if (existe)
             {
-                for(int i = 0; i < itemsFactura.size(); i++)
+                for(int i = 0; i < Constantes.itemsFactura.size(); i++)
                 {
-                    if(idClienteCliente.equalsIgnoreCase(itemsFactura.get(i).getIdCliente()))
+                    if(idClienteCliente.equalsIgnoreCase(Constantes.itemsFactura.get(i).getIdCliente()))
                     {
-                        idFactura = itemsFactura.get(i).getIdFactura();
-                        fechaFactura= itemsFactura.get(i).getFecha();
-                        totalFactura= itemsFactura.get(i).getTotal();
-                        fechaCobroFactura= itemsFactura.get(i).getFechaCobro();
-                        diaCobroFactura= itemsFactura.get(i).getDiaCobro();
-                        horaCobroFactura= itemsFactura.get(i).getHoraCobro();
-                        idVendedorFactura= itemsFactura.get(i).getIdVendedor();
-                        idClienteFactura= itemsFactura.get(i).getIdCliente();
+                        idFactura = Constantes.itemsFactura.get(i).getIdFactura();
+                        fechaFactura= Constantes.itemsFactura.get(i).getFecha();
+                        totalFactura= Constantes.itemsFactura.get(i).getTotal();
+                        fechaCobroFactura= Constantes.itemsFactura.get(i).getFechaCobro();
+                        diaCobroFactura= Constantes.itemsFactura.get(i).getDiaCobro();
+                        horaCobroFactura= Constantes.itemsFactura.get(i).getHoraCobro();
+                        idVendedorFactura= Constantes.itemsFactura.get(i).getIdVendedor();
+                        idClienteFactura= Constantes.itemsFactura.get(i).getIdCliente();
 
                         TareaGetSale tareaGetSale = new TareaGetSale();
                         tareaGetSale.execute();
@@ -511,14 +504,14 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                 }
                 else
                 {
-                    itemsVenta.clear();
+                    Constantes.itemsVenta.clear();
                     for(int i=0; i<objFacturas.length(); i++)
                     {
                         JSONObject obj = objFacturas.getJSONObject(i);
 
                         if(idFactura.equalsIgnoreCase(obj.getString("idFactura")))
                         {
-                            itemsVenta.add(new ItemsVenta_AgregarCliente(obj.getString("idVenta"),obj.getString("total"),obj.getString("cantidad"),obj.getString("estado"),obj.getString("idFactura"),obj.getString("idProducto")));
+                            Constantes.itemsVenta.add(new ItemsVenta_AgregarCliente(obj.getString("idVenta"),obj.getString("total"),obj.getString("cantidad"),obj.getString("estado"),obj.getString("idFactura"),obj.getString("idProducto")));
                         }
 
                         existe = true;
@@ -596,17 +589,17 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                 JSONArray objItems = respJSON.getJSONArray("items");
                 JSONArray objVendedores = objItems.getJSONArray(0);
 
-                itemsProductos.clear();
+                Constantes.itemsProductos.clear();
 
-                for(int i = 0; i < itemsVenta.size(); i++)
+                for(int i = 0; i < Constantes.itemsVenta.size(); i++)
                 {
                     for(int j=0; j<objVendedores.length(); j++)
                     {
                         JSONObject obj = objVendedores.getJSONObject(j);
 
-                        if(obj.getString("idProducto").equalsIgnoreCase(itemsVenta.get(i).getIdProducto()))
+                        if(obj.getString("idProducto").equalsIgnoreCase(Constantes.itemsVenta.get(i).getIdProducto()))
                         {
-                            itemsProductos.add(new ItemsListaProductos_Productos(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, obj.getString("idProducto"), obj.getString("descripcion"), obj.getString("cantidad"), obj.getString("precioCompra"), obj.getString("precioVenta"), obj.getString("idCategoria")));
+                            Constantes.itemsProductos.add(new ItemsListaProductos_Productos(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, obj.getString("idProducto"), obj.getString("descripcion"), obj.getString("cantidad"), obj.getString("precioCompra"), obj.getString("precioVenta"), obj.getString("idCategoria")));
                         }
 
                         existe = true;
@@ -699,6 +692,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                         if(obj.getString("idUsuario").equalsIgnoreCase(idVendedorFactura))
                         {
                             nombreVendedorUsuarios = obj.getString("nombre");
+                            telefonoVendedorUsuarios = obj.getString("telefono");
                         }
                         existe = true;
                     }
@@ -735,27 +729,28 @@ public class AdapterListaPersonalizada extends ArrayAdapter
             if(existe)
             {
                 alert.cancel();
-
+                //Toast.makeText(getContext(), idClienteCliente + " " + cedula + " " + nombre+ " " + direccion+ " " +telefono+ " " +correo, Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(getContext(), ModificarCliente.class);
 
-                intent.putExtra("cedulaCliente", cedula);
-                intent.putExtra("nombreCliente", nombre);
-                intent.putExtra("direccionCliente", direccion);
-                intent.putExtra("telefonoCliente", telefono);
-                intent.putExtra("correoCliente", correo);
-                intent.putExtra("nombreEmpresaCliente", nombreEmpresa);
-                intent.putExtra("direccionEmpresaCliente", direccionEmpresa);
-                intent.putExtra("idClienteCliente", idClienteCliente);
-                intent.putExtra("idFactura", idFactura);
-                intent.putExtra("fechaFactura", fechaFactura);
-                intent.putExtra("totalFactura", totalFactura);
-                intent.putExtra("fechaCobroFactura", fechaCobroFactura);
-                intent.putExtra("diaCobroFactura", diaCobroFactura);
-                intent.putExtra("horaCobroFactura", horaCobroFactura);
-                intent.putExtra("idVendedorFactura", idVendedorFactura);
-                intent.putExtra("idClienteFactura", idClienteFactura);
-                intent.putExtra("nombreVendedorUsuarios", nombreVendedorUsuarios);
-                intent.putExtra("Interfaz","Administrador");
+                Constantes.cedulaCliente = cedula;
+                Constantes.nombreCliente = nombre;
+                Constantes.direccionCliente = direccion;
+                Constantes.telefonoCliente = telefono;
+                Constantes.correoCliente = correo;
+                Constantes.nombreEmpresaCliente = nombreEmpresa;
+                Constantes.direccionEmpresaCliente = direccionEmpresa;
+                Constantes.idClienteCliente = idClienteCliente;
+                Constantes.idFactura = idFactura;
+                Constantes.fechaFactura = fechaFactura;
+                Constantes.totalFactura = totalFactura;
+                Constantes.fechaCobroFactura = fechaCobroFactura;
+                Constantes.diaCobroFactura = diaCobroFactura;
+                Constantes.horaCobroFactura = horaCobroFactura;
+                Constantes.idVendedorFactura = idVendedorFactura;
+                Constantes.idClienteFactura = idClienteFactura;
+                Constantes.nombreVendedorUsuarios = nombreVendedorUsuarios;
+                Constantes.telefonoVendedorUsuarios = telefonoVendedorUsuarios;
+                Constantes.interfaz = "Administrador";
                 getContext().startActivity(intent);
             }
             else

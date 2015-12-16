@@ -34,7 +34,7 @@
     <string-array name="fechadeCobro">
         <item>Fecha de Cobro</item>
         <item>Semanal</item>
-        <item>Cada 10 Días</item>
+        <item>Cada 10 Dias</item>
         <item>Quincenal</item>
         <item>Mensual</item>
     </string-array>

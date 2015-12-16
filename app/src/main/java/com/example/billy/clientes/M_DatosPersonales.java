@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.billy.constantes.Constantes;
 import com.example.billy.inversiones.R;
 
 
@@ -37,13 +39,16 @@ public class M_DatosPersonales extends Fragment
         nomEmpresa=(EditText)view.findViewById(R.id.editNombreEmpresa_DatoPersonales_Mcliente);
         dircEmpresa=(EditText)view.findViewById(R.id.editDireccionEmpresa_DatoPersonales_Mcliente);
 
-        cedula.setText(ModificarCliente.cedulaCliente);
-        nombre.setText(ModificarCliente.nombreCliente);
-        direccion.setText(ModificarCliente.direccionCliente);
-        telefono.setText(ModificarCliente.telefonoCliente);
-        correo.setText(ModificarCliente.correoCliente);
-        nomEmpresa.setText(ModificarCliente.nombreEmpresaCliente);
-        dircEmpresa.setText(ModificarCliente.direccionEmpresaCliente);
+        cedula.setText(Constantes.cedulaCliente);
+        nombre.setText(Constantes.nombreCliente);
+        direccion.setText(Constantes.direccionCliente);
+        telefono.setText(Constantes.telefonoCliente);
+        correo.setText(Constantes.correoCliente);
+        nomEmpresa.setText(Constantes.nombreEmpresaCliente);
+        dircEmpresa.setText(Constantes.direccionEmpresaCliente);
+
+        //Toast.makeText(getActivity(), " " + ModificarCliente.cedulaCliente + " " + ModificarCliente.nombreCliente+ " " + ModificarCliente.direccionCliente+ " " +ModificarCliente.telefonoCliente+ " " +ModificarCliente.correoCliente, Toast.LENGTH_SHORT).show();
+
         return view;
     }
 }
