@@ -1,9 +1,12 @@
 package com.example.billy.clientes;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +18,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.billy.empleado.Empleados;
 import com.example.billy.inversiones.R;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -39,6 +58,8 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
     EditText editFechaGarantia;
     EditText editFechaDevolucion;
 
+    boolean resul;
+    Object respuesta = "";
 
     public AdapterLista_Productos_MDatosCobro(Context context, List objects)
     {
@@ -66,6 +87,16 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         garantia.setImageResource(items.getGarantia());
         devolucion.setImageResource(items.getDevolucion());
         eliminar.setImageResource(items.getEliminar());
+
+        if(items.getEstado().equalsIgnoreCase("insert"))
+        {
+            garantia.setVisibility(View.GONE);
+            devolucion.setVisibility(View.GONE);
+        }
+        else
+        {
+            eliminar.setVisibility(View.GONE);
+        }
 
         garantia.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,20 +135,48 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         builder.setMessage("¿Eliminar Producto?");
         builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //Captura la Posicion del item de la lista
+            public void onClick(DialogInterface dialog, int which)
+            {
+                int precioVenta = 0;
 
-                //Borrar un item de la lista
-                ArrayAdapter adapter = new AdapterLista_Productos_MDatosCobro(getContext(), M_DatosCobro.arrayList);
-                adapter.remove(posicionItems);
-                //Se carga de nuevo la vista
-                M_DatosCobro.lista.setAdapter(adapter);
+                for (int i = 0; i < M_DatosCobro.arrayList.size(); i++) {
+                    if (posicionItems.getNombre().equalsIgnoreCase(M_DatosCobro.arrayListP.get(i).getNombre())) {
+                        precioVenta = Integer.valueOf(M_DatosCobro.arrayListP.get(i).getPrecioVenta());
+                    }
+                }
+
+                int precioActual = 0;
+
+                //Solo se multiplica cuando la cantidad del producto es mayor a 1 de lo contrario solo se resta
+
+                int total = Integer.valueOf(M_DatosCobro.totalPagar.getText().toString());
+                if (Integer.valueOf(posicionItems.getCantidad()) > 1) {
+                    precioActual = Integer.valueOf(posicionItems.getCantidad()) * precioVenta;
+
+                    total = total - precioActual;
+                    M_DatosCobro.totalPagar.setText(String.valueOf(total));
+
+                    limpiarLista();
+                } else {
+                    total = total - precioVenta;
+                    M_DatosCobro.totalPagar.setText(String.valueOf(total));
+                    limpiarLista();
+                }
             }
         });
 
         builder.setNegativeButton("Cancelar", null);
         builder.setCancelable(false);
         builder.show();
+    }
+
+    public void limpiarLista()
+    {
+        //Borrar un item de la lista
+        ArrayAdapter adapter = new AdapterLista_Productos_MDatosCobro(getContext(), M_DatosCobro.arrayList);
+        adapter.remove(posicionItems);
+        //Se carga de nuevo la vista
+        M_DatosCobro.lista.setAdapter(adapter);
     }
 
     //Alerta Personalizada Para la garantia del producto
@@ -139,25 +198,29 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         builder.setIcon(R.mipmap.garantia);
         builder.setTitle("Garantia");
         builder.setView(dialoglayout);
-        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
+        {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
                 //Capturar variables de la alerta
                 String capDescripcion = editDescripcionGarantia.getText().toString();
                 String capFecha = editFechaGarantia.getText().toString();
-                if (capDescripcion.equals("") ||
-                        capFecha.equals("")) {
+                if (capDescripcion.equals("") || capFecha.equals("")) {
                     Toast.makeText(getContext(), "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
-                } else {
+                }
+                else
+                {
                     //Borrar un item de la lista
                     ArrayAdapter adapter = new AdapterLista_Productos_MDatosCobro(getContext(), M_DatosCobro.arrayList);
                     adapter.remove(posicionItems);
                     //Se carga de nuevo la vista
                     M_DatosCobro.lista.setAdapter(adapter);
+
+
+
                     Toast.makeText(getContext(), "Producto Registrado por Garantia", Toast.LENGTH_SHORT).show();
                 }
-
-
             }
         });
         builder.setNegativeButton("Cancelar", null);
@@ -263,5 +326,94 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         }
     }
 
+    //Clases Asyntask para eliminar una venta
 
+    /*private class TareaDelete extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+        JSONObject respJSON;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerVenta.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("idVenta", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("option", "deleteSale"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                respJSON = new JSONObject(respStr);
+
+                respuesta= respJSON.get("items");
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            int precioVenta = 0;
+
+            for (int i = 0; i <M_DatosCobro.arrayList.size(); i++)
+            {
+                if (posicionItems.getNombre().equalsIgnoreCase(M_DatosCobro.arrayListP.get(i).getNombre()))
+                {
+                    precioVenta = Integer.valueOf(M_DatosCobro.arrayListP.get(i).getPrecioVenta());
+                }
+            }
+
+            int precioActual = 0;
+
+            //Solo se multiplica cuando la cantidad del producto es mayor a 1 de lo contrario solo se resta
+
+            int total = Integer.valueOf(M_DatosCobro.totalPagar.getText().toString());
+            if (Integer.valueOf(posicionItems.getCantidad()) > 1)
+            {
+                precioActual = Integer.valueOf(posicionItems.getCantidad()) * precioVenta;
+
+                total =  total - precioActual;
+                M_DatosCobro.totalPagar.setText(String.valueOf(total));
+            }
+            else
+            {
+                total = total - precioVenta;
+                M_DatosCobro.totalPagar.setText(String.valueOf(total));
+            }
+
+            limpiarLista();
+        }
+    }*/
 }

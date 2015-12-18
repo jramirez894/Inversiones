@@ -156,20 +156,6 @@ public class AdapterListaPersonalizada extends ArrayAdapter
 
                         TareaGetBill tareaGetBill = new TareaGetBill();
                         tareaGetBill.execute();
-
-                        /*Intent intent = new Intent(getContext(),ModificarCliente.class);
-
-                        intent.putExtra("idCliente",idCliente);
-                        intent.putExtra("cedula", cedula);
-                        intent.putExtra("nombre", nombre);
-                        intent.putExtra("direccion", direccion);
-                        intent.putExtra("telefono", telefono);
-                        intent.putExtra("correo", correo);
-                        intent.putExtra("nombreEmpresa", nombreEmpresa);
-                        intent.putExtra("direccionEmpresa", direccionEmpresa);
-
-                        intent.putExtra("Interfaz","Administrador");
-                        getContext().startActivity(intent);*/
                     }
                 });
 
@@ -509,7 +495,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                     {
                         JSONObject obj = objFacturas.getJSONObject(i);
 
-                        if(idFactura.equalsIgnoreCase(obj.getString("idFactura")))
+                        if(idFactura.equalsIgnoreCase(obj.getString("idFactura")) && obj.getString("estado").equalsIgnoreCase("En Venta"))
                         {
                             Constantes.itemsVenta.add(new ItemsVenta_AgregarCliente(obj.getString("idVenta"),obj.getString("total"),obj.getString("cantidad"),obj.getString("estado"),obj.getString("idFactura"),obj.getString("idProducto")));
                         }

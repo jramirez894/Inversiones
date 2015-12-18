@@ -9,13 +9,18 @@ public class ItemListaroductos_MDatosCobro
     int garantia;
     int devolucion;
     int eliminar;
+    String estado;
+    String cantidad;
+    String idVenta;
 
-    public ItemListaroductos_MDatosCobro(String nombre, int garantia, int devolucion, int eliminar)
-    {
+    public ItemListaroductos_MDatosCobro(String nombre, int garantia, int devolucion, int eliminar, String estado, String cantidad, String idVenta) {
         this.nombre = nombre;
         this.garantia = garantia;
         this.devolucion = devolucion;
         this.eliminar = eliminar;
+        this.estado = estado;
+        this.cantidad = cantidad;
+        this.idVenta = idVenta;
     }
 
     public String getNombre() {
@@ -34,23 +39,43 @@ public class ItemListaroductos_MDatosCobro
         this.garantia = garantia;
     }
 
-    public int getDevolucion()
-    {
+    public int getDevolucion() {
         return devolucion;
     }
 
-    public void setDevolucion(int devolucion)
-    {
+    public void setDevolucion(int devolucion) {
         this.devolucion = devolucion;
     }
 
-    public int getEliminar()
-    {
+    public int getEliminar() {
         return eliminar;
     }
 
-    public void setEliminar(int eliminar)
-    {
+    public void setEliminar(int eliminar) {
         this.eliminar = eliminar;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public String getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(String cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public String getIdVenta() {
+        return idVenta;
+    }
+
+    public void setIdVenta(String idVenta) {
+        this.idVenta = idVenta;
     }
 }

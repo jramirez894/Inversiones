@@ -650,7 +650,7 @@ public class PrincipalMenu extends AppCompatActivity
                     {
                         JSONObject obj = objFacturas.getJSONObject(i);
 
-                        if(idFactura.equalsIgnoreCase(obj.getString("idFactura")))
+                        if(idFactura.equalsIgnoreCase(obj.getString("idFactura")) && obj.getString("estado").equalsIgnoreCase("En Venta"))
                         {
                             itemsVenta.add(new ItemsVenta_AgregarCliente(obj.getString("idVenta"),obj.getString("total"),obj.getString("cantidad"),obj.getString("estado"),obj.getString("idFactura"),obj.getString("idProducto")));
                         }

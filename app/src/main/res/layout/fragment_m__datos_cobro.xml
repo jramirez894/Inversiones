@@ -65,14 +65,6 @@
             </LinearLayout>
 
             <EditText
-                android:id="@+id/editPrecioProducto_DatosCobro_Mcliente"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Precio Producto"
-                android:layout_marginTop="5dp"
-                android:inputType="number"/>
-
-            <EditText
                 android:id="@+id/editFechaVenta_DatosCobro_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

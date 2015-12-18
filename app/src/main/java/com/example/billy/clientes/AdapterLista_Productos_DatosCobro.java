@@ -62,22 +62,25 @@ public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
             @Override
             public void onClick(View v) {
                 posicionItems = (ItemListaProdutos_DatosCobro) getItem(position);
+
                 String nombreProducto = posicionItems.getNomProducto();
                 String cantidad = posicionItems.getCantidad();
 
                 String descripcion = "";
                 String precioVenta = "";
+                String disponibles = "";
 
                 for (int i = 0; i < DatosCobro.arrayList.size(); i++) {
                     if (nombreProducto.equalsIgnoreCase(DatosCobro.arrayList.get(i).getNombre())) {
                         descripcion = DatosCobro.arrayList.get(i).getDescripcion();
                         precioVenta = DatosCobro.arrayList.get(i).getPrecioVenta();
+                        disponibles = DatosCobro.arrayList.get(i).getCantidad();
 
                         break;
                     }
                 }
 
-                AlertaInfoProducto(nombreProducto, descripcion, precioVenta, cantidad);
+                AlertaInfoProducto(nombreProducto, descripcion, precioVenta, cantidad, disponibles);
             }
         });
 
@@ -115,6 +118,7 @@ public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
 
                 int precioActual = 0;
 
+                //Solo se multiplica cuando la cantidad del producto es mayor a 1 de lo contrario solo se resta
                 if (Integer.valueOf(posicionItems.getCantidad()) > 1)
                 {
                     precioActual = Integer.valueOf(posicionItems.getCantidad()) * precioVenta;
@@ -135,17 +139,19 @@ public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
         builder.show();
     }
 
-    public void AlertaInfoProducto(String nom, String descri, String precio,String can)
+    public void AlertaInfoProducto(String nom, String descri, String precio,String can, String dispo)
     {
         LayoutInflater inflaterAlert = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialoglayout = inflaterAlert.inflate(R.layout.alert_info_producto, null);
 
         final TextView descripcion = (TextView)dialoglayout.findViewById(R.id.txtDescripcion_AlertInfo);
         final EditText precioVenta = (EditText)dialoglayout.findViewById(R.id.editPrecioVenta_AlertInfo);
+        final EditText disponibles = (EditText)dialoglayout.findViewById(R.id.editDisponibles_AlertInfo);
         final EditText cantidad = (EditText)dialoglayout.findViewById(R.id.editCantidad_AlertInfo);
 
         descripcion.setText(descri);
         precioVenta.setText(precio);
+        disponibles.setText(dispo);
         cantidad.setText(can);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
