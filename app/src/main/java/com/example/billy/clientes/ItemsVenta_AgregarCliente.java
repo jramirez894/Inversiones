@@ -11,14 +11,24 @@ public class ItemsVenta_AgregarCliente
     public String estado;
     public String idFactura;
     public String idProducto;
+    public String nuevaCantidad;
 
-    public ItemsVenta_AgregarCliente(String idVenta, String total, String cantidad, String estado, String idFactura, String idProducto) {
+    public String getNuevaCantidad() {
+        return nuevaCantidad;
+    }
+
+    public void setNuevaCantidad(String nuevaCantidad) {
+        this.nuevaCantidad = nuevaCantidad;
+    }
+
+    public ItemsVenta_AgregarCliente(String idVenta, String total, String cantidad, String estado, String idFactura, String idProducto, String nuevaCantidad) {
         this.idVenta = idVenta;
         this.total = total;
         this.cantidad = cantidad;
         this.estado = estado;
         this.idFactura = idFactura;
         this.idProducto = idProducto;
+        this.nuevaCantidad = nuevaCantidad;
     }
 
     public String getIdVenta() {

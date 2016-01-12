@@ -79,11 +79,13 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         ItemListaroductos_MDatosCobro items = (ItemListaroductos_MDatosCobro)getItem(position);
 
         TextView nombre = (TextView) convertView.findViewById(R.id.textViewNombreProducto_MDatosCobro);
+        TextView cantidadAdicional = (TextView) convertView.findViewById(R.id.textViewCantidadAdicional_MDatosCobro);
         final ImageView garantia = (ImageView)convertView.findViewById(R.id.imageViewGarantiaProducto_MDatosCobro);
         ImageView devolucion = (ImageView)convertView.findViewById(R.id.imageViewDevolucionProducto_MDatosCobro);
         ImageView eliminar = (ImageView)convertView.findViewById(R.id.imageViewEliminarProducto_MDatosCobro);
 
         nombre.setText(items.getNombre());
+        //cantidadAdicional.setText(items.getCantidadAdicional());
         garantia.setImageResource(items.getGarantia());
         devolucion.setImageResource(items.getDevolucion());
         eliminar.setImageResource(items.getEliminar());
@@ -95,7 +97,19 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         }
         else
         {
-            eliminar.setVisibility(View.GONE);
+            if(items.getCantidadAdicional().equalsIgnoreCase("0"))
+            {
+                eliminar.setVisibility(View.GONE);
+            }
+            else
+            {
+                eliminar.setVisibility(View.GONE);
+                cantidadAdicional.setVisibility(View.VISIBLE);
+
+                int resta = Integer.valueOf(items.getCantidadAdicional()) - Integer.valueOf(items.getCantidad());
+
+                cantidadAdicional.setText("+" + String.valueOf(resta));
+            }
         }
 
         garantia.setOnClickListener(new View.OnClickListener() {

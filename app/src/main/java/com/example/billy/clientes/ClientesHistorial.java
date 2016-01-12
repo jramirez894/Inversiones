@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.example.billy.constantes.Constantes;
 import com.example.billy.inversiones.R;
+import com.example.billy.menu_principal.AdapterListaPersonalizada;
 import com.example.billy.menu_principal.PrincipalMenu;
 
 import org.apache.http.HttpResponse;
@@ -98,12 +100,30 @@ public class ClientesHistorial extends Fragment
                     {
                         JSONObject obj = objVendedores.getJSONObject(j);
 
-                        if(obj.getString("idFactura").equalsIgnoreCase(VisualizarCliente.idFactura))
+                        switch (Constantes.tipoConsultaidFactura)
                         {
-                            itemsCobro.add(new ItemsCobro_AgregarCliente(obj.getString("idCobro"),obj.getString("fecha"),obj.getString("abono"),obj.getString("idVendedor"),obj.getString("idFactura")));
-                        }
+                            case "Visualizar":
 
-                        existe= true;
+                                if(obj.getString("idFactura").equalsIgnoreCase(VisualizarCliente.idFactura))
+                                {
+                                    itemsCobro.add(new ItemsCobro_AgregarCliente(obj.getString("idCobro"),obj.getString("fecha"),obj.getString("abono"),obj.getString("idVendedor"),obj.getString("idFactura")));
+                                }
+
+                                existe= true;
+
+                                break;
+
+                            case "Modificar":
+
+                                if(obj.getString("idFactura").equalsIgnoreCase(AdapterListaPersonalizada.idFactura))
+                                {
+                                    itemsCobro.add(new ItemsCobro_AgregarCliente(obj.getString("idCobro"),obj.getString("fecha"),obj.getString("abono"),obj.getString("idVendedor"),obj.getString("idFactura")));
+                                }
+
+                                existe= true;
+
+                                break;
+                        }
                     }
                 }
                 else

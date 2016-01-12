@@ -265,6 +265,8 @@ public class PrincipalMenu extends AppCompatActivity
 
                 TareaGetBill tareaGetBill = new TareaGetBill();
                 tareaGetBill.execute();
+
+                Constantes.tipoConsultaidFactura = "Visualizar";
             }
         });
 
@@ -652,7 +654,7 @@ public class PrincipalMenu extends AppCompatActivity
 
                         if(idFactura.equalsIgnoreCase(obj.getString("idFactura")) && obj.getString("estado").equalsIgnoreCase("En Venta"))
                         {
-                            itemsVenta.add(new ItemsVenta_AgregarCliente(obj.getString("idVenta"),obj.getString("total"),obj.getString("cantidad"),obj.getString("estado"),obj.getString("idFactura"),obj.getString("idProducto")));
+                            itemsVenta.add(new ItemsVenta_AgregarCliente(obj.getString("idVenta"),obj.getString("total"),obj.getString("cantidad"),obj.getString("estado"),obj.getString("idFactura"),obj.getString("idProducto"), "0"));
                         }
 
                         existe = true;

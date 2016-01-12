@@ -89,7 +89,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
     String direccionEmpresa = "";
 
     //Tabla Factura
-    String idFactura;
+    public static String idFactura;
     String fechaFactura;
     String totalFactura;
     String fechaCobroFactura;
@@ -156,6 +156,8 @@ public class AdapterListaPersonalizada extends ArrayAdapter
 
                         TareaGetBill tareaGetBill = new TareaGetBill();
                         tareaGetBill.execute();
+
+                        Constantes.tipoConsultaidFactura = "Modificar";
                     }
                 });
 
@@ -497,7 +499,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
 
                         if(idFactura.equalsIgnoreCase(obj.getString("idFactura")) && obj.getString("estado").equalsIgnoreCase("En Venta"))
                         {
-                            Constantes.itemsVenta.add(new ItemsVenta_AgregarCliente(obj.getString("idVenta"),obj.getString("total"),obj.getString("cantidad"),obj.getString("estado"),obj.getString("idFactura"),obj.getString("idProducto")));
+                            Constantes.itemsVenta.add(new ItemsVenta_AgregarCliente(obj.getString("idVenta"),obj.getString("total"),obj.getString("cantidad"),obj.getString("estado"),obj.getString("idFactura"),obj.getString("idProducto"), "0"));
                         }
 
                         existe = true;

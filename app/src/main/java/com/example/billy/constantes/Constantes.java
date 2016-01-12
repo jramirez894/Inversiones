@@ -59,4 +59,7 @@ public class Constantes
 
     //Tabla Productos
     public static ArrayList<ItemsListaProductos_Productos> itemsProductos = new ArrayList<ItemsListaProductos_Productos>();
+
+    //para diferenciar si le damos click a editar un cliente o visualizar un cliente, para saber que id de factura traer
+    public static String tipoConsultaidFactura = "";
 }

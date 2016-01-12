@@ -9,32 +9,62 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/textViewNombreProducto_MDatosCobro"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
-            android:text="producto"
-            android:textSize="20sp"
-            android:layout_gravity="center"/>
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/imageViewGarantiaProducto_MDatosCobro"
+            <TextView
+                android:id="@+id/textViewNombreProducto_MDatosCobro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="producto"
+                android:textSize="20sp"
+                android:layout_gravity="center"/>
+
+            <TextView
+                android:id="@+id/textViewCantidadAdicional_MDatosCobro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginLeft="5dp"
+                android:text=""
+                android:textSize="20sp"
+                android:layout_gravity="center"
+                android:textColor="@android:color/holo_red_dark"/>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/garantia"/>
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/imageViewDevolucionProducto_MDatosCobro"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/devolucion"/>
+            <ImageView
+                android:id="@+id/imageViewGarantiaProducto_MDatosCobro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/garantia"/>
 
-        <ImageView
-            android:id="@+id/imageViewEliminarProducto_MDatosCobro"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/eliminar"/>
+            <ImageView
+                android:id="@+id/imageViewDevolucionProducto_MDatosCobro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/devolucion"/>
+
+            <ImageView
+                android:id="@+id/imageViewEliminarProducto_MDatosCobro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/eliminar"/>
+
+        </LinearLayout>
+
+
+
+
 
     </LinearLayout>
 </LinearLayout>

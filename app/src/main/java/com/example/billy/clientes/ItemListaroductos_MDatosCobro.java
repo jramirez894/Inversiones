@@ -13,7 +13,7 @@ public class ItemListaroductos_MDatosCobro
     String cantidad;
     String idVenta;
 
-    public ItemListaroductos_MDatosCobro(String nombre, int garantia, int devolucion, int eliminar, String estado, String cantidad, String idVenta) {
+    public ItemListaroductos_MDatosCobro(String nombre, int garantia, int devolucion, int eliminar, String estado, String cantidad, String idVenta, String cantidadAdicional) {
         this.nombre = nombre;
         this.garantia = garantia;
         this.devolucion = devolucion;
@@ -21,6 +21,19 @@ public class ItemListaroductos_MDatosCobro
         this.estado = estado;
         this.cantidad = cantidad;
         this.idVenta = idVenta;
+        this.cantidadAdicional = cantidadAdicional;
+    }
+
+    String cantidadAdicional;
+
+
+
+    public String getCantidadAdicional() {
+        return cantidadAdicional;
+    }
+
+    public void setCantidadAdicional(String cantidadAdicional) {
+        this.cantidadAdicional = cantidadAdicional;
     }
 
     public String getNombre() {

@@ -59,6 +59,7 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
 {
     public static ListView lista;
     public static ArrayList<ItemListaroductos_MDatosCobro> arrayList = new ArrayList<ItemListaroductos_MDatosCobro>();
+    public static ArrayList<ItemListaroductos_MDatosCobro> arrayListInsert = new ArrayList<ItemListaroductos_MDatosCobro>();
 
     private DatePickerDialog datePickerDialogPendiente;
     private SimpleDateFormat dateFormatterPendiente;
@@ -205,7 +206,7 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
 
                     buscarProducto.setText("");
 
-                    arrayList.add(new ItemListaroductos_MDatosCobro(producto.getNombre(), R.mipmap.garantia, R.mipmap.devolucion, R.mipmap.eliminar, "insert", "1", producto.getIdProducto()));
+                    arrayList.add(new ItemListaroductos_MDatosCobro(producto.getNombre(), R.mipmap.garantia, R.mipmap.devolucion, R.mipmap.eliminar, "insert", "1", producto.getIdProducto(), ""));
                     lista.setAdapter(new AdapterLista_Productos_MDatosCobro(getActivity(), arrayList));
 
                     //Sumar el precio del nuevo producto al total
@@ -258,7 +259,15 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                     {
                         if(idProducto.equalsIgnoreCase(Constantes.itemsVenta.get(i).getIdProducto()))
                         {
-                            cantidad = Constantes.itemsVenta.get(i).getCantidad();
+                            if(Constantes.itemsVenta.get(i).getNuevaCantidad().equalsIgnoreCase("0"))
+                            {
+                                cantidad = Constantes.itemsVenta.get(i).getCantidad();
+                            }
+                            else
+                            {
+                                int suma = (Integer.valueOf(Constantes.itemsVenta.get(i).getNuevaCantidad()) - Integer.valueOf(Constantes.itemsVenta.get(i).getCantidad())) + Integer.valueOf(Constantes.itemsVenta.get(i).getCantidad());
+                                cantidad = String.valueOf(suma);
+                            }
                         }
                     }
                 }
@@ -307,7 +316,37 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
 
         for(int i = 0; i < Constantes.itemsVenta.size(); i++)
         {
-            arrayList.add(new ItemListaroductos_MDatosCobro(Constantes.itemsProductos.get(i).getNombre(), R.mipmap.garantia,R.mipmap.devolucion,R.mipmap.eliminar, "update" , "0", Constantes.itemsVenta.get(i).getIdVenta()));
+            arrayList.add(new ItemListaroductos_MDatosCobro(Constantes.itemsProductos.get(i).getNombre(), R.mipmap.garantia,R.mipmap.devolucion,R.mipmap.eliminar, "update" , "0", Constantes.itemsVenta.get(i).getIdVenta(), "0"));
+        }
+
+        lista.setAdapter(new AdapterLista_Productos_MDatosCobro(getActivity(), arrayList));
+    }
+
+    public void ModificarLista()
+    {
+        arrayListInsert.clear();
+
+        //productos con insert
+        for(int i = 0; i < arrayList.size(); i++)
+        {
+            if(arrayList.get(i).getEstado().equalsIgnoreCase("insert"))
+            {
+                arrayListInsert.add(new ItemListaroductos_MDatosCobro(arrayList.get(i).getNombre(), R.mipmap.garantia,R.mipmap.devolucion,R.mipmap.eliminar, arrayList.get(i).getEstado(), arrayList.get(i).getCantidad(), arrayList.get(i).getIdVenta(), arrayList.get(i).getCantidadAdicional()));
+            }
+        }
+
+        arrayList.clear();
+
+        //productos con update
+        for(int i = 0; i < Constantes.itemsVenta.size(); i++)
+        {
+            arrayList.add(new ItemListaroductos_MDatosCobro(Constantes.itemsProductos.get(i).getNombre(), R.mipmap.garantia,R.mipmap.devolucion,R.mipmap.eliminar, "update" , Constantes.itemsVenta.get(i).getCantidad(), Constantes.itemsVenta.get(i).getIdVenta(), Constantes.itemsVenta.get(i).getNuevaCantidad()));
+        }
+
+        //uniendo los productos update e insert
+        for(int i = 0; i < arrayListInsert.size(); i++)
+        {
+            arrayList.add(new ItemListaroductos_MDatosCobro(arrayListInsert.get(i).getNombre(), R.mipmap.garantia,R.mipmap.devolucion,R.mipmap.eliminar, arrayListInsert.get(i).getEstado(), arrayListInsert.get(i).getCantidad(), arrayListInsert.get(i).getIdVenta(), arrayListInsert.get(i).getCantidadAdicional()));
         }
 
         lista.setAdapter(new AdapterLista_Productos_MDatosCobro(getActivity(), arrayList));
@@ -429,18 +468,8 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                     }
                     else
                     {
-                        if (Integer.valueOf(capCantidad) < Integer.valueOf(can) && arrayList.get(posicionLista).getEstado().equalsIgnoreCase("update")) {
-                            AlertDialog.Builder alerta = new AlertDialog.Builder(getActivity());
-                            alerta.setTitle("Alerta");
-                            alerta.setIcon(R.mipmap.informacion);
-                            alerta.setMessage("La cantidad del producto no puede ser menor a la actual, debe registrar el producto por garantía o devolución.");
-                            alerta.setCancelable(false);
-                            alerta.setPositiveButton("Aceptar", null);
-                            alerta.show();
-                        }
-                        else {
-                            //Metodo para sumar al total, en caso de que un producto sea mas de uno
-
+                        if(arrayList.get(posicionLista).getEstado().equalsIgnoreCase("insert"))
+                        {
                             int precioVenta = 0;
 
                             for (int j = 0; j < arrayListP.size(); j++) {
@@ -453,24 +482,97 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
 
                             total = total - Integer.valueOf(can) * precioVenta;
 
-                            if (arrayList.get(posicionLista).getEstado().equalsIgnoreCase("update"))
-                            {
-                                for (int j = 0; j < Constantes.itemsVenta.size(); j++)
-                                {
-                                    if (idProducto.equalsIgnoreCase(Constantes.itemsVenta.get(j).getIdProducto()))
-                                    {
-                                        Constantes.itemsVenta.get(j).setCantidad(capCantidad);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                arrayList.get(posicionLista).setCantidad(capCantidad);
-                            }
+
+                            arrayList.get(posicionLista).setCantidad(capCantidad);
 
                             int precioNuevo = Integer.valueOf(capCantidad) * precioVenta;
                             total = total + precioNuevo;
                             totalPagar.setText(String.valueOf(total));
+                        }
+                        else
+                        {
+                            String cantidadBase = Constantes.itemsVenta.get(posicionLista).getCantidad();
+
+                            if(capCantidad.equalsIgnoreCase(cantidadBase))
+                            {
+                                Constantes.itemsVenta.get(posicionLista).setNuevaCantidad("0");
+                                totalPagar.setText(Constantes.totalFactura);
+                                ModificarLista();
+                            }
+                            else
+                            {
+                                if(Integer.valueOf(capCantidad) > Integer.valueOf(cantidadBase))
+                                {
+                                    int precioVenta = 0;
+
+                                    for (int j = 0; j < arrayListP.size(); j++) {
+                                        if (nom.equalsIgnoreCase(arrayListP.get(j).getNombre())) {
+                                            precioVenta = Integer.valueOf(arrayListP.get(j).getPrecioVenta());
+                                        }
+                                    }
+
+                                    //int total = Integer.valueOf(totalPagar.getText().toString());
+                                    //total = total - Integer.valueOf(can) * precioVenta;
+
+                                    if (arrayList.get(posicionLista).getEstado().equalsIgnoreCase("update"))
+                                    {
+                                        for (int j = 0; j < Constantes.itemsVenta.size(); j++)
+                                        {
+                                            if (idProducto.equalsIgnoreCase(Constantes.itemsVenta.get(j).getIdProducto()))
+                                            {
+                                                Constantes.itemsVenta.get(j).setNuevaCantidad(capCantidad);
+                                                ModificarLista();
+                                            }
+                                        }
+                                    }
+
+                                    int precioNuevo = Integer.valueOf(capCantidad) * precioVenta;
+                                    totalPagar.setText(String.valueOf(precioNuevo));
+                                }
+                                else
+                                {
+                                    if (Integer.valueOf(capCantidad) < Integer.valueOf(can) && arrayList.get(posicionLista).getEstado().equalsIgnoreCase("update")) {
+                                        AlertDialog.Builder alerta = new AlertDialog.Builder(getActivity());
+                                        alerta.setTitle("Alerta");
+                                        alerta.setIcon(R.mipmap.informacion);
+                                        alerta.setMessage("La cantidad del producto no puede ser menor a la actual, debe registrar el producto por garantía o devolución.");
+                                        alerta.setCancelable(false);
+                                        alerta.setPositiveButton("Aceptar", null);
+                                        alerta.show();
+                                    }
+                                    else {
+                                        //Metodo para sumar al total, en caso de que un producto sea mas de uno
+
+                                        int precioVenta = 0;
+
+                                        for (int j = 0; j < arrayListP.size(); j++) {
+                                            if (nom.equalsIgnoreCase(arrayListP.get(j).getNombre())) {
+                                                precioVenta = Integer.valueOf(arrayListP.get(j).getPrecioVenta());
+                                            }
+                                        }
+
+                                        int total = Integer.valueOf(totalPagar.getText().toString());
+
+                                        total = total - Integer.valueOf(can) * precioVenta;
+
+                                        if (arrayList.get(posicionLista).getEstado().equalsIgnoreCase("update"))
+                                        {
+                                            for (int j = 0; j < Constantes.itemsVenta.size(); j++)
+                                            {
+                                                if (idProducto.equalsIgnoreCase(Constantes.itemsVenta.get(j).getIdProducto()))
+                                                {
+                                                    Constantes.itemsVenta.get(j).setNuevaCantidad(capCantidad);
+                                                    ModificarLista();
+                                                }
+                                            }
+                                        }
+
+                                        int precioNuevo = Integer.valueOf(capCantidad) * precioVenta;
+                                        total = total + precioNuevo;
+                                        totalPagar.setText(String.valueOf(total));
+                                    }
+                                }
+                            }
                         }
                     }
                 }
