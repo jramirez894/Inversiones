@@ -30,7 +30,8 @@
                 android:layout_height="wrap_content"
                 android:drawableRight="@android:drawable/ic_menu_search"
                 android:hint="Nombre Empleado"
-                android:layout_marginTop="15dp"/>
+                android:layout_marginTop="15dp"
+                android:completionThreshold="1"/>
 
             <TextView
                 android:id="@+id/textViewnomEmpleado_DetalleCobro_Mcliente"

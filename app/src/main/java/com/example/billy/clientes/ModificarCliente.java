@@ -1,10 +1,13 @@
 package com.example.billy.clientes;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -29,7 +32,22 @@ import com.example.billy.menu_principal.PagerAdapter;
 import com.example.billy.menu_principal.PrincipalMenu;
 import com.example.billy.inversiones.R;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -55,6 +73,13 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
     int valorRestante = 0;
     String fecha;
     String calificacion;
+
+    //Varibales createClient
+    boolean resul;
+    Object respuesta = "";
+
+    //Variable para decidir el estado del cliente
+    String estadoCliente = "";
 
     @Override
     public void onClick(View view)
@@ -219,30 +244,76 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         LayoutInflater inflaterAlert = (LayoutInflater) ModificarCliente.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialoglayout = inflaterAlert.inflate(R.layout.alert_guardar_modificar_cliente, null);
 
-        String valorRestanteVacio = M_DatosCobro.valorRestante.getText().toString();
+        //Variables DatosPersonales
+        final String cedula = M_DatosPersonales.cedula.getText().toString();
+        final String nombre = M_DatosPersonales.nombre.getText().toString();
+        final String direccion = M_DatosPersonales.direccion.getText().toString();
+        final String telefono = M_DatosPersonales.telefono.getText().toString();
+        final String correo = M_DatosPersonales.correo.getText().toString();
+        final String nomEmpresa = M_DatosPersonales.nomEmpresa.getText().toString();
+        final String dirEmpresa = M_DatosPersonales.dircEmpresa.getText().toString();
 
-        if (valorRestanteVacio.equalsIgnoreCase(""))
+
+
+        //Variables DatosCobro
+        //String fechaVenta = M_DatosCobro.fechaVenta.getText().toString();
+        String totalPagar = M_DatosCobro.totalPagar.getText().toString();
+        //String abono = M_DatosCobro.abono.getText().toString();
+        //String valorRestante = M_DatosCobro.valorRestante.getText().toString();
+
+        //Variables DetalleCobro
+        String fechaCobro;
+        String diaCobro;
+        String horaCobro;
+        try
         {
-            Toast.makeText(ModificarCliente.this, "Aun no se ha registrado el valor restante", Toast.LENGTH_LONG).show();
+            fechaCobro = M_DetalleCobro.fechaDeCobro.getSelectedItem().toString();
+            diaCobro = M_DetalleCobro.diaCobro.getSelectedItem().toString();
+            horaCobro = M_DetalleCobro.horaCobro.getSelectedItem().toString();
+        }
+        catch (Exception ex)
+        {
+            fechaCobro = Constantes.fechaCobroFactura;
+            diaCobro = Constantes.diaCobroFactura;
+            horaCobro = Constantes.horaCobroFactura;
+        }
+
+        if (cedula.equals("")||
+                nombre.equals("")||
+                direccion.equals("")||
+                telefono.equals("")||
+                correo.equals("")||
+                nomEmpresa.equals("")||
+                dirEmpresa.equals("")||
+                fechaCobro.equalsIgnoreCase("Fecha de Cobro")||
+                diaCobro.equalsIgnoreCase("Dia de Cobro")||
+                horaCobro.equalsIgnoreCase("Hora de Cobro"))
+        {
+            Toast.makeText(ModificarCliente.this, "Faltan campos por llenar", Toast.LENGTH_LONG).show();
         }
         else
         {
+            txtMensaje_AlertaMCliente = (TextView) dialoglayout.findViewById(R.id.txtMensaje_AlertaMCliente);
+            editCalificacion_AlertaMCliente = (EditText) dialoglayout.findViewById(R.id.editCalificacion_AlertaMCliente);
+
             try
             {
                 valorRestante = Integer.valueOf(M_DatosCobro.valorRestante.getText().toString());
             }
             catch (Exception e)
             {
-
+                valorRestante = 1;
             }
-
-            txtMensaje_AlertaMCliente = (TextView) dialoglayout.findViewById(R.id.txtMensaje_AlertaMCliente);
-            editCalificacion_AlertaMCliente = (EditText) dialoglayout.findViewById(R.id.editCalificacion_AlertaMCliente);
 
             if(valorRestante != 0)
             {
                 txtMensaje_AlertaMCliente.setVisibility(View.GONE);
                 editCalificacion_AlertaMCliente.setVisibility(View.GONE);
+                estadoCliente = "Activo";
+            }
+            else
+            {
+                estadoCliente = "Inactivo";
             }
 
             //Fecha Personalizada para la garantia
@@ -263,23 +334,30 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                 {
                     fecha = editFecha_AlertaMCliente.getText().toString();
                     calificacion = editCalificacion_AlertaMCliente.getText().toString();
-                    switch (Constantes.interfaz) {
+                    switch (Constantes.interfaz)
+                    {
                         case "Administrador":
-                            if (valorRestante != 0) {
-                                if (fecha.equals("")) {
+                            if (valorRestante != 0)
+                            {
+                                if (fecha.equals(""))
+                                {
                                     Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(ModificarCliente.this, PrincipalMenu.class);
-                                    startActivity(intent);
-                                    finish();
                                 }
-
-                            } else {
+                                else
+                                {
+                                    TareaUpdateCient tareaUpdateCient = new TareaUpdateCient();
+                                    tareaUpdateCient.execute(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa, editCalificacion_AlertaMCliente.getText().toString());
+                                }
+                            }
+                            else
+                            {
                                 if (fecha.equals("") ||
-                                        calificacion.equals("")) {
+                                        calificacion.equals(""))
+                                {
                                     Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
-                                } else {
+                                }
+                                else
+                                {
                                     Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(ModificarCliente.this, PrincipalMenu.class);
                                     startActivity(intent);
@@ -385,26 +463,7 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
     //Varaibles de los Tab
     public void capturarVariables()
     {
-        //Variables DatosPersonales
-        String cedula = M_DatosPersonales.cedula.getText().toString();
-        String nombre = M_DatosPersonales.nombre.getText().toString();
-        String direccion = M_DatosPersonales.direccion.getText().toString();
-        String telefono = M_DatosPersonales.telefono.getText().toString();
-        String correo = M_DatosPersonales.correo.getText().toString();
-        String nomEmpresa = M_DatosPersonales.nomEmpresa.getText().toString();
-        String dirEmpresa = M_DatosPersonales.dircEmpresa.getText().toString();
 
-        //Variables DatosCobro
-        String fechaVenta = M_DatosCobro.fechaVenta.getText().toString();
-        String totalPagar = M_DatosCobro.totalPagar.getText().toString();
-        String abono = M_DatosCobro.abono.getText().toString();
-        String valorRestante = M_DatosCobro.valorRestante.getText().toString();
-
-        //Variables DetalleCobro
-        String nombreEmpleado = M_DetalleCobro.buscarEmpleado.getText().toString();
-        String fechaCobro = M_DetalleCobro.fechaDeCobro.getSelectedItem().toString();
-        String diaCobro = M_DetalleCobro.diaCobro.getSelectedItem().toString();
-        String horaCobro = M_DetalleCobro.horaCobro.getSelectedItem().toString();
     }
 
     @Override
@@ -418,5 +477,83 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         }
 
         return super.onKeyUp(keyCode, event);
+    }
+
+    private class TareaUpdateCient extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        JSONObject respJSON;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerCliente.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("idCliente", Constantes.idClienteCliente));
+            nameValuePairs.add(new BasicNameValuePair("cedula", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("nombre", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("direccion", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("telefono", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("correo", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("nombreEmpresa", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("direccionEmpresa", params[6]));
+            nameValuePairs.add(new BasicNameValuePair("estado", estadoCliente));
+            nameValuePairs.add(new BasicNameValuePair("calificacion", params[7]));
+            nameValuePairs.add(new BasicNameValuePair("option", "updateClient"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                respJSON = new JSONObject(respStr);
+                //JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                respuesta= respJSON.get("items");
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(ModificarCliente.this, PrincipalMenu.class);
+            startActivity(intent);
+            finish();
+        }
     }
 }

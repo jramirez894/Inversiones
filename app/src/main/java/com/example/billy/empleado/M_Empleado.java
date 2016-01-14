@@ -36,6 +36,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class M_Empleado extends AppCompatActivity
 {
@@ -141,23 +143,43 @@ public class M_Empleado extends AppCompatActivity
                     }
                     else
                     {
-                        if(passNuevo.equalsIgnoreCase(vPass))
+                        if(isEmailValid(cor))
                         {
-                            pas = passNuevo;
-                            ModificarEmpleado();
+                            if(passNuevo.equalsIgnoreCase(vPass))
+                            {
+                                pas = passNuevo;
+                                ModificarEmpleado();
+                            }
+                            else
+                            {
+                                Toast.makeText(M_Empleado.this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
+                            }
                         }
                         else
                         {
-                            Toast.makeText(M_Empleado.this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(M_Empleado.this, "Debe Ingresar un Correo Valido", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
-
 
                 break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public static boolean isEmailValid(String email) {
+        boolean isValid = false;
+
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        CharSequence inputStr = email;
+
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(inputStr);
+        if (matcher.matches()) {
+            isValid = true;
+        }
+        return isValid;
     }
 
     //Alerta de Confirmacion

@@ -116,6 +116,7 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                     case "Habilitar":
 
                         fechaPendiente.setVisibility(View.VISIBLE);
+                        abono.setEnabled(false);
                         habilitar = "Desabilitar";
 
                         break;
@@ -123,6 +124,7 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                     case "Desabilitar":
 
                         fechaPendiente.setVisibility(View.GONE);
+                        abono.setEnabled(true);
                         habilitar = "Habilitar";
 
                         break;
@@ -479,7 +481,6 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                             }
 
                             int total = Integer.valueOf(totalPagar.getText().toString());
-
                             total = total - Integer.valueOf(can) * precioVenta;
 
 
@@ -495,8 +496,23 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
 
                             if(capCantidad.equalsIgnoreCase(cantidadBase))
                             {
+                                int precioVenta = 0;
+
+                                for (int j = 0; j < arrayListP.size(); j++) {
+                                    if (nom.equalsIgnoreCase(arrayListP.get(j).getNombre())) {
+                                        precioVenta = Integer.valueOf(arrayListP.get(j).getPrecioVenta());
+                                    }
+                                }
+
+                                int precioAntiguo = (Integer.valueOf(Constantes.itemsVenta.get(posicionLista).getNuevaCantidad()) * precioVenta);
+                                int precioActual = Integer.valueOf(totalPagar.getText().toString());
+
+                                precioActual = precioActual - precioAntiguo;
+
+                                precioActual = precioActual + (Integer.valueOf(precioVenta) * Integer.valueOf(cantidadBase));
+
                                 Constantes.itemsVenta.get(posicionLista).setNuevaCantidad("0");
-                                totalPagar.setText(Constantes.totalFactura);
+                                totalPagar.setText(String.valueOf(precioActual));
                                 ModificarLista();
                             }
                             else
@@ -526,8 +542,12 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                                         }
                                     }
 
+                                    int total = Integer.valueOf(totalPagar.getText().toString());
+                                    total = total - Integer.valueOf(can) * precioVenta;
+
                                     int precioNuevo = Integer.valueOf(capCantidad) * precioVenta;
-                                    totalPagar.setText(String.valueOf(precioNuevo));
+                                    total = total + precioNuevo;
+                                    totalPagar.setText(String.valueOf(total));
                                 }
                                 else
                                 {

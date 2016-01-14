@@ -56,6 +56,8 @@ public class DetalleCobro extends Fragment
     public static ArrayList<String> arrayListNombresVe = new ArrayList<String>();
 
     public static String idVendedor = "";
+    public static String direccion = "";
+    public static String telefono = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -101,13 +103,23 @@ public class DetalleCobro extends Fragment
 
                 ItemListaEmpleado empleado = arrayList.get(posicion);
                 idVendedor = empleado.getIdUsuario();
-                dir.setText("Direccion: " + empleado.getDireccionEmp());
-                tel.setText("Telefono: " + empleado.getTelefonoEmp());
+                direccion = empleado.getDireccionEmp();
+                telefono = empleado.getTelefonoEmp();
+                dir.setText("Direccion: " + direccion);
+                tel.setText("Telefono: " + telefono);
             }
         });
 
         return view;
 
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        dir.setText("Direccion: " + direccion);
+        tel.setText("Telefono: " + telefono);
     }
 
     //Clases Asyntask para listar los empleados que hay actualmente en el servidor
