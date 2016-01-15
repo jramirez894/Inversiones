@@ -81,6 +81,13 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
     //Variable para decidir el estado del cliente
     String estadoCliente = "";
 
+    //Variable para insertar un abono
+    boolean insertarAbono;
+
+    //Variables para insertar en la tabla de cobros
+    String idVendedor = "";
+    String idFactura = "";
+
     @Override
     public void onClick(View view)
     {
@@ -206,7 +213,6 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         this.mapTabInfo.put(tabInfo.tag, tabInfo);
         // Default to first tab
         //this.onTabChanged("Tab1");
-        //
         mTabHost.setOnTabChangedListener(this);
     }
 
@@ -253,13 +259,17 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         final String nomEmpresa = M_DatosPersonales.nomEmpresa.getText().toString();
         final String dirEmpresa = M_DatosPersonales.dircEmpresa.getText().toString();
 
-
-
         //Variables DatosCobro
-        //String fechaVenta = M_DatosCobro.fechaVenta.getText().toString();
-        String totalPagar = M_DatosCobro.totalPagar.getText().toString();
-        //String abono = M_DatosCobro.abono.getText().toString();
-        //String valorRestante = M_DatosCobro.valorRestante.getText().toString();
+        String abono = "";
+
+        try
+        {
+            abono = M_DatosCobro.abono.getText().toString();
+        }
+        catch (Exception e)
+        {
+            abono = "0";
+        }
 
         //Variables DetalleCobro
         String fechaCobro;
@@ -295,6 +305,7 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         {
             txtMensaje_AlertaMCliente = (TextView) dialoglayout.findViewById(R.id.txtMensaje_AlertaMCliente);
             editCalificacion_AlertaMCliente = (EditText) dialoglayout.findViewById(R.id.editCalificacion_AlertaMCliente);
+            editFecha_AlertaMCliente = (EditText) dialoglayout.findViewById(R.id.editFecha_AlertaMCliente);
 
             try
             {
@@ -310,15 +321,29 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                 txtMensaje_AlertaMCliente.setVisibility(View.GONE);
                 editCalificacion_AlertaMCliente.setVisibility(View.GONE);
                 estadoCliente = "Activo";
+
+                insertarAbono = true;
+
+                if(abono.equalsIgnoreCase("0") || abono.equalsIgnoreCase(""))
+                {
+                    editFecha_AlertaMCliente.setVisibility(View.GONE);
+                    insertarAbono = false;
+                }
             }
             else
             {
+                if(abono.equalsIgnoreCase("0") || abono.equalsIgnoreCase(""))
+                {
+                    editFecha_AlertaMCliente.setVisibility(View.GONE);
+                    insertarAbono = false;
+                }
+
                 estadoCliente = "Inactivo";
+                insertarAbono = true;
             }
 
             //Fecha Personalizada para la garantia
             dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-            editFecha_AlertaMCliente = (EditText) dialoglayout.findViewById(R.id.editFecha_AlertaMCliente);
             editFecha_AlertaMCliente.setInputType(InputType.TYPE_NULL);
             editFecha_AlertaMCliente.requestFocus();
             setDateTimeField();
@@ -345,8 +370,8 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                                 }
                                 else
                                 {
-                                    TareaUpdateCient tareaUpdateCient = new TareaUpdateCient();
-                                    tareaUpdateCient.execute(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa, editCalificacion_AlertaMCliente.getText().toString());
+                                    TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
+                                    tareaUpdateClient.execute(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa, editCalificacion_AlertaMCliente.getText().toString());
                                 }
                             }
                             else
@@ -479,7 +504,7 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         return super.onKeyUp(keyCode, event);
     }
 
-    private class TareaUpdateCient extends AsyncTask<String,Integer,Boolean>
+    private class TareaUpdateClient extends AsyncTask<String,Integer,Boolean>
     {
         private String respStr;
         JSONObject respJSON;
@@ -507,6 +532,428 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
             nameValuePairs.add(new BasicNameValuePair("estado", estadoCliente));
             nameValuePairs.add(new BasicNameValuePair("calificacion", params[7]));
             nameValuePairs.add(new BasicNameValuePair("option", "updateClient"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                respJSON = new JSONObject(respStr);
+                //JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                respuesta= respJSON.get("items");
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            String idVenta = "";
+            String total = "";
+            String cantidad = "";
+            String estado = "";
+
+            String idProducto = "";
+
+            String precioProducto = "";
+
+            String totalFactura = "";
+            int sumaTotalFactura = 0;
+
+            for(int i = 0; i < M_DatosCobro.arrayList.size(); i++)
+            {
+                String estadoProducto = M_DatosCobro.arrayList.get(i).getEstado();
+
+                switch (estadoProducto)
+                {
+                    case "update":
+
+                        idVenta = M_DatosCobro.arrayList.get(i).getIdVenta();
+
+                        for(int j = 0; j < Constantes.itemsVenta.size(); j++)
+                        {
+                            if(Constantes.itemsVenta.get(j).getIdVenta().equalsIgnoreCase(idVenta))
+                            {
+                                estado = Constantes.itemsVenta.get(j).getEstado();
+                                idFactura = Constantes.itemsVenta.get(j).getIdFactura();
+                                idProducto = Constantes.itemsVenta.get(j).getIdProducto();
+
+                                for(int k = 0; k < M_DatosCobro.arrayListP.size(); k++)
+                                {
+                                    if(idProducto.equalsIgnoreCase(M_DatosCobro.arrayListP.get(k).getIdProducto()))
+                                    {
+                                        precioProducto = M_DatosCobro.arrayListP.get(k).getPrecioVenta();
+                                    }
+                                }
+
+                                if(M_DatosCobro.arrayList.get(i).getCantidadAdicional().equalsIgnoreCase("0"))
+                                {
+                                    total = Constantes.itemsVenta.get(j).getTotal();
+                                    cantidad = Constantes.itemsVenta.get(j).getCantidad();
+                                }
+                                else
+                                {
+                                    cantidad = M_DatosCobro.arrayList.get(i).getCantidadAdicional();
+
+                                    int operacion = Integer.valueOf(cantidad) * Integer.valueOf(precioProducto);
+                                    total = String.valueOf(operacion);
+                                }
+                            }
+                        }
+
+                        TareaUpdateSale tareaUpdateSale = new TareaUpdateSale();
+                        tareaUpdateSale.execute(idVenta, total, cantidad, estado, idFactura, idProducto);
+
+                        break;
+
+                    case "insert":
+
+                        String nombre = M_DatosCobro.arrayList.get(i).getNombre();
+                        idFactura = Constantes.itemsVenta.get(0).getIdFactura();
+
+                        for(int k = 0; k < M_DatosCobro.arrayListP.size(); k++)
+                        {
+                            if(nombre.equalsIgnoreCase(M_DatosCobro.arrayListP.get(k).getNombre()))
+                            {
+                                idProducto = M_DatosCobro.arrayListP.get(k).getIdProducto();
+                                precioProducto = M_DatosCobro.arrayListP.get(k).getPrecioVenta();
+                            }
+                        }
+
+                        estado = "En Venta";
+                        cantidad = M_DatosCobro.arrayList.get(i).getCantidad();
+
+                        int operacion = Integer.valueOf(cantidad) * Integer.valueOf(precioProducto);
+                        total = String.valueOf(operacion);
+
+                        TareaCreateSale tareaCreateSale = new TareaCreateSale();
+                        tareaCreateSale.execute(total, cantidad, estado, idFactura, idProducto);
+
+                        break;
+                }
+
+                sumaTotalFactura = sumaTotalFactura + Integer.valueOf(total);
+            }
+
+            //Variables spinner clase detalle cobro
+            String fechaCobro = "";
+            String diaCobro = "";
+            String horaCobro = "";
+
+            try
+            {
+                fechaCobro = M_DetalleCobro.fechaDeCobro.getSelectedItem().toString();
+                diaCobro = M_DetalleCobro.diaCobro.getSelectedItem().toString();
+                horaCobro = M_DetalleCobro.horaCobro.getSelectedItem().toString();
+            }
+            catch (Exception e)
+            {
+                fechaCobro = Constantes.itemsFactura.get(0).getFechaCobro();
+                diaCobro = Constantes.itemsFactura.get(0).getDiaCobro();
+                horaCobro = Constantes.itemsFactura.get(0).getHoraCobro();
+            }
+
+            if(M_DetalleCobro.idVendedor.equalsIgnoreCase(""))
+            {
+                idVendedor = Constantes.idVendedorFactura;
+            }
+            else
+            {
+                idVendedor = M_DetalleCobro.idVendedor;
+            }
+
+            TareaUpdateBill tareaUpdateBill = new TareaUpdateBill();
+            tareaUpdateBill.execute(idFactura,
+                    Constantes.itemsFactura.get(0).getFecha(),
+                    String.valueOf(sumaTotalFactura),
+                    Constantes.itemsFactura.get(0).getEstado(),
+                    fechaCobro,
+                    diaCobro,
+                    horaCobro,
+                    idVendedor,
+                    Constantes.itemsFactura.get(0).getIdCliente());
+        }
+    }
+
+    //Clases Asyntask para agregar una factura
+    private class TareaUpdateSale extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        JSONObject respJSON;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerVenta.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("idVenta", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("total", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("cantidad", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("estado", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("idFactura", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("idProducto", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("option",  "updateSale"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                respJSON = new JSONObject(respStr);
+                //JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                respuesta= respJSON.get("items");
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+
+        }
+    }
+
+    //Clases Asyntask para agregar una factura
+    private class TareaCreateSale extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        JSONObject respJSON;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerVenta.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("total", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("cantidad", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("estado", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("idFactura", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("idProducto", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("option",  "createSale"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                respJSON = new JSONObject(respStr);
+                //JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                respuesta= respJSON.get("items");
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+
+        }
+    }
+
+    //Clases Asyntask para agregar una factura
+    private class TareaUpdateBill extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        JSONObject respJSON;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerFactura.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("idFactura", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("fecha", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("total", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("estado", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("fechaCobro", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("diaCobro", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("horaCobro", params[6]));
+            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[7]));
+            nameValuePairs.add(new BasicNameValuePair("idCliente", params[8]));
+            nameValuePairs.add(new BasicNameValuePair("option", "updateBill"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                respJSON = new JSONObject(respStr);
+                //JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                respuesta= respJSON.get("items");
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            if(insertarAbono)
+            {
+                TareaCreateCharge tareaCreateCharge = new TareaCreateCharge();
+                tareaCreateCharge.execute(fecha, M_DatosCobro.abono.getText().toString(), idVendedor, idFactura);
+            }
+            else
+            {
+                Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ModificarCliente.this, PrincipalMenu.class);
+                startActivity(intent);
+                finish();
+            }
+        }
+    }
+
+    //Clases Asyntask para agregar una factura
+    private class TareaCreateCharge extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        JSONObject respJSON;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerCobro.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("fecha", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("abono", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("idFactura", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("option",  "createCharge"));
 
             try
             {
