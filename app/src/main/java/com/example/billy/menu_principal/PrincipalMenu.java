@@ -100,6 +100,7 @@ public class PrincipalMenu extends AppCompatActivity
     String idFactura;
     String fechaFactura;
     String totalFactura;
+    String valorRestante;
     String fechaCobroFactura;
     String diaCobroFactura;
     String horaCobroFactura;
@@ -552,7 +553,7 @@ public class PrincipalMenu extends AppCompatActivity
                     for(int i=0; i<objFacturas.length(); i++)
                     {
                         JSONObject obj = objFacturas.getJSONObject(i);
-                        itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("diaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
+                        itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("valorRestante"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("diaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
                         existe = true;
                     }
                 }
@@ -593,6 +594,7 @@ public class PrincipalMenu extends AppCompatActivity
                         idFactura = itemsFactura.get(i).getIdFactura();
                         fechaFactura= itemsFactura.get(i).getFecha();
                         totalFactura= itemsFactura.get(i).getTotal();
+                        valorRestante = itemsFactura.get(i).getValorRestante();
                         fechaCobroFactura= itemsFactura.get(i).getFechaCobro();
                         diaCobroFactura= itemsFactura.get(i).getDiaCobro();
                         horaCobroFactura= itemsFactura.get(i).getHoraCobro();
@@ -890,6 +892,7 @@ public class PrincipalMenu extends AppCompatActivity
                 intent.putExtra("idFactura", idFactura);
                 intent.putExtra("fechaFactura", fechaFactura);
                 intent.putExtra("totalFactura", totalFactura);
+                intent.putExtra("valorRestante", valorRestante);
                 intent.putExtra("fechaCobroFactura", fechaCobroFactura);
                 intent.putExtra("diaCobroFactura", diaCobroFactura);
                 intent.putExtra("horaCobroFactura", horaCobroFactura);

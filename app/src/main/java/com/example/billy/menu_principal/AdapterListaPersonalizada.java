@@ -92,6 +92,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
     public static String idFactura;
     String fechaFactura;
     String totalFactura;
+    String valorRestante;
     String fechaCobroFactura;
     String diaCobroFactura;
     String horaCobroFactura;
@@ -393,7 +394,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                     for(int i=0; i<objFacturas.length(); i++)
                     {
                         JSONObject obj = objFacturas.getJSONObject(i);
-                        Constantes.itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("diaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
+                        Constantes.itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("valorRestante"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("diaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
                         existe = true;
                     }
                 }
@@ -434,6 +435,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                         idFactura = Constantes.itemsFactura.get(i).getIdFactura();
                         fechaFactura= Constantes.itemsFactura.get(i).getFecha();
                         totalFactura= Constantes.itemsFactura.get(i).getTotal();
+                        valorRestante= Constantes.itemsFactura.get(i).getValorRestante();
                         fechaCobroFactura= Constantes.itemsFactura.get(i).getFechaCobro();
                         diaCobroFactura= Constantes.itemsFactura.get(i).getDiaCobro();
                         horaCobroFactura= Constantes.itemsFactura.get(i).getHoraCobro();
@@ -731,6 +733,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                 Constantes.idFactura = idFactura;
                 Constantes.fechaFactura = fechaFactura;
                 Constantes.totalFactura = totalFactura;
+                Constantes.valorRestante = valorRestante;
                 Constantes.fechaCobroFactura = fechaCobroFactura;
                 Constantes.diaCobroFactura = diaCobroFactura;
                 Constantes.horaCobroFactura = horaCobroFactura;

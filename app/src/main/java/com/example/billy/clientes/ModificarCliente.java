@@ -689,16 +689,38 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                 idVendedor = M_DetalleCobro.idVendedor;
             }
 
-            TareaUpdateBill tareaUpdateBill = new TareaUpdateBill();
-            tareaUpdateBill.execute(idFactura,
-                    Constantes.itemsFactura.get(0).getFecha(),
-                    String.valueOf(sumaTotalFactura),
-                    Constantes.itemsFactura.get(0).getEstado(),
-                    fechaCobro,
-                    diaCobro,
-                    horaCobro,
-                    idVendedor,
-                    Constantes.itemsFactura.get(0).getIdCliente());
+            //Determinar cual sera el nuevo total y el valor restante del cliente
+            //if(Constantes.totalFactura.equalsIgnoreCase(String.valueOf(sumaTotalFactura)))
+            //{
+                TareaUpdateBill tareaUpdateBill = new TareaUpdateBill();
+                tareaUpdateBill.execute(idFactura,
+                        Constantes.itemsFactura.get(0).getFecha(),
+                        String.valueOf(sumaTotalFactura),
+                        M_DatosCobro.valorRestante.getText().toString(),
+                        Constantes.itemsFactura.get(0).getEstado(),
+                        fechaCobro,
+                        diaCobro,
+                        horaCobro,
+                        idVendedor,
+                        Constantes.itemsFactura.get(0).getIdCliente());
+            /*}
+            else
+            {
+                //int diferencia = sumaTotalFactura - Integer.valueOf(Constantes.totalFactura);
+                //int nuevoValorRestante = diferencia + Integer.valueOf(M_DatosCobro.valorRestante.getText().toString());
+
+                TareaUpdateBill tareaUpdateBill = new TareaUpdateBill();
+                tareaUpdateBill.execute(idFactura,
+                        Constantes.itemsFactura.get(0).getFecha(),
+                        String.valueOf(sumaTotalFactura),
+                        M_DatosCobro.valorRestante.getText().toString(),
+                        Constantes.itemsFactura.get(0).getEstado(),
+                        fechaCobro,
+                        diaCobro,
+                        horaCobro,
+                        idVendedor,
+                        Constantes.itemsFactura.get(0).getIdCliente());
+            }*/
         }
     }
 
@@ -866,12 +888,13 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
             nameValuePairs.add(new BasicNameValuePair("idFactura", params[0]));
             nameValuePairs.add(new BasicNameValuePair("fecha", params[1]));
             nameValuePairs.add(new BasicNameValuePair("total", params[2]));
-            nameValuePairs.add(new BasicNameValuePair("estado", params[3]));
-            nameValuePairs.add(new BasicNameValuePair("fechaCobro", params[4]));
-            nameValuePairs.add(new BasicNameValuePair("diaCobro", params[5]));
-            nameValuePairs.add(new BasicNameValuePair("horaCobro", params[6]));
-            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[7]));
-            nameValuePairs.add(new BasicNameValuePair("idCliente", params[8]));
+            nameValuePairs.add(new BasicNameValuePair("valorRestante", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("estado", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("fechaCobro", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("diaCobro", params[6]));
+            nameValuePairs.add(new BasicNameValuePair("horaCobro", params[7]));
+            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[8]));
+            nameValuePairs.add(new BasicNameValuePair("idCliente", params[9]));
             nameValuePairs.add(new BasicNameValuePair("option", "updateBill"));
 
             try
@@ -931,7 +954,7 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         }
     }
 
-    //Clases Asyntask para agregar una factura
+    //Clases Asyntask para agregar un abono
     private class TareaCreateCharge extends AsyncTask<String,Integer,Boolean>
     {
         private String respStr;

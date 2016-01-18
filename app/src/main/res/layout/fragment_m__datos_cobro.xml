@@ -81,6 +81,14 @@
                 android:layout_marginTop="5dp"
                 android:inputType="number"/>
 
+            <EditText
+                android:id="@+id/editSaldoRestante_DatosCobro_Mcliente"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Saldo Restante"
+                android:layout_marginTop="5dp"
+                android:enabled="false"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -124,5 +132,7 @@
                 android:enabled="false"/>
 
         </LinearLayout>
+
     </ScrollView>
+
 </LinearLayout>

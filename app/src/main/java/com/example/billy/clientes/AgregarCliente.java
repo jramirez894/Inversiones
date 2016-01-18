@@ -97,6 +97,9 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
     //Variable para saber el id de la factura que se creo
     String idFactura = "";
 
+    //variable para saber si hay que insertar un abono o no
+    boolean insertarAbono;
+
     private class TabInfo
     {
         private String tag;
@@ -257,7 +260,6 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
         catch (Exception e)
         {
             Toast.makeText(AgregarCliente.this,"Faltan Datos Por Llenar",Toast.LENGTH_SHORT).show();
-
         }
 
 
@@ -583,8 +585,18 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
             DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
             String fechaVentaModificada = fechaVenta + " " + hourFormat.format(date);
 
-            TareaCreateBill createBill = new TareaCreateBill();
-            createBill.execute(fechaVentaModificada, totalPagar, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idCliente);
+            if(abono.equalsIgnoreCase(""))
+            {
+                TareaCreateBill createBill = new TareaCreateBill();
+                createBill.execute(fechaVentaModificada, totalPagar, totalPagar, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idCliente);
+                insertarAbono = false;
+            }
+            else
+            {
+                TareaCreateBill createBill = new TareaCreateBill();
+                createBill.execute(fechaVentaModificada, totalPagar, valorRestante, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idCliente);
+                insertarAbono = true;
+            }
         }
     }
 
@@ -608,12 +620,13 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
             nameValuePairs = new ArrayList<NameValuePair>();
             nameValuePairs.add(new BasicNameValuePair("fecha", params[0]));
             nameValuePairs.add(new BasicNameValuePair("total", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("valorRestante", params[2]));
             nameValuePairs.add(new BasicNameValuePair("estado", "Activo"));
-            nameValuePairs.add(new BasicNameValuePair("fechaCobro", params[2]));
-            nameValuePairs.add(new BasicNameValuePair("diaCobro", params[3]));
-            nameValuePairs.add(new BasicNameValuePair("horaCobro", params[4]));
-            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[5]));
-            nameValuePairs.add(new BasicNameValuePair("idCliente", params[6]));
+            nameValuePairs.add(new BasicNameValuePair("fechaCobro", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("diaCobro", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("horaCobro", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[6]));
+            nameValuePairs.add(new BasicNameValuePair("idCliente", params[7]));
             nameValuePairs.add(new BasicNameValuePair("option", "createBill"));
 
             try
@@ -659,7 +672,6 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
         protected void onPostExecute(Boolean result)
         {
             //Toast.makeText(AgregarCliente.this, respStr.toString(), Toast.LENGTH_SHORT).show();
-
             TareaListadoBill listadoBill = new TareaListadoBill();
             listadoBill.execute();
         }
@@ -764,6 +776,21 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
                 TareaCreateSale createSale = new TareaCreateSale();
                 createSale.execute(String.valueOf(totalPorProducto), DatosCobro.arrayListItems.get(i).getCantidad(), "En Venta", idFactura, DatosCobro.arrayList.get(posicionProducto).getIdProducto());
             }
+
+            if(insertarAbono)
+            {
+                TareaCreateCharge tareaCreateCharge = new TareaCreateCharge();
+                tareaCreateCharge.execute(fechaVenta, abono, DetalleCobro.idVendedor, idFactura);
+            }
+            else
+            {
+                DetalleCobro.telefono = "";
+                DetalleCobro.direccion = "";
+
+                Intent intent = new Intent(AgregarCliente.this, PrincipalMenu.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -834,8 +861,83 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
 
         protected void onPostExecute(Boolean result)
         {
+
+        }
+    }
+
+    //Clases Asyntask para agregar un abono
+    private class TareaCreateCharge extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        JSONObject respJSON;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerCobro.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("fecha", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("abono", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("idFactura", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("option",  "createCharge"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                respJSON = new JSONObject(respStr);
+                //JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                respuesta= respJSON.get("items");
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            DetalleCobro.telefono = "";
+            DetalleCobro.direccion = "";
+
+            Toast.makeText(AgregarCliente.this, "Cliente agregado satisfactoriamente", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(AgregarCliente.this, PrincipalMenu.class);
             startActivity(intent);
+            finish();
         }
     }
 }

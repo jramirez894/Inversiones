@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.billy.constantes.Constantes;
 import com.example.billy.empleado.Empleados;
 import com.example.billy.inversiones.R;
 
@@ -164,17 +165,32 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 //Solo se multiplica cuando la cantidad del producto es mayor a 1 de lo contrario solo se resta
 
                 int total = Integer.valueOf(M_DatosCobro.totalPagar.getText().toString());
-                if (Integer.valueOf(posicionItems.getCantidad()) > 1) {
+                if (Integer.valueOf(posicionItems.getCantidad()) > 1)
+                {
                     precioActual = Integer.valueOf(posicionItems.getCantidad()) * precioVenta;
 
                     total = total - precioActual;
                     M_DatosCobro.totalPagar.setText(String.valueOf(total));
 
                     limpiarLista();
-                } else {
+
+                    //Nuevo valor restante
+                    int diferencia = 0;
+                    diferencia = Integer.valueOf(M_DatosCobro.saldoRestante.getText().toString()) - precioActual;
+
+                    M_DatosCobro.saldoRestante.setText(String.valueOf(diferencia));
+                }
+                else
+                {
                     total = total - precioVenta;
                     M_DatosCobro.totalPagar.setText(String.valueOf(total));
                     limpiarLista();
+
+                    //Nuevo valor restante
+                    int diferencia = 0;
+                    diferencia = Integer.valueOf(M_DatosCobro.saldoRestante.getText().toString()) - precioVenta;
+
+                    M_DatosCobro.saldoRestante.setText(String.valueOf(diferencia));
                 }
             }
         });

@@ -71,6 +71,7 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
     public static ImageView pendiente;
     public static EditText fechaPendiente;
     public static EditText valorRestante;
+    public static EditText saldoRestante;
 
     String habilitar = "Habilitar";
 
@@ -91,9 +92,13 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
         pendiente=(ImageView)view.findViewById(R.id.buttonPendiente_DatosCobro_Mcliente);
 
         valorRestante=(EditText)view.findViewById(R.id.editTextValorRestante_DatosCobro_Mcliente);
+        saldoRestante=(EditText)view.findViewById(R.id.editSaldoRestante_DatosCobro_Mcliente);
 
         //Total a pagar
         totalPagar.setText(Constantes.totalFactura);
+
+        //Saldo Restante
+        saldoRestante.setText(Constantes.valorRestante);
 
         //Fecha Personalizada
         fechaVenta=(EditText)view.findViewById(R.id.editFechaVenta_DatosCobro_Mcliente);
@@ -144,7 +149,7 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                 try {
                     //con la variable charSequence se captura y se convierte a entero lo que se esta escribiendo en el EditText de abono
                     int abonoIngresado = Integer.valueOf(charSequence.toString());
-                    int totalAPagar = Integer.parseInt(totalPagar.getText().toString());
+                    int totalAPagar = Integer.parseInt(saldoRestante.getText().toString());
                     int resta = totalAPagar - abonoIngresado;
 
                     valorRestante.setText(String.valueOf(resta));
@@ -224,7 +229,16 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
 
                     int total = 1 * Integer.valueOf(precioVenta);
                     int suma = total + Integer.valueOf(totalPagar.getText().toString());
+
+                    //Nuevo valor restante
+                    int diferencia = Integer.valueOf(suma) - Integer.valueOf(totalPagar.getText().toString());
+                    diferencia = Integer.valueOf(saldoRestante.getText().toString()) + diferencia;
+
+                    saldoRestante.setText(String.valueOf(diferencia));
+
                     totalPagar.setText(String.valueOf(suma));
+
+
                 }
             }
         });
@@ -481,14 +495,19 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                             }
 
                             int total = Integer.valueOf(totalPagar.getText().toString());
-                            total = total - Integer.valueOf(can) * precioVenta;
-
+                            int totalNuevo = total - Integer.valueOf(can) * precioVenta;
 
                             arrayList.get(posicionLista).setCantidad(capCantidad);
 
                             int precioNuevo = Integer.valueOf(capCantidad) * precioVenta;
-                            total = total + precioNuevo;
-                            totalPagar.setText(String.valueOf(total));
+                            totalNuevo = totalNuevo + precioNuevo;
+                            totalPagar.setText(String.valueOf(totalNuevo));
+
+                            //Nuevo valor restante
+                            int diferencia = Integer.valueOf(totalNuevo) - total;
+                            diferencia = Integer.valueOf(saldoRestante.getText().toString()) + diferencia;
+
+                            saldoRestante.setText(String.valueOf(diferencia));
                         }
                         else
                         {
@@ -514,6 +533,12 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                                 Constantes.itemsVenta.get(posicionLista).setNuevaCantidad("0");
                                 totalPagar.setText(String.valueOf(precioActual));
                                 ModificarLista();
+
+                                //Nuevo valor restante
+                                int diferencia = precioAntiguo - (Integer.valueOf(precioVenta) * Integer.valueOf(cantidadBase));
+                                diferencia = Integer.valueOf(saldoRestante.getText().toString()) - diferencia;
+
+                                saldoRestante.setText(String.valueOf(diferencia));
                             }
                             else
                             {
@@ -543,11 +568,17 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                                     }
 
                                     int total = Integer.valueOf(totalPagar.getText().toString());
-                                    total = total - Integer.valueOf(can) * precioVenta;
+                                    int totalNuevo = total - Integer.valueOf(can) * precioVenta;
 
                                     int precioNuevo = Integer.valueOf(capCantidad) * precioVenta;
-                                    total = total + precioNuevo;
-                                    totalPagar.setText(String.valueOf(total));
+                                    totalNuevo = totalNuevo + precioNuevo;
+                                    totalPagar.setText(String.valueOf(totalNuevo));
+
+                                    //Nuevo valor restante
+                                    int diferencia = Integer.valueOf(totalNuevo) - total;
+                                    diferencia = Integer.valueOf(saldoRestante.getText().toString()) + diferencia;
+
+                                    saldoRestante.setText(String.valueOf(diferencia));
                                 }
                                 else
                                 {
@@ -573,7 +604,7 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
 
                                         int total = Integer.valueOf(totalPagar.getText().toString());
 
-                                        total = total - Integer.valueOf(can) * precioVenta;
+                                        int totalNuevo = total - Integer.valueOf(can) * precioVenta;
 
                                         if (arrayList.get(posicionLista).getEstado().equalsIgnoreCase("update"))
                                         {
@@ -588,8 +619,14 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                                         }
 
                                         int precioNuevo = Integer.valueOf(capCantidad) * precioVenta;
-                                        total = total + precioNuevo;
-                                        totalPagar.setText(String.valueOf(total));
+                                        totalNuevo = totalNuevo + precioNuevo;
+                                        totalPagar.setText(String.valueOf(totalNuevo));
+
+                                        //Nuevo valor restante
+                                        int diferencia = Integer.valueOf(totalNuevo) - total;
+                                        diferencia = Integer.valueOf(saldoRestante.getText().toString()) + diferencia;
+
+                                        saldoRestante.setText(String.valueOf(diferencia));
                                     }
                                 }
                             }
