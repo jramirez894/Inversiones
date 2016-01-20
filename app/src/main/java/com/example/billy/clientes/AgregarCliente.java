@@ -752,7 +752,7 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
 
         protected void onPostExecute(Boolean result)
         {
-            //Toast.makeText(AgregarCliente.this, respStr.toString(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(AgregarCliente.this, idFactura, Toast.LENGTH_SHORT).show();
 
             for (int i = 0; i < DatosCobro.arrayListItems.size(); i++)
             {
