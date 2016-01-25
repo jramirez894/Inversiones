@@ -36,9 +36,11 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -61,6 +63,11 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
 
     boolean resul;
     Object respuesta = "";
+
+    String idProducto = "";
+    String idVendedor = "";
+    String capDescripcion = "";
+    String capFecha = "";
 
     public AdapterLista_Productos_MDatosCobro(Context context, List objects)
     {
@@ -234,22 +241,37 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
             public void onClick(DialogInterface dialogInterface, int i)
             {
                 //Capturar variables de la alerta
-                String capDescripcion = editDescripcionGarantia.getText().toString();
-                String capFecha = editFechaGarantia.getText().toString();
+                capDescripcion = editDescripcionGarantia.getText().toString();
+                capFecha = editFechaGarantia.getText().toString();
                 if (capDescripcion.equals("") || capFecha.equals("")) {
                     Toast.makeText(getContext(), "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    //Borrar un item de la lista
-                    ArrayAdapter adapter = new AdapterLista_Productos_MDatosCobro(getContext(), M_DatosCobro.arrayList);
-                    adapter.remove(posicionItems);
-                    //Se carga de nuevo la vista
-                    M_DatosCobro.lista.setAdapter(adapter);
+                    for (int j = 0; j < M_DatosCobro.arrayListP.size(); j++)
+                    {
+                        if (posicionItems.getNombre().equalsIgnoreCase(M_DatosCobro.arrayListP.get(j).getNombre()))
+                        {
+                            idProducto = M_DatosCobro.arrayListP.get(j).getIdProducto();
+                        }
+                    }
 
+                    if(M_DetalleCobro.idVendedor.equalsIgnoreCase(""))
+                    {
+                        idVendedor = Constantes.idVendedorFactura;
+                    }
+                    else
+                    {
+                        idVendedor = M_DetalleCobro.idVendedor;
+                    }
 
+                    //Enviar fecha con hora
+                    Date date = new Date();
+                    DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
+                    String fechaVentaModificada = capFecha + " " + hourFormat.format(date);
 
-                    Toast.makeText(getContext(), "Producto Registrado por Garantia", Toast.LENGTH_SHORT).show();
+                    TareaCreateWarranty tareaCreateWarranty = new TareaCreateWarranty();
+                    tareaCreateWarranty.execute("En espera", capDescripcion, fechaVentaModificada, idVendedor, Constantes.idClienteCliente, idProducto);
                 }
             }
         });
@@ -356,12 +378,10 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         }
     }
 
-    //Clases Asyntask para eliminar una venta
-
-    /*private class TareaDelete extends AsyncTask<String,Integer,Boolean>
+    //Clases Asyntask para agregar una factura
+    private class TareaCreateWarranty extends AsyncTask<String,Integer,Boolean>
     {
         private String respStr;
-        private JSONObject msg;
         JSONObject respJSON;
 
         @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -371,12 +391,18 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
             HttpClient httpClient;
             List<NameValuePair> nameValuePairs;
             HttpPost httpPost;
+
             httpClient= new DefaultHttpClient();
-            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerVenta.php");
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerGarantia.php");
 
             nameValuePairs = new ArrayList<NameValuePair>();
-            nameValuePairs.add(new BasicNameValuePair("idVenta", params[0]));
-            nameValuePairs.add(new BasicNameValuePair("option", "deleteSale"));
+            nameValuePairs.add(new BasicNameValuePair("estado", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("descripcion", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("fecha", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("idCliente", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("idProducto",  params[5]));
+            nameValuePairs.add(new BasicNameValuePair("option",  "createWarranty"));
 
             try
             {
@@ -386,7 +412,9 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 respStr = EntityUtils.toString(resp.getEntity());
 
                 respJSON = new JSONObject(respStr);
+                //JSONArray objItems = respJSON.getJSONArray("items");
 
+                //String obj
                 respuesta= respJSON.get("items");
                 resul = true;
             }
@@ -406,7 +434,10 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
             {
                 e.printStackTrace();
                 resul = false;
-            } catch (JSONException e) {
+            }
+
+            catch (JSONException e)
+            {
                 e.printStackTrace();
             }
 
@@ -415,35 +446,25 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
 
         protected void onPostExecute(Boolean result)
         {
-            int precioVenta = 0;
-
-            for (int i = 0; i <M_DatosCobro.arrayList.size(); i++)
+            if (resul)
             {
-                if (posicionItems.getNombre().equalsIgnoreCase(M_DatosCobro.arrayListP.get(i).getNombre()))
-                {
-                    precioVenta = Integer.valueOf(M_DatosCobro.arrayListP.get(i).getPrecioVenta());
-                }
+                //Borrar un item de la lista
+                ArrayAdapter adapter = new AdapterLista_Productos_MDatosCobro(getContext(), M_DatosCobro.arrayList);
+                adapter.remove(posicionItems);
+                //Se carga de nuevo la vista
+                M_DatosCobro.lista.setAdapter(adapter);
+
+                Toast.makeText(getContext(), "Producto Registrado por Garantia\n"
+                        + respuesta + "\nestado: " + "En espera"
+                        + "\n" + "descripcion: " + capDescripcion
+                        + "\n" + "fecha: " + capFecha
+                        + "\n" + "idVendedor: " + idVendedor
+                        + "\n" + "idCliente: " + Constantes.idClienteCliente
+                        + "\n" + "idProducto: " + idProducto, Toast.LENGTH_LONG).show();
             }
-
-            int precioActual = 0;
-
-            //Solo se multiplica cuando la cantidad del producto es mayor a 1 de lo contrario solo se resta
-
-            int total = Integer.valueOf(M_DatosCobro.totalPagar.getText().toString());
-            if (Integer.valueOf(posicionItems.getCantidad()) > 1)
-            {
-                precioActual = Integer.valueOf(posicionItems.getCantidad()) * precioVenta;
-
-                total =  total - precioActual;
-                M_DatosCobro.totalPagar.setText(String.valueOf(total));
+            else {
+                Toast.makeText(getContext(), "Error de servidor \n" + respuesta, Toast.LENGTH_SHORT).show();
             }
-            else
-            {
-                total = total - precioVenta;
-                M_DatosCobro.totalPagar.setText(String.valueOf(total));
-            }
-
-            limpiarLista();
         }
-    }*/
+    }
 }

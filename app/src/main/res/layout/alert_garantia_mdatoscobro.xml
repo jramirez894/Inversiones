@@ -15,20 +15,30 @@
         android:textColor="@android:color/background_dark"
         android:textStyle="bold"/>
 
-    <EditText
-        android:id="@+id/editDescripcion_Garantia_MDatosCobro"
+    <TextView
+        android:id="@+id/txtTiempo_Grarantia_MDatosCobro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Descripcion"
-        android:layout_marginTop="20dp"
-        android:inputType="text"/>
+        android:text="Tiempo de Garantia: "
+        android:textSize="18sp"
+        android:gravity="center"
+        android:textColor="@android:color/background_dark"
+        android:layout_marginTop="15dp"/>
 
     <EditText
         android:id="@+id/editFecha_Garantia_MDatosCobro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Fecha"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:inputType="date"/>
+
+    <EditText
+        android:id="@+id/editDescripcion_Garantia_MDatosCobro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Descripcion"
+        android:layout_marginTop="10dp"
+        android:inputType="text"/>
 
 </LinearLayout>

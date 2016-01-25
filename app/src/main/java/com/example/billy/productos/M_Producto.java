@@ -44,6 +44,7 @@ public class M_Producto extends AppCompatActivity
     Spinner categoria;
     EditText descripcion;
     EditText cantidad;
+    EditText garantia;
     EditText precioCompra;
     EditText precioVenta;
 
@@ -52,6 +53,7 @@ public class M_Producto extends AppCompatActivity
     String idC = "";
     String des = "";
     String can = "";
+    String gar = "";
     String preC = "";
     String preV = "";
 
@@ -79,6 +81,7 @@ public class M_Producto extends AppCompatActivity
         idC = extra.getString("idCategoria");
         des = extra.getString("descripcion");
         can = extra.getString("cantidad");
+        gar = extra.getString("garantia");
         preC = extra.getString("precioCompra");
         preV = extra.getString("precioVenta");
 
@@ -86,12 +89,14 @@ public class M_Producto extends AppCompatActivity
         categoria = (Spinner)findViewById(R.id.spinnerCategoria_MProducto);
         descripcion = (EditText)findViewById(R.id.editTextDescripcion_MProducto);
         cantidad = (EditText)findViewById(R.id.editTextCantidad_MProducto);
+        garantia = (EditText)findViewById(R.id.editTextGarantia_MProducto);
         precioCompra = (EditText)findViewById(R.id.editTextPrecioCompra_MProducto);
         precioVenta = (EditText)findViewById(R.id.editTextPrecioVenta_MProducto);
 
         nombre.setText(nom);
         descripcion.setText(des);
         cantidad.setText(can);
+        garantia.setText(gar);
         precioCompra.setText(preC);
         precioVenta.setText(preV);
 
@@ -150,12 +155,14 @@ public class M_Producto extends AppCompatActivity
                 String nom = nombre.getText().toString();
                 String des = descripcion.getText().toString();
                 String can = cantidad.getText().toString();
+                String gar = garantia.getText().toString();
                 String preC = precioCompra.getText().toString();
                 String preV = precioVenta.getText().toString();
 
                 if(nom.equalsIgnoreCase("") ||
                         des.equalsIgnoreCase("") ||
                         can.equalsIgnoreCase("") ||
+                        gar.equalsIgnoreCase("") ||
                         preC.equalsIgnoreCase("") ||
                         preV.equalsIgnoreCase("") )
                 {
@@ -204,7 +211,7 @@ public class M_Producto extends AppCompatActivity
                 String idC = categoriaSeleccionada();
 
                 TareaUpdadte updadte = new TareaUpdadte();
-                updadte.execute(nombre.getText().toString(), descripcion.getText().toString(), cantidad.getText().toString(), precioCompra.getText().toString(), precioVenta.getText().toString(), idC);
+                updadte.execute(nombre.getText().toString(), descripcion.getText().toString(), cantidad.getText().toString(), garantia.getText().toString(), precioCompra.getText().toString(), precioVenta.getText().toString(), idC);
             }
         });
 
@@ -325,9 +332,10 @@ public class M_Producto extends AppCompatActivity
             nameValuePairs.add(new BasicNameValuePair("nombre", params[0]));
             nameValuePairs.add(new BasicNameValuePair("descripcion", params[1]));
             nameValuePairs.add(new BasicNameValuePair("cantidad", params[2]));
-            nameValuePairs.add(new BasicNameValuePair("precioCompra", params[3]));
-            nameValuePairs.add(new BasicNameValuePair("precioVenta", params[4]));
-            nameValuePairs.add(new BasicNameValuePair("idCategoria", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("tiempoGarantia", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("precioCompra", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("precioVenta", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("idCategoria", params[6]));
             nameValuePairs.add(new BasicNameValuePair("option", "updateProduct"));
 
             try

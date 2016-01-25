@@ -61,6 +61,15 @@
             android:textColor="@android:color/background_dark"/>
 
         <TextView
+            android:id="@+id/textGarantia_VProducto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tiempo de Garantia:"
+            android:textSize="20sp"
+            android:layout_marginTop="15dp"
+            android:textColor="@android:color/background_dark"/>
+
+        <TextView
             android:id="@+id/textPrecioCompra_VProducto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

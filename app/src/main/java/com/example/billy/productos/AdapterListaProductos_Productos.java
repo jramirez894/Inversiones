@@ -82,6 +82,7 @@ public class AdapterListaProductos_Productos extends ArrayAdapter
                 String idCategoria = productos.getIdCategoria();
                 String descripcion = productos.getDescripcion();
                 String cantidad = productos.getCantidad();
+                String garantia = productos.getGarantia();
                 String precioCompra = productos.getPrecioCompra();
                 String precioVenta = productos.getPrecioVenta();
 
@@ -92,6 +93,7 @@ public class AdapterListaProductos_Productos extends ArrayAdapter
                 intent.putExtra("idCategoria", idCategoria);
                 intent.putExtra("descripcion", descripcion);
                 intent.putExtra("cantidad", cantidad);
+                intent.putExtra("garantia", garantia);
                 intent.putExtra("precioCompra", precioCompra);
                 intent.putExtra("precioVenta", precioVenta);
                 getContext().startActivity(intent);

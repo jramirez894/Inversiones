@@ -44,7 +44,7 @@
                     android:inputType="number"
                     android:layout_marginTop="15dp"
                     android:drawableLeft="@mipmap/perfil"
-                    android:text="1088321328"/>
+                    android:text="1088336137"/>
 
                 <EditText
                     android:id="@+id/editTextContrasena"

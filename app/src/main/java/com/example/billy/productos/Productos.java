@@ -88,6 +88,7 @@ public class Productos extends AppCompatActivity
                 intent.putExtra("nombre", producto.getNombre());
                 intent.putExtra("descripcion", producto.getDescripcion());
                 intent.putExtra("cantidad", producto.getCantidad());
+                intent.putExtra("garantia", producto.getGarantia());
                 intent.putExtra("precioCompra", producto.getPrecioCompra());
                 intent.putExtra("precioVenta", producto.getPrecioVenta());
 
@@ -140,6 +141,7 @@ public class Productos extends AppCompatActivity
                 intent.putExtra("nombre", producto.getNombre());
                 intent.putExtra("descripcion", producto.getDescripcion());
                 intent.putExtra("cantidad", producto.getCantidad());
+                intent.putExtra("garantia", producto.getGarantia());
                 intent.putExtra("precioCompra", producto.getPrecioCompra());
                 intent.putExtra("precioVenta", producto.getPrecioVenta());
 
@@ -344,7 +346,7 @@ public class Productos extends AppCompatActivity
                 for(int i=0; i<objVendedores.length(); i++)
                 {
                     JSONObject obj = objVendedores.getJSONObject(i);
-                    arrayList.add(new ItemsListaProductos_Productos(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, obj.getString("idProducto"), obj.getString("descripcion"), obj.getString("cantidad"), obj.getString("precioCompra"), obj.getString("precioVenta"), obj.getString("idCategoria")));
+                    arrayList.add(new ItemsListaProductos_Productos(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, obj.getString("idProducto"), obj.getString("descripcion"), obj.getString("cantidad"), obj.getString("tiempoGarantia"), obj.getString("precioCompra"), obj.getString("precioVenta"), obj.getString("idCategoria")));
                     arrayListNombresProductos.add(obj.getString("nombre"));
 
                     resul = true;

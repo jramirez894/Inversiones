@@ -51,6 +51,7 @@ public class AgregarProducto extends AppCompatActivity
     ImageView agregarCat;
     EditText descripcion;
     EditText cantidad;
+    EditText garantia;
     EditText precioCompra;
     EditText precioVenta;
 
@@ -75,6 +76,7 @@ public class AgregarProducto extends AppCompatActivity
         agregarCat = (ImageView)findViewById(R.id.imageAddCategoria_Producto);
         descripcion = (EditText)findViewById(R.id.editTextDescripcion_Producto);
         cantidad = (EditText)findViewById(R.id.editTextCantidad_Producto);
+        garantia = (EditText)findViewById(R.id.editTextGarantia_Producto);
         precioCompra = (EditText)findViewById(R.id.editTextPrecioCompra_Producto);
         precioVenta = (EditText)findViewById(R.id.editTextPrecioVenta_Producto);
 
@@ -150,6 +152,7 @@ public class AgregarProducto extends AppCompatActivity
         String nom = nombre.getText().toString();
         String des = descripcion.getText().toString();
         String cant = cantidad.getText().toString();
+        String gara = garantia.getText().toString();
         String preCom = precioCompra.getText().toString();
         String preVen = precioVenta.getText().toString();
 
@@ -160,6 +163,7 @@ public class AgregarProducto extends AppCompatActivity
                 if (nom.equals("")||
                     des.equals("")||
                     cant.equals("")||
+                    gara.equals("")||
                     preCom.equals("")||
                     preVen.equals(""))
                 {
@@ -205,6 +209,7 @@ public class AgregarProducto extends AppCompatActivity
                 String nom = nombre.getText().toString();
                 String des = descripcion.getText().toString();
                 String cant = cantidad.getText().toString();
+                String gara = garantia.getText().toString();
                 String preCom = precioCompra.getText().toString();
                 String preVen = precioVenta.getText().toString();
 
@@ -212,7 +217,7 @@ public class AgregarProducto extends AppCompatActivity
                 String cat = cargarCategoriaActual();
 
                 TareaCreateProducto tareaCreate = new TareaCreateProducto();
-                tareaCreate.execute(nom, des, cant, preCom, preVen, cat);
+                tareaCreate.execute(nom, des, cant, gara, preCom, preVen, cat);
             }
         });
 
@@ -411,9 +416,10 @@ public class AgregarProducto extends AppCompatActivity
             nameValuePairs.add(new BasicNameValuePair("nombre", params[0]));
             nameValuePairs.add(new BasicNameValuePair("descripcion", params[1]));
             nameValuePairs.add(new BasicNameValuePair("cantidad", params[2]));
-            nameValuePairs.add(new BasicNameValuePair("precioCompra", params[3]));
-            nameValuePairs.add(new BasicNameValuePair("precioVenta", params[4]));
-            nameValuePairs.add(new BasicNameValuePair("idCategoria", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("tiempoGarantia", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("precioCompra", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("precioVenta", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("idCategoria", params[6]));
             nameValuePairs.add(new BasicNameValuePair("option", "createProducto"));
 
             try

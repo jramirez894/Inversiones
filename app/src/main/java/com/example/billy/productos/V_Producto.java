@@ -16,6 +16,7 @@ public class V_Producto extends AppCompatActivity
     TextView categoria;
     TextView descripcion;
     TextView cantidad;
+    TextView garantia;
     TextView precioCompra;
     TextView precioVenta;
 
@@ -23,6 +24,7 @@ public class V_Producto extends AppCompatActivity
     String idC = "";
     String des = "";
     String can = "";
+    String gar = "";
     String preC = "";
     String preV = "";
 
@@ -40,6 +42,7 @@ public class V_Producto extends AppCompatActivity
         categoria = (TextView)findViewById(R.id.textCategoria_VProducto);
         descripcion = (TextView)findViewById(R.id.textDescripcion_VProducto);
         cantidad = (TextView)findViewById(R.id.textCantidad_VProducto);
+        garantia = (TextView)findViewById(R.id.textGarantia_VProducto);
         precioCompra = (TextView)findViewById(R.id.textPrecioCompra_VProducto);
         precioVenta = (TextView)findViewById(R.id.textPrecioVenta_VProducto);
 
@@ -48,6 +51,7 @@ public class V_Producto extends AppCompatActivity
         idC = extra.getString("idCategoria");
         des = extra.getString("descripcion");
         can = extra.getString("cantidad");
+        gar = extra.getString("garantia");
         preC = extra.getString("precioCompra");
         preV = extra.getString("precioVenta");
 
@@ -55,6 +59,7 @@ public class V_Producto extends AppCompatActivity
         categoria.setText("Categoria: " + idC);
         descripcion.setText("Descripcion: " + des);
         cantidad.setText("Cantidad: " + can);
+        garantia.setText("Garantia: " + gar);
         precioCompra.setText("Precio Compra: " + preC);
         precioVenta.setText("Precio Venta: " + preV);
     }

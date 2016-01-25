@@ -11,20 +11,30 @@ public class ItemsListaProductos_Productos
     String idProducto;
     String descripcion;
     String cantidad;
+    String garantia;
     String precioCompra;
     String precioVenta;
     String idCategoria;
 
-    public ItemsListaProductos_Productos(String nombre, int editar, int eliminar, String idProducto, String descripcion, String cantidad, String precioCompra, String precioVenta, String idCategoria) {
+    public ItemsListaProductos_Productos(String nombre, int editar, int eliminar, String idProducto, String descripcion, String cantidad, String garantia, String precioCompra, String precioVenta, String idCategoria) {
         this.nombre = nombre;
         this.editar = editar;
         this.eliminar = eliminar;
         this.idProducto = idProducto;
         this.descripcion = descripcion;
         this.cantidad = cantidad;
+        this.garantia = garantia;
         this.precioCompra = precioCompra;
         this.precioVenta = precioVenta;
         this.idCategoria = idCategoria;
+    }
+
+    public String getGarantia() {
+        return garantia;
+    }
+
+    public void setGarantia(String garantia) {
+        this.garantia = garantia;
     }
 
     public String getNombre() {

@@ -589,7 +589,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
 
                         if(obj.getString("idProducto").equalsIgnoreCase(Constantes.itemsVenta.get(i).getIdProducto()))
                         {
-                            Constantes.itemsProductos.add(new ItemsListaProductos_Productos(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, obj.getString("idProducto"), obj.getString("descripcion"), obj.getString("cantidad"), obj.getString("precioCompra"), obj.getString("precioVenta"), obj.getString("idCategoria")));
+                            Constantes.itemsProductos.add(new ItemsListaProductos_Productos(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, obj.getString("idProducto"), obj.getString("descripcion"), obj.getString("cantidad"), obj.getString("tiempoGarantia"), obj.getString("precioCompra"), obj.getString("precioVenta"), obj.getString("idCategoria")));
                         }
 
                         existe = true;

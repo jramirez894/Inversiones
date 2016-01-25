@@ -408,7 +408,7 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                 for(int i=0; i<objVendedores.length(); i++)
                 {
                     JSONObject obj = objVendedores.getJSONObject(i);
-                    arrayListP.add(new ItemsListaProductos_Productos(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, obj.getString("idProducto"), obj.getString("descripcion"), obj.getString("cantidad"), obj.getString("precioCompra"), obj.getString("precioVenta"), obj.getString("idCategoria")));
+                    arrayListP.add(new ItemsListaProductos_Productos(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, obj.getString("idProducto"), obj.getString("descripcion"), obj.getString("cantidad"), obj.getString("tiempoGarantia"), obj.getString("precioCompra"), obj.getString("precioVenta"), obj.getString("idCategoria")));
                     arrayListNombresProductos.add(obj.getString("nombre"));
 
                     resul = true;
