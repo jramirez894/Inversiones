@@ -4,6 +4,7 @@ import android.widget.EditText;
 
 import com.example.billy.clientes.ItemFactura_AgregarCliente;
 import com.example.billy.clientes.ItemsVenta_AgregarCliente;
+import com.example.billy.garantias_product.Items_Garantia;
 import com.example.billy.productos.ItemsListaProductos_Productos;
 
 import java.util.ArrayList;
@@ -63,4 +64,7 @@ public class Constantes
 
     //para diferenciar si le damos click a editar un cliente o visualizar un cliente, para saber que id de factura traer
     public static String tipoConsultaidFactura = "";
+
+    //Tabla Garantia
+    public static ArrayList<Items_Garantia> itemsGarantias = new ArrayList<Items_Garantia>();
 }

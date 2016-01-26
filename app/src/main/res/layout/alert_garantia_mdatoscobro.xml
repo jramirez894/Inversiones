@@ -41,4 +41,29 @@
         android:layout_marginTop="10dp"
         android:inputType="text"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cantidad:"
+            android:layout_gravity="center"
+            android:textSize="18sp"
+            android:textColor="@android:color/background_dark"/>
+
+        <Spinner
+            android:id="@+id/spinCantidad_Garantia_MDatosCobro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"></Spinner>
+
+    </LinearLayout>
+
+
+
 </LinearLayout>

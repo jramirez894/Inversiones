@@ -5,7 +5,7 @@ package com.example.billy.clientes;
  */
 public class ItemsGarantia_DatosCobro
 {
-    String fechaDevolucion;
+    /*String fechaDevolucion;
     String fechaGarantia;
     String descripcionDevolucion;
     String descripcionGarantia;
@@ -48,5 +48,5 @@ public class ItemsGarantia_DatosCobro
 
     public void setDescripcionGarantia(String descripcionGarantia) {
         this.descripcionGarantia = descripcionGarantia;
-    }
+    }*/
 }

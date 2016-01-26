@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.billy.constantes.Constantes;
+import com.example.billy.garantias_product.Items_Garantia;
 import com.example.billy.inversiones.R;
 import com.example.billy.menu_principal.AdapterListaPersonalizada;
 import com.example.billy.menu_principal.PrincipalMenu;
@@ -78,6 +79,8 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
     public static ArrayList<ItemsListaProductos_Productos> arrayListP = new ArrayList<ItemsListaProductos_Productos>();
     public static ArrayList<String> arrayListNombresProductos = new ArrayList<String>();
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -111,6 +114,12 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
         fechaPendiente.requestFocus();
 
         lista=(ListView)view.findViewById(R.id.listViewListaProductos_DatosCobro_Mcliente);
+
+        //Obtener las garantias si las hay
+        Constantes.itemsGarantias.clear();
+        TareaObtenerGarantias tareaObtenerGarantias = new TareaObtenerGarantias();
+        tareaObtenerGarantias.execute();
+
         ActualizarLista();
         setDateTimeFieldPendiente();
 
@@ -255,6 +264,7 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                 String disponibles = "";
                 String cantidad = "";
                 String idProducto = "";
+                String garantias = "";
 
                 nombreProducto = arrayList.get(position).getNombre();
 
@@ -292,12 +302,22 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                     cantidad = arrayList.get(position).getCantidad();
                 }
 
-                AlertaInfoProducto(nombreProducto, descripcion, precioVenta, cantidad, disponibles, idProducto, position);
+                //Para saber si tiene garantias
+                for(int i = 0; i < Constantes.itemsGarantias.size(); i++)
+                {
+                    if(idProducto.equalsIgnoreCase(Constantes.itemsGarantias.get(i).getIdProducto()))
+                    {
+                        garantias = Constantes.itemsGarantias.get(i).getCantidad();
+                    }
+                }
+
+                AlertaInfoProducto(nombreProducto, descripcion, precioVenta, cantidad, disponibles, idProducto, position, garantias);
             }
         });
 
         return view;
     }
+
 
     private void setDateTimeFieldPendiente()
     {
@@ -447,7 +467,7 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
         }
     }
 
-    public void AlertaInfoProducto(final String nom, String descri, String precio, final String can, String dispo, final String idProducto, final int posicionLista)
+    public void AlertaInfoProducto(final String nom, String descri, String precio, final String can, String dispo, final String idProducto, final int posicionLista, final String garantias)
     {
         LayoutInflater inflaterAlert = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialoglayout = inflaterAlert.inflate(R.layout.alert_info_producto, null);
@@ -456,11 +476,24 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
         final EditText precioVenta = (EditText)dialoglayout.findViewById(R.id.editPrecioVenta_AlertInfo);
         final EditText disponibles = (EditText)dialoglayout.findViewById(R.id.editDisponibles_AlertInfo);
         final EditText cantidad = (EditText)dialoglayout.findViewById(R.id.editCantidad_AlertInfo);
+        final EditText editGarantia = (EditText)dialoglayout.findViewById(R.id.editGarantias_AlertInfo);
+
+        final View layoutGarantia = (View)dialoglayout.findViewById(R.id.layoutGarantia);
 
         descripcion.setText(descri);
         precioVenta.setText(precio);
         disponibles.setText(dispo);
         cantidad.setText(can);
+
+        //Para saber si hay que mostrar o no las garantias
+        if(garantias.equalsIgnoreCase(""))
+        {
+            layoutGarantia.setVisibility(View.GONE);
+        }
+        else
+        {
+            editGarantia.setText(garantias);
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setIcon(R.mipmap.productos);
@@ -637,5 +670,82 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
         });
         builder.setCancelable(false);
         builder.show();
+    }
+
+    //Clases Asyntask para traer los datos de la tabla productos
+
+    private class TareaObtenerGarantias extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerGarantia.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "getAllWarranty"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+                //JSONObject obj = objItems.getJSONObject(0);
+
+                //String obj
+
+                for(int i=0; i<objVendedores.length(); i++)
+                {
+                    JSONObject obj = objVendedores.getJSONObject(i);
+
+                    if(obj.getString("estado").equalsIgnoreCase("En espera") || obj.getString("estado").equalsIgnoreCase("Pendiente"))
+                    {
+                        Constantes.itemsGarantias.add(new Items_Garantia(obj.getString("idGarantia"), obj.getString("estado"), obj.getString("descripcion"), obj.getString("fecha"), obj.getString("cantidad"), obj.getString("idVendedor"), obj.getString("idCliente"), obj.getString("idProducto")));
+                    }
+
+                    resul = true;
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(getActivity(), respStr, Toast.LENGTH_SHORT).show();
+        }
     }
 }

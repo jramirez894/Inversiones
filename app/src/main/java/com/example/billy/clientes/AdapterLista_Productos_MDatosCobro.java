@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +69,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
     String idVendedor = "";
     String capDescripcion = "";
     String capFecha = "";
+    String cantidadP = "";
 
     public AdapterLista_Productos_MDatosCobro(Context context, List objects)
     {
@@ -161,7 +163,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
             {
                 int precioVenta = 0;
 
-                for (int i = 0; i < M_DatosCobro.arrayList.size(); i++) {
+                for (int i = 0; i < M_DatosCobro.arrayListP.size(); i++) {
                     if (posicionItems.getNombre().equalsIgnoreCase(M_DatosCobro.arrayListP.get(i).getNombre())) {
                         precioVenta = Integer.valueOf(M_DatosCobro.arrayListP.get(i).getPrecioVenta());
                     }
@@ -223,6 +225,8 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         View dialoglayout = inflaterAlert.inflate(R.layout.alert_garantia_mdatoscobro, null);
 
         final EditText editDescripcionGarantia = (EditText) dialoglayout.findViewById(R.id.editDescripcion_Garantia_MDatosCobro);
+        final TextView txtTextoDescripcion = (TextView) dialoglayout.findViewById(R.id.txtTiempo_Grarantia_MDatosCobro);
+        final Spinner spinCantidadGarantia = (Spinner) dialoglayout.findViewById(R.id.spinCantidad_Garantia_MDatosCobro);
 
         //Fecha Personalizada para la garantia
         dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
@@ -231,47 +235,130 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         editFechaGarantia.requestFocus();
         setDateTimeField();
 
+        //Llenar el spinner segun la cantidad que haya registrada
+
+        String idVenta = posicionItems.getIdVenta();
+        String cantidadProductos = "";
+
+        //variables para definir las probabilidades del usuario
+        String diferencia = "";
+        int pos = 0;
+        boolean accionAceptar = false;
+
+        for(int j = 0; j < Constantes.itemsVenta.size(); j++)
+        {
+            if(idVenta.equalsIgnoreCase(Constantes.itemsVenta.get(j).getIdVenta()))
+            {
+                if(Constantes.itemsVenta.get(j).getNuevaCantidad().equalsIgnoreCase("0"))
+                {
+                    cantidadProductos = Constantes.itemsVenta.get(j).getCantidad();
+                    diferencia = "Original";
+                    pos = j;
+                }
+                else
+                {
+                    cantidadProductos = Constantes.itemsVenta.get(j).getNuevaCantidad();
+                    diferencia = "Nueva";
+                    pos = j;
+                }
+            }
+        }
+
+        switch (diferencia)
+        {
+            case "Original":
+
+                if(cantidadProductos.equalsIgnoreCase(Constantes.itemsVenta.get(pos).getCantidad()))
+                {
+                    editDescripcionGarantia.setVisibility(View.GONE);
+                    editFechaGarantia.setVisibility(View.GONE);
+                    spinCantidadGarantia.setVisibility(View.GONE);
+
+                    txtTextoDescripcion.setText("Los productos ya se encuentran registrados por garantia");
+
+                    accionAceptar = true;
+                }
+
+                break;
+
+            case "Nueva":
+
+                if(cantidadProductos.equalsIgnoreCase(Constantes.itemsVenta.get(pos).getNuevaCantidad()))
+                {
+                    editDescripcionGarantia.setVisibility(View.GONE);
+                    editFechaGarantia.setVisibility(View.GONE);
+                    spinCantidadGarantia.setVisibility(View.GONE);
+
+                    txtTextoDescripcion.setText("Los productos ya se encuentran registrados por garantia");
+
+                    accionAceptar = true;
+                }
+
+                break;
+        }
+
+        ArrayList<String> arrayListSpin = new ArrayList<String>();
+        arrayListSpin.clear();
+
+        for(int m = 1; m <= Integer.valueOf(cantidadProductos); m++)
+        {
+            arrayListSpin.add(String.valueOf(m));
+        }
+
+        spinCantidadGarantia.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, arrayListSpin));
+
+        //Alerta personalizada
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setIcon(R.mipmap.garantia);
         builder.setTitle("Garantia");
         builder.setView(dialoglayout);
+        final boolean finalAccionAceptar = accionAceptar;
         builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
         {
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
             {
-                //Capturar variables de la alerta
-                capDescripcion = editDescripcionGarantia.getText().toString();
-                capFecha = editFechaGarantia.getText().toString();
-                if (capDescripcion.equals("") || capFecha.equals("")) {
-                    Toast.makeText(getContext(), "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
+                if (finalAccionAceptar)
+                {
+                    //Sin Accion
                 }
                 else
                 {
-                    for (int j = 0; j < M_DatosCobro.arrayListP.size(); j++)
-                    {
-                        if (posicionItems.getNombre().equalsIgnoreCase(M_DatosCobro.arrayListP.get(j).getNombre()))
-                        {
-                            idProducto = M_DatosCobro.arrayListP.get(j).getIdProducto();
-                        }
-                    }
-
-                    if(M_DetalleCobro.idVendedor.equalsIgnoreCase(""))
-                    {
-                        idVendedor = Constantes.idVendedorFactura;
+                    //Capturar variables de la alerta
+                    capDescripcion = editDescripcionGarantia.getText().toString();
+                    capFecha = editFechaGarantia.getText().toString();
+                    if (capDescripcion.equals("") || capFecha.equals("")) {
+                        Toast.makeText(getContext(), "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
                     }
                     else
                     {
-                        idVendedor = M_DetalleCobro.idVendedor;
+                        for (int j = 0; j < M_DatosCobro.arrayListP.size(); j++)
+                        {
+                            if (posicionItems.getNombre().equalsIgnoreCase(M_DatosCobro.arrayListP.get(j).getNombre()))
+                            {
+                                idProducto = M_DatosCobro.arrayListP.get(j).getIdProducto();
+                            }
+                        }
+
+                        if(M_DetalleCobro.idVendedor.equalsIgnoreCase(""))
+                        {
+                            idVendedor = Constantes.idVendedorFactura;
+                        }
+                        else
+                        {
+                            idVendedor = M_DetalleCobro.idVendedor;
+                        }
+
+                        //Enviar fecha con hora
+                        Date date = new Date();
+                        DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
+                        capFecha = capFecha + " " + hourFormat.format(date);
+
+                        cantidadP = spinCantidadGarantia.getSelectedItem().toString();
+
+                        TareaCreateWarranty tareaCreateWarranty = new TareaCreateWarranty();
+                        tareaCreateWarranty.execute("En espera", capDescripcion, capFecha, cantidadP, idVendedor, Constantes.idClienteCliente, idProducto);
                     }
-
-                    //Enviar fecha con hora
-                    Date date = new Date();
-                    DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
-                    String fechaVentaModificada = capFecha + " " + hourFormat.format(date);
-
-                    TareaCreateWarranty tareaCreateWarranty = new TareaCreateWarranty();
-                    tareaCreateWarranty.execute("En espera", capDescripcion, fechaVentaModificada, idVendedor, Constantes.idClienteCliente, idProducto);
                 }
             }
         });
@@ -399,9 +486,10 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
             nameValuePairs.add(new BasicNameValuePair("estado", params[0]));
             nameValuePairs.add(new BasicNameValuePair("descripcion", params[1]));
             nameValuePairs.add(new BasicNameValuePair("fecha", params[2]));
-            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[3]));
-            nameValuePairs.add(new BasicNameValuePair("idCliente", params[4]));
-            nameValuePairs.add(new BasicNameValuePair("idProducto",  params[5]));
+            nameValuePairs.add(new BasicNameValuePair("cantidad", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("idCliente", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("idProducto",  params[6]));
             nameValuePairs.add(new BasicNameValuePair("option",  "createWarranty"));
 
             try
@@ -454,13 +542,16 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 //Se carga de nuevo la vista
                 M_DatosCobro.lista.setAdapter(adapter);
 
-                Toast.makeText(getContext(), "Producto Registrado por Garantia\n"
+                /*Toast.makeText(getContext(), "Producto Registrado por Garantia\n"
                         + respuesta + "\nestado: " + "En espera"
                         + "\n" + "descripcion: " + capDescripcion
                         + "\n" + "fecha: " + capFecha
+                        + "\n" + "cantidad: " + cantidadP
                         + "\n" + "idVendedor: " + idVendedor
                         + "\n" + "idCliente: " + Constantes.idClienteCliente
-                        + "\n" + "idProducto: " + idProducto, Toast.LENGTH_LONG).show();
+                        + "\n" + "idProducto: " + idProducto, Toast.LENGTH_LONG).show();*/
+
+                Toast.makeText(getContext(), "Producto Registrado por Garantia", Toast.LENGTH_LONG).show();
             }
             else {
                 Toast.makeText(getContext(), "Error de servidor \n" + respuesta, Toast.LENGTH_SHORT).show();

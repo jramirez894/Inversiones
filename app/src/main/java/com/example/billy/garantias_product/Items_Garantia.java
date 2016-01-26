@@ -5,43 +5,24 @@ package com.example.billy.garantias_product;
  */
 public class Items_Garantia
 {
-    String nombre;
-    String nomProducto;
-    String fecha;
+    String idGarantia;
+    String estado;
     String descripcion;
-    int eliminar;
+    String fecha;
+    String cantidad;
+    String idVendedor;
+    String idCliente;
+    String idProducto;
 
-    public Items_Garantia(String nombre, String nomProducto, String fecha, String descripcion, int eliminar)
-    {
-        this.nombre = nombre;
-        this.nomProducto = nomProducto;
-        this.fecha = fecha;
+    public Items_Garantia(String idGarantia, String estado, String descripcion, String fecha, String cantidad, String idVendedor, String idCliente, String idProducto) {
+        this.idGarantia = idGarantia;
+        this.estado = estado;
         this.descripcion = descripcion;
-        this.eliminar = eliminar;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getNomProducto() {
-        return nomProducto;
-    }
-
-    public void setNomProducto(String nomProducto) {
-        this.nomProducto = nomProducto;
-    }
-
-    public String getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(String fecha) {
         this.fecha = fecha;
+        this.cantidad = cantidad;
+        this.idVendedor = idVendedor;
+        this.idCliente = idCliente;
+        this.idProducto = idProducto;
     }
 
     public String getDescripcion() {
@@ -52,11 +33,59 @@ public class Items_Garantia
         this.descripcion = descripcion;
     }
 
-    public int getEliminar() {
-        return eliminar;
+    public String getIdGarantia() {
+        return idGarantia;
     }
 
-    public void setEliminar(int eliminar) {
-        this.eliminar = eliminar;
+    public void setIdGarantia(String idGarantia) {
+        this.idGarantia = idGarantia;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
+
+    public String getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(String cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public String getIdVendedor() {
+        return idVendedor;
+    }
+
+    public void setIdVendedor(String idVendedor) {
+        this.idVendedor = idVendedor;
+    }
+
+    public String getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(String idCliente) {
+        this.idCliente = idCliente;
+    }
+
+    public String getIdProducto() {
+        return idProducto;
+    }
+
+    public void setIdProducto(String idProducto) {
+        this.idProducto = idProducto;
     }
 }

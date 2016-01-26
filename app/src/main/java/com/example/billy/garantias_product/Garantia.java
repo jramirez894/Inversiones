@@ -34,8 +34,8 @@ public class Garantia extends AppCompatActivity
     {
         arrayList.clear();
 
-        arrayList.add(new Items_Garantia("Cliente: Miguel", "Producto: Sabanas", "Fecha: 20-10-2015", "Descripcion: Que pereza", R.mipmap.eliminar));
-        arrayList.add(new Items_Garantia("Cliente: Colson", "Producto: Sabanas", "Fecha: 20-10-2015", "Descripcion: Que pereza", R.mipmap.eliminar));
+        //arrayList.add(new Items_Garantia("Cliente: Miguel", "Producto: Sabanas", "Fecha: 20-10-2015", "Descripcion: Que pereza", R.mipmap.eliminar));
+        //arrayList.add(new Items_Garantia("Cliente: Colson", "Producto: Sabanas", "Fecha: 20-10-2015", "Descripcion: Que pereza", R.mipmap.eliminar));
 
         listaGarantia.setAdapter(new Adapter_Garantia(this, arrayList));
     }

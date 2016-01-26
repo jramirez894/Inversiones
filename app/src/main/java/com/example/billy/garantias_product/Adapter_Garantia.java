@@ -44,11 +44,11 @@ public class Adapter_Garantia extends ArrayAdapter
         TextView descripcion = (TextView)convertView.findViewById(R.id.textViewDescripcion_ItemsGarantia);
         ImageView eliminar = (ImageView)convertView.findViewById(R.id.imageEliminar_ItemsGarantia);
 
-        nombre.setText(items.getNombre());
+        /*nombre.setText(items.getNombre());
         nomProducto.setText(items.getNomProducto());
         fecha.setText(items.getFecha());
         descripcion.setText(items.getDescripcion());
-        eliminar.setImageResource(items.getEliminar());
+        eliminar.setImageResource(items.getEliminar());*/
 
         eliminar.setOnClickListener(new View.OnClickListener()
         {

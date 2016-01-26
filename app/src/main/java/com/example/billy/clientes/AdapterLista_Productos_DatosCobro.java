@@ -149,6 +149,9 @@ public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
         final EditText disponibles = (EditText)dialoglayout.findViewById(R.id.editDisponibles_AlertInfo);
         final EditText cantidad = (EditText)dialoglayout.findViewById(R.id.editCantidad_AlertInfo);
 
+        final View layoutGarantia = (View)dialoglayout.findViewById(R.id.layoutGarantia);
+        layoutGarantia.setVisibility(View.GONE);
+
         descripcion.setText(descri);
         precioVenta.setText(precio);
         disponibles.setText(dispo);
