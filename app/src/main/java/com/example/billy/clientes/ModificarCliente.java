@@ -316,30 +316,41 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                 valorRestante = 1;
             }
 
-            if(valorRestante != 0)
+            if(valorRestante == 1)
             {
                 txtMensaje_AlertaMCliente.setVisibility(View.GONE);
                 editCalificacion_AlertaMCliente.setVisibility(View.GONE);
+                editFecha_AlertaMCliente.setVisibility(View.GONE);
+
                 estadoCliente = "Activo";
-
-                insertarAbono = true;
-
-                if(abono.equalsIgnoreCase("0") || abono.equalsIgnoreCase(""))
-                {
-                    editFecha_AlertaMCliente.setVisibility(View.GONE);
-                    insertarAbono = false;
-                }
             }
             else
             {
-                if(abono.equalsIgnoreCase("0") || abono.equalsIgnoreCase(""))
+                if(valorRestante != 0)
                 {
-                    editFecha_AlertaMCliente.setVisibility(View.GONE);
-                    insertarAbono = false;
-                }
+                    txtMensaje_AlertaMCliente.setVisibility(View.GONE);
+                    editCalificacion_AlertaMCliente.setVisibility(View.GONE);
+                    estadoCliente = "Activo";
 
-                estadoCliente = "Inactivo";
-                insertarAbono = true;
+                    insertarAbono = true;
+
+                    if(abono.equalsIgnoreCase("0") || abono.equalsIgnoreCase(""))
+                    {
+                        editFecha_AlertaMCliente.setVisibility(View.GONE);
+                        insertarAbono = false;
+                    }
+                }
+                else
+                {
+                    if(abono.equalsIgnoreCase("0") || abono.equalsIgnoreCase(""))
+                    {
+                        editFecha_AlertaMCliente.setVisibility(View.GONE);
+                        insertarAbono = false;
+                    }
+
+                    estadoCliente = "Inactivo";
+                    insertarAbono = true;
+                }
             }
 
             //Fecha Personalizada para la garantia
@@ -349,8 +360,8 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
             setDateTimeField();
 
             AlertDialog.Builder alerta = new AlertDialog.Builder(ModificarCliente.this);
-            alerta.setIcon(R.mipmap.garantia);
-            alerta.setTitle("Garantia");
+            alerta.setIcon(R.mipmap.guardar);
+            alerta.setTitle("Guardar");
             alerta.setView(dialoglayout);
             alerta.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
             {
@@ -362,33 +373,43 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                     switch (Constantes.interfaz)
                     {
                         case "Administrador":
-                            if (valorRestante != 0)
+
+                            if(valorRestante == 1)
                             {
-                                if (fecha.equals(""))
-                                {
-                                    Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
-                                }
-                                else
-                                {
-                                    TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
-                                    tareaUpdateClient.execute(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa, editCalificacion_AlertaMCliente.getText().toString());
-                                }
+                                TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
+                                tareaUpdateClient.execute(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa, editCalificacion_AlertaMCliente.getText().toString());
                             }
                             else
                             {
-                                if (fecha.equals("") ||
-                                        calificacion.equals(""))
+                                if (valorRestante != 0)
                                 {
-                                    Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
+                                    if (fecha.equals(""))
+                                    {
+                                        Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else
+                                    {
+                                        TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
+                                        tareaUpdateClient.execute(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa, editCalificacion_AlertaMCliente.getText().toString());
+                                    }
                                 }
                                 else
                                 {
-                                    Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(ModificarCliente.this, PrincipalMenu.class);
-                                    startActivity(intent);
-                                    finish();
+                                    if (fecha.equals("") ||
+                                            calificacion.equals(""))
+                                    {
+                                        Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else
+                                    {
+                                        Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(ModificarCliente.this, PrincipalMenu.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
                                 }
                             }
+
                             break;
 
                         case "Empleado":
@@ -692,6 +713,22 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
             //Determinar cual sera el nuevo total y el valor restante del cliente
             //if(Constantes.totalFactura.equalsIgnoreCase(String.valueOf(sumaTotalFactura)))
             //{
+            if(valorRestante == 1)
+            {
+                TareaUpdateBill tareaUpdateBill = new TareaUpdateBill();
+                tareaUpdateBill.execute(idFactura,
+                        Constantes.itemsFactura.get(0).getFecha(),
+                        String.valueOf(sumaTotalFactura),
+                        M_DatosCobro.saldoRestante.getText().toString(),
+                        Constantes.itemsFactura.get(0).getEstado(),
+                        fechaCobro,
+                        diaCobro,
+                        horaCobro,
+                        idVendedor,
+                        Constantes.itemsFactura.get(0).getIdCliente());
+            }
+            else
+            {
                 TareaUpdateBill tareaUpdateBill = new TareaUpdateBill();
                 tareaUpdateBill.execute(idFactura,
                         Constantes.itemsFactura.get(0).getFecha(),
@@ -703,6 +740,7 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                         horaCobro,
                         idVendedor,
                         Constantes.itemsFactura.get(0).getIdCliente());
+            }
             /*}
             else
             {

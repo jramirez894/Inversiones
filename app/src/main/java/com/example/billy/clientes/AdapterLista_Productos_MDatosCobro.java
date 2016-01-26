@@ -228,6 +228,8 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         final TextView txtTextoDescripcion = (TextView) dialoglayout.findViewById(R.id.txtTiempo_Grarantia_MDatosCobro);
         final Spinner spinCantidadGarantia = (Spinner) dialoglayout.findViewById(R.id.spinCantidad_Garantia_MDatosCobro);
 
+        final View layoutGarantia = (View) dialoglayout.findViewById(R.id.layoutGarantia);
+
         //Fecha Personalizada para la garantia
         dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         editFechaGarantia = (EditText) dialoglayout.findViewById(R.id.editFecha_Garantia_MDatosCobro);
@@ -239,10 +241,9 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
 
         String idVenta = posicionItems.getIdVenta();
         String cantidadProductos = "";
+        String idP = "";
 
         //variables para definir las probabilidades del usuario
-        String diferencia = "";
-        int pos = 0;
         boolean accionAceptar = false;
 
         for(int j = 0; j < Constantes.itemsVenta.size(); j++)
@@ -252,49 +253,37 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 if(Constantes.itemsVenta.get(j).getNuevaCantidad().equalsIgnoreCase("0"))
                 {
                     cantidadProductos = Constantes.itemsVenta.get(j).getCantidad();
-                    diferencia = "Original";
-                    pos = j;
+                    idP = Constantes.itemsVenta.get(j).getIdProducto();
                 }
                 else
                 {
                     cantidadProductos = Constantes.itemsVenta.get(j).getNuevaCantidad();
-                    diferencia = "Nueva";
-                    pos = j;
+                    idP = Constantes.itemsVenta.get(j).getIdProducto();
                 }
             }
         }
 
-        switch (diferencia)
+        //Para saber si todas las garantias ya estan registradas
+        for(int l = 0; l < Constantes.itemsGarantias.size(); l++)
         {
-            case "Original":
-
-                if(cantidadProductos.equalsIgnoreCase(Constantes.itemsVenta.get(pos).getCantidad()))
+            if(idP.equalsIgnoreCase(Constantes.itemsGarantias.get(l).getIdProducto()) && Constantes.idClienteCliente.equalsIgnoreCase(Constantes.itemsGarantias.get(l).getIdCliente()))
+            {
+                if(cantidadProductos.equalsIgnoreCase(Constantes.itemsGarantias.get(l).getCantidad()))
                 {
                     editDescripcionGarantia.setVisibility(View.GONE);
                     editFechaGarantia.setVisibility(View.GONE);
-                    spinCantidadGarantia.setVisibility(View.GONE);
+                    layoutGarantia.setVisibility(View.GONE);
 
                     txtTextoDescripcion.setText("Los productos ya se encuentran registrados por garantia");
 
                     accionAceptar = true;
                 }
-
-                break;
-
-            case "Nueva":
-
-                if(cantidadProductos.equalsIgnoreCase(Constantes.itemsVenta.get(pos).getNuevaCantidad()))
+                else
                 {
-                    editDescripcionGarantia.setVisibility(View.GONE);
-                    editFechaGarantia.setVisibility(View.GONE);
-                    spinCantidadGarantia.setVisibility(View.GONE);
-
-                    txtTextoDescripcion.setText("Los productos ya se encuentran registrados por garantia");
-
-                    accionAceptar = true;
+                    int canP = Integer.valueOf(cantidadProductos) - Integer.valueOf(Constantes.itemsGarantias.get(l).getCantidad());
+                    cantidadProductos = String.valueOf(canP);
                 }
-
-                break;
+            }
         }
 
         ArrayList<String> arrayListSpin = new ArrayList<String>();

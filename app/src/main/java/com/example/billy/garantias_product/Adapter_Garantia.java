@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.billy.inversiones.R;
+import com.example.billy.menu_principal.PrincipalMenu;
 
 import java.util.List;
 
@@ -20,8 +21,6 @@ import java.util.List;
  */
 public class Adapter_Garantia extends ArrayAdapter
 {
-    public static Items_Garantia posicionItems;
-
     public Adapter_Garantia(Context context, List objects)
     {
         super(context, 0, objects);
@@ -36,58 +35,25 @@ public class Adapter_Garantia extends ArrayAdapter
             convertView = inflater.inflate(R.layout.items_garantia,null);
         }
 
-        Items_Garantia items = (Items_Garantia)getItem(position);
+        Items_Garantia_Visualizar items = (Items_Garantia_Visualizar)getItem(position);
 
         TextView nombre = (TextView)convertView.findViewById(R.id.textViewNombre_ItemsGarantia);
+        TextView telefono = (TextView)convertView.findViewById(R.id.textViewTelefono_ItemsGarantia);
         TextView nomProducto = (TextView)convertView.findViewById(R.id.textViewNombreProducto_ItemsGarantia);
+        TextView cantidad = (TextView)convertView.findViewById(R.id.textViewCantidadProducto_ItemsGarantia);
         TextView fecha = (TextView)convertView.findViewById(R.id.textViewFecha_ItemsGarantia);
         TextView descripcion = (TextView)convertView.findViewById(R.id.textViewDescripcion_ItemsGarantia);
-        ImageView eliminar = (ImageView)convertView.findViewById(R.id.imageEliminar_ItemsGarantia);
+        TextView estado = (TextView)convertView.findViewById(R.id.textViewEstado_ItemsGarantia);
 
-        /*nombre.setText(items.getNombre());
-        nomProducto.setText(items.getNomProducto());
-        fecha.setText(items.getFecha());
-        descripcion.setText(items.getDescripcion());
-        eliminar.setImageResource(items.getEliminar());*/
 
-        eliminar.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                posicionItems = (Items_Garantia) getItem(position);
-                EliminarGarantia();
-            }
-        });
+        nombre.setText("Nombre: " + items.getNombre());
+        telefono.setText("Telefono: " + items.getTelefono());
+        nomProducto.setText("Producto: " + items.getNombreProducto());
+        cantidad.setText("Cantidad: " + items.getCantidad());
+        fecha.setText("Fecha: " + items.getFecha());
+        descripcion.setText("Descripcion: " + items.getDescripcion());
+        estado.setText(items.getEstado());
 
         return convertView;
-    }
-
-    //Alerta de Confirmacion
-    public void EliminarGarantia()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setIcon(R.mipmap.borrar);
-        builder.setTitle("Eliminar");
-        builder.setMessage("¿Eliminar Garantia?");
-        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                //Captura la Posicion del item de la lista
-
-                //Borrar un item de la lista
-                ArrayAdapter adapter = new Adapter_Garantia(getContext(), Garantia.arrayList);
-                adapter.remove(posicionItems);
-                //Se carga de nuevo la vista
-                Garantia.listaGarantia.setAdapter(adapter);
-                Toast.makeText(getContext(), "Se Elimino Garantia Correctamente", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        builder.setNegativeButton("Cancelar", null);
-        builder.setCancelable(false);
-        builder.show();
     }
 }

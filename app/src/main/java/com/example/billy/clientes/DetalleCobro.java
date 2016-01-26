@@ -123,7 +123,6 @@ public class DetalleCobro extends Fragment
     }
 
     //Clases Asyntask para listar los empleados que hay actualmente en el servidor
-
     private class TareaListado extends AsyncTask<String,Integer,Boolean>
     {
         private String respStr;
