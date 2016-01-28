@@ -59,6 +59,9 @@ public class MainActivity extends AppCompatActivity
     View layoutProgress;
     View layoutLogin;
 
+
+    //que funcione!!
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
