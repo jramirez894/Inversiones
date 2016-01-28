@@ -69,18 +69,20 @@ public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
                 String descripcion = "";
                 String precioVenta = "";
                 String disponibles = "";
+                String tiempoGarantia = "";
 
                 for (int i = 0; i < DatosCobro.arrayList.size(); i++) {
                     if (nombreProducto.equalsIgnoreCase(DatosCobro.arrayList.get(i).getNombre())) {
                         descripcion = DatosCobro.arrayList.get(i).getDescripcion();
                         precioVenta = DatosCobro.arrayList.get(i).getPrecioVenta();
                         disponibles = DatosCobro.arrayList.get(i).getCantidad();
+                        tiempoGarantia = DatosCobro.arrayList.get(i).getGarantia();
 
                         break;
                     }
                 }
 
-                AlertaInfoProducto(nombreProducto, descripcion, precioVenta, cantidad, disponibles);
+                AlertaInfoProducto(nombreProducto, descripcion, precioVenta, cantidad, disponibles, tiempoGarantia);
             }
         });
 
@@ -139,7 +141,7 @@ public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
         builder.show();
     }
 
-    public void AlertaInfoProducto(String nom, String descri, String precio,String can, String dispo)
+    public void AlertaInfoProducto(String nom, String descri, String precio,String can, String dispo, String tiempoG)
     {
         LayoutInflater inflaterAlert = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialoglayout = inflaterAlert.inflate(R.layout.alert_info_producto, null);
@@ -148,14 +150,13 @@ public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
         final EditText precioVenta = (EditText)dialoglayout.findViewById(R.id.editPrecioVenta_AlertInfo);
         final EditText disponibles = (EditText)dialoglayout.findViewById(R.id.editDisponibles_AlertInfo);
         final EditText cantidad = (EditText)dialoglayout.findViewById(R.id.editCantidad_AlertInfo);
-
-        final View layoutGarantia = (View)dialoglayout.findViewById(R.id.layoutGarantia);
-        layoutGarantia.setVisibility(View.GONE);
+        final EditText tiempoGarantia = (EditText)dialoglayout.findViewById(R.id.editGarantias_AlertInfo);
 
         descripcion.setText(descri);
         precioVenta.setText(precio);
         disponibles.setText(dispo);
         cantidad.setText(can);
+        tiempoGarantia.setText(tiempoG);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setIcon(R.mipmap.productos);

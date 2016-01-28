@@ -54,8 +54,6 @@ public class Garantia extends AppCompatActivity
 
     AutoCompleteTextView autoCompleteTextViewBuscar;
     RadioGroup radioGroup;
-    RadioButton radioButtonVerTodos;
-    RadioButton radioButtonPorVendedor;
 
     boolean existe = false;
     String respuesta = "";
@@ -82,24 +80,18 @@ public class Garantia extends AppCompatActivity
 
         autoCompleteTextViewBuscar = (AutoCompleteTextView)findViewById(R.id.complete_Garantia);
         radioGroup = (RadioGroup)findViewById(R.id.radioButton_Garantias);
-        radioButtonVerTodos = (RadioButton)findViewById(R.id.rbVerTodos_Garantia);
-        radioButtonPorVendedor = (RadioButton)findViewById(R.id.rbVendedor_Garantia);
 
         TareaListado tareaListado = new TareaListado();
         tareaListado.execute();
 
-        autoCompleteTextViewBuscar.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        autoCompleteTextViewBuscar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String nombre = autoCompleteTextViewBuscar.getText().toString();
                 int posicion = 0;
 
-                for (int i = 0; i < arrayListVendedores.size(); i++)
-                {
-                    if (nombre.equalsIgnoreCase(arrayListVendedores.get(i).getNombre()))
-                    {
+                for (int i = 0; i < arrayListVendedores.size(); i++) {
+                    if (nombre.equalsIgnoreCase(arrayListVendedores.get(i).getNombre())) {
                         posicion = i;
                         break;
                     }
@@ -114,11 +106,32 @@ public class Garantia extends AppCompatActivity
                 {
                     if (idVendedor.equalsIgnoreCase(arrayList.get(j).getIdVendedor()))
                     {
-                        arrayListFiltroVendedor.add(new Items_Garantia_Visualizar(arrayList.get(j).getNombre(),arrayList.get(j).getTelefono(),arrayList.get(j).getNombreProducto(), arrayList.get(j).getCantidad(), arrayList.get(j).getFecha(), arrayList.get(j).getDescripcion(), arrayList.get(j).getEstado(), arrayList.get(j).getIdVendedor()));
+                        arrayListFiltroVendedor.add(new Items_Garantia_Visualizar(arrayList.get(j).getNombre(), arrayList.get(j).getTelefono(), arrayList.get(j).getNombreProducto(), arrayList.get(j).getCantidad(), arrayList.get(j).getFecha(), arrayList.get(j).getDescripcion(), arrayList.get(j).getEstado(), arrayList.get(j).getIdVendedor()));
                     }
                 }
 
                 listaGarantia.setAdapter(new Adapter_Garantia(Garantia.this, arrayListFiltroVendedor));
+            }
+        });
+
+            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+                if (checkedId == R.id.rbVerTodos_Garantia)
+                {
+                    listaGarantia.setAdapter(new Adapter_Garantia(Garantia.this, arrayList));
+                    autoCompleteTextViewBuscar.setEnabled(false);
+                    autoCompleteTextViewBuscar.setText("");
+                }
+                else
+                {
+                    if (checkedId == R.id.rbVendedor_Garantia)
+                    {
+                        autoCompleteTextViewBuscar.setEnabled(true);
+                    }
+                }
             }
         });
     }

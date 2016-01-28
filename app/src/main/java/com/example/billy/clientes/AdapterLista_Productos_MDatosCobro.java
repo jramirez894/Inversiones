@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.text.InputType;
@@ -21,7 +22,9 @@ import android.widget.Toast;
 
 import com.example.billy.constantes.Constantes;
 import com.example.billy.empleado.Empleados;
+import com.example.billy.garantias_product.Items_Garantia;
 import com.example.billy.inversiones.R;
+import com.example.billy.productos.Productos;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -32,6 +35,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,6 +74,13 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
     String capDescripcion = "";
     String capFecha = "";
     String cantidadP = "";
+    int posicionListaGarantia = 0;
+
+    String respuestaGarantia = "";
+    boolean existe = false;
+
+    int sumaCantidad = 0;
+
 
     public AdapterLista_Productos_MDatosCobro(Context context, List objects)
     {
@@ -245,6 +256,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
 
         //variables para definir las probabilidades del usuario
         boolean accionAceptar = false;
+        boolean verificarGarantia = false;
 
         for(int j = 0; j < Constantes.itemsVenta.size(); j++)
         {
@@ -280,8 +292,18 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 }
                 else
                 {
+
+                    //Para sacar la posicion en la que se encuentra la garantia que fue selecionada.
+                    posicionListaGarantia = l;
+
+                    editDescripcionGarantia.setText(Constantes.itemsGarantias.get(l).getDescripcion());
+                    editFechaGarantia.setText(Constantes.itemsGarantias.get(l).getFecha());
+
+                    //resta para la cantidad de los productos que estan registrados por garanatia
                     int canP = Integer.valueOf(cantidadProductos) - Integer.valueOf(Constantes.itemsGarantias.get(l).getCantidad());
                     cantidadProductos = String.valueOf(canP);
+
+                    verificarGarantia = true;
                 }
             }
         }
@@ -302,6 +324,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         builder.setTitle("Garantia");
         builder.setView(dialoglayout);
         final boolean finalAccionAceptar = accionAceptar;
+        final boolean finalVerificarGarantia = verificarGarantia;
         builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
         {
             @Override
@@ -313,42 +336,68 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 }
                 else
                 {
-                    //Capturar variables de la alerta
-                    capDescripcion = editDescripcionGarantia.getText().toString();
-                    capFecha = editFechaGarantia.getText().toString();
-                    if (capDescripcion.equals("") || capFecha.equals("")) {
-                        Toast.makeText(getContext(), "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
+                    if (finalVerificarGarantia)
+                    {
+                        //Capturar variables de la alerta
+                        capDescripcion = editDescripcionGarantia.getText().toString();
+                        capFecha = editFechaGarantia.getText().toString();
+                        cantidadP = spinCantidadGarantia.getSelectedItem().toString();
+
+                        sumaCantidad = Integer.valueOf(Constantes.itemsGarantias.get(posicionListaGarantia).getCantidad()) + Integer.valueOf(cantidadP);
+                        cantidadP = String.valueOf(sumaCantidad);
+                        //Enviar fecha con hora
+
+                        if(!capFecha.equalsIgnoreCase(Constantes.itemsGarantias.get(posicionListaGarantia).getFecha()))
+                        {
+                            Date date = new Date();
+                            DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
+                            capFecha = capFecha + " " + hourFormat.format(date);
+                        }
+
+                        TareaUpdadteGarantia updadteGarantia = new TareaUpdadteGarantia();
+                        updadteGarantia.execute(Constantes.itemsGarantias.get(posicionListaGarantia).getIdGarantia(),"En espera", capDescripcion, capFecha,cantidadP, Constantes.itemsGarantias.get(posicionListaGarantia).getIdVendedor(),Constantes.itemsGarantias.get(posicionListaGarantia).getIdCliente(), Constantes.itemsGarantias.get(posicionListaGarantia).getIdProducto());
                     }
                     else
                     {
-                        for (int j = 0; j < M_DatosCobro.arrayListP.size(); j++)
+                        //Capturar variables de la alerta
+                        capDescripcion = editDescripcionGarantia.getText().toString();
+                        capFecha = editFechaGarantia.getText().toString();
+                        if (capDescripcion.equals("") || capFecha.equals(""))
                         {
-                            if (posicionItems.getNombre().equalsIgnoreCase(M_DatosCobro.arrayListP.get(j).getNombre()))
-                            {
-                                idProducto = M_DatosCobro.arrayListP.get(j).getIdProducto();
-                            }
-                        }
-
-                        if(M_DetalleCobro.idVendedor.equalsIgnoreCase(""))
-                        {
-                            idVendedor = Constantes.idVendedorFactura;
+                            Toast.makeText(getContext(), "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
                         }
                         else
                         {
-                            idVendedor = M_DetalleCobro.idVendedor;
+                            for (int j = 0; j < M_DatosCobro.arrayListP.size(); j++)
+                            {
+                                if (posicionItems.getNombre().equalsIgnoreCase(M_DatosCobro.arrayListP.get(j).getNombre()))
+                                {
+                                    idProducto = M_DatosCobro.arrayListP.get(j).getIdProducto();
+                                }
+                            }
+
+                            if(M_DetalleCobro.idVendedor.equalsIgnoreCase(""))
+                            {
+                                idVendedor = Constantes.idVendedorFactura;
+                            }
+                            else
+                            {
+                                idVendedor = M_DetalleCobro.idVendedor;
+                            }
+
+                            //Enviar fecha con hora
+                            Date date = new Date();
+                            DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
+                            capFecha = capFecha + " " + hourFormat.format(date);
+
+                            cantidadP = spinCantidadGarantia.getSelectedItem().toString();
+
+                            TareaCreateWarranty tareaCreateWarranty = new TareaCreateWarranty();
+                            tareaCreateWarranty.execute("En espera", capDescripcion, capFecha, cantidadP, idVendedor, Constantes.idClienteCliente, idProducto);
                         }
-
-                        //Enviar fecha con hora
-                        Date date = new Date();
-                        DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
-                        capFecha = capFecha + " " + hourFormat.format(date);
-
-                        cantidadP = spinCantidadGarantia.getSelectedItem().toString();
-
-                        TareaCreateWarranty tareaCreateWarranty = new TareaCreateWarranty();
-                        tareaCreateWarranty.execute("En espera", capDescripcion, capFecha, cantidadP, idVendedor, Constantes.idClienteCliente, idProducto);
                     }
                 }
+
             }
         });
         builder.setNegativeButton("Cancelar", null);
@@ -525,26 +574,187 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         {
             if (resul)
             {
-                //Borrar un item de la lista
-                ArrayAdapter adapter = new AdapterLista_Productos_MDatosCobro(getContext(), M_DatosCobro.arrayList);
-                adapter.remove(posicionItems);
-                //Se carga de nuevo la vista
-                M_DatosCobro.lista.setAdapter(adapter);
-
-                /*Toast.makeText(getContext(), "Producto Registrado por Garantia\n"
-                        + respuesta + "\nestado: " + "En espera"
-                        + "\n" + "descripcion: " + capDescripcion
-                        + "\n" + "fecha: " + capFecha
-                        + "\n" + "cantidad: " + cantidadP
-                        + "\n" + "idVendedor: " + idVendedor
-                        + "\n" + "idCliente: " + Constantes.idClienteCliente
-                        + "\n" + "idProducto: " + idProducto, Toast.LENGTH_LONG).show();*/
+                //Obtener las garantias si las hay
+                Constantes.itemsGarantias.clear();
+                TareaObtenerGarantias tareaObtenerGarantias = new TareaObtenerGarantias();
+                tareaObtenerGarantias.execute();
 
                 Toast.makeText(getContext(), "Producto Registrado por Garantia", Toast.LENGTH_LONG).show();
             }
             else {
                 Toast.makeText(getContext(), "Error de servidor \n" + respuesta, Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    //Clases Asyntask para actualizar una garantia
+    private class TareaUpdadteGarantia extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerGarantia.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("idGarantia", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("estado", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("descripcion", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("fecha", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("cantidad", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("idCliente", params[6]));
+            nameValuePairs.add(new BasicNameValuePair("idProducto", params[7]));
+            nameValuePairs.add(new BasicNameValuePair("option", "updateWarranty"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                respuestaGarantia = String.valueOf(objItems);
+
+                if(respuestaGarantia.equalsIgnoreCase("No Existe"))
+                {
+                    existe = false;
+                }
+                else
+                {
+                    existe = true;
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(Perfil.this, respStr, Toast.LENGTH_SHORT).show();
+
+            if(existe)
+            {
+                //Obtener las garantias si las hay
+                Constantes.itemsGarantias.clear();
+                TareaObtenerGarantias tareaObtenerGarantias = new TareaObtenerGarantias();
+                tareaObtenerGarantias.execute();
+
+                Toast.makeText(getContext(), "Los Cambios Fueron Exitosos (update)", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                Toast.makeText(getContext(), "Error al Modificar Usuario", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    //Clases Asyntask para traer los datos de la tabla garantias
+    private class TareaObtenerGarantias extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerGarantia.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "getAllWarranty"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+                //JSONObject obj = objItems.getJSONObject(0);
+
+                //String obj
+
+                for(int i=0; i<objVendedores.length(); i++)
+                {
+                    JSONObject obj = objVendedores.getJSONObject(i);
+
+                    if(obj.getString("estado").equalsIgnoreCase("En espera") || obj.getString("estado").equalsIgnoreCase("Pendiente"))
+                    {
+                        Constantes.itemsGarantias.add(new Items_Garantia(obj.getString("idGarantia"), obj.getString("estado"), obj.getString("descripcion"), obj.getString("fecha"), obj.getString("cantidad"), obj.getString("idVendedor"), obj.getString("idCliente"), obj.getString("idProducto")));
+                    }
+
+                    resul = true;
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(getActivity(), respStr, Toast.LENGTH_SHORT).show();
         }
     }
 }

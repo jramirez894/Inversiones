@@ -59,7 +59,7 @@
         android:completionThreshold="1"
         android:inputType="textPersonName"
         android:drawableRight="@android:drawable/ic_menu_search"
-        android:enabled="true"/>
+        android:enabled="false"/>
 
     <ListView
         android:id="@+id/listView_Garantia"

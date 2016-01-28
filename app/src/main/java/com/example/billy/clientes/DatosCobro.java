@@ -93,9 +93,11 @@ public class DatosCobro extends Fragment implements View.OnClickListener
         setDateTimeField();
 
         //Metodo para restar el abono ingresado al valor total
-        abono.addTextChangedListener(new TextWatcher() {
+        abono.addTextChangedListener(new TextWatcher()
+        {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
 
             }
 

@@ -672,8 +672,7 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
         builder.show();
     }
 
-    //Clases Asyntask para traer los datos de la tabla productos
-
+    //Clases Asyntask para traer los datos de la tabla garantias
     private class TareaObtenerGarantias extends AsyncTask<String,Integer,Boolean>
     {
         private String respStr;
