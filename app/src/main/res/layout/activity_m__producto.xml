@@ -25,13 +25,20 @@
                 android:textColor="@android:color/background_dark"
                 android:textStyle="bold"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre Producto:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="30dp"/>
+
             <EditText
                 android:id="@+id/editTextNombre_MProducto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Nombre Producto"
                 android:textSize="20sp"
-                android:layout_marginTop="30dp"
                 android:inputType="text"/>
 
             <Spinner
@@ -41,14 +48,29 @@
                 android:layout_marginTop="5dp">
             </Spinner>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Descripción Producto:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="5dp"/>
+
             <EditText
                 android:id="@+id/editTextDescripcion_MProducto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Descripcion Producto"
                 android:textSize="20sp"
-                android:layout_marginTop="5dp"
                 android:inputType="text"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cantidad Producto:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="5dp"/>
 
             <EditText
                 android:id="@+id/editTextCantidad_MProducto"
@@ -56,8 +78,15 @@
                 android:layout_height="wrap_content"
                 android:hint="Cantidad"
                 android:textSize="20sp"
-                android:layout_marginTop="10dp"
                 android:inputType="number"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tiempo de Garantia:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="5dp"/>
 
             <EditText
                 android:id="@+id/editTextGarantia_MProducto"
@@ -65,8 +94,15 @@
                 android:layout_height="wrap_content"
                 android:hint="Tiempo de Garantia"
                 android:textSize="20sp"
-                android:layout_marginTop="10dp"
                 android:inputType="textPersonName"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Precio de Compra:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="5dp"/>
 
             <EditText
                 android:id="@+id/editTextPrecioCompra_MProducto"
@@ -74,16 +110,22 @@
                 android:layout_height="wrap_content"
                 android:hint="Precio de Compra"
                 android:textSize="20sp"
-                android:layout_marginTop="10dp"
                 android:inputType="number"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Precio de Venta:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="5dp"/>
 
             <EditText
                 android:id="@+id/editTextPrecioVenta_MProducto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Precio de Compra"
+                android:hint="Precio de Venta"
                 android:textSize="20sp"
-                android:layout_marginTop="10dp"
                 android:inputType="number"/>
         </LinearLayout>
 

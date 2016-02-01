@@ -24,70 +24,120 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cedula:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="10dp"/>
+
             <EditText
                 android:id="@+id/editCedula_DatoPersonales_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Cedula"
-                android:layout_marginTop="10dp"
                 android:inputType="number"
                 android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="5dp"/>
 
             <EditText
                 android:id="@+id/editNombre_DatoPersonales_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Nombre"
-                android:layout_marginTop="5dp"
                 android:inputType="text"
                 android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dirección:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="5dp"/>
 
             <EditText
                 android:id="@+id/editDireccion_DatoPersonales_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Direccion"
-                android:layout_marginTop="5dp"
                 android:inputType="text"
                 android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Telefono:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="5dp"/>
 
             <EditText
                 android:id="@+id/editTelefono_DatoPersonales_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Telefono"
-                android:layout_marginTop="5dp"
                 android:inputType="number"
                 android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Correo Electronico:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="5dp"/>
 
             <EditText
                 android:id="@+id/editCorreo_DatoPersonales_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Correo"
-                android:layout_marginTop="5dp"
                 android:inputType="textEmailAddress"
                 android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre de la Empresa:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="20dp"/>
 
             <EditText
                 android:id="@+id/editNombreEmpresa_DatoPersonales_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Nombre Empresa"
-                android:layout_marginTop="20dp"
                 android:inputType="text"
                 android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dirección de la Empresa:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="5dp"/>
 
             <EditText
                 android:id="@+id/editDireccionEmpresa_DatoPersonales_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Direccion Empresa"
-                android:layout_marginTop="5dp"
                 android:inputType="text"
                 android:textSize="20sp"/>
 
         </LinearLayout>
 
     </ScrollView>
+
 </LinearLayout>

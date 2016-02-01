@@ -30,13 +30,28 @@
                     android:textColor="@android:color/background_dark"
                     android:textStyle="bold"/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cedula:"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginTop="10dp"/>
+
                 <EditText
                     android:id="@+id/editTextCedula_MiPerfil"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Cedula"
-                    android:inputType="number"
-                    android:layout_marginTop="10dp"/>
+                    android:inputType="number"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre:"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginTop="5dp"/>
 
                 <EditText
                     android:id="@+id/editTextNombre_MiPerfil"
@@ -45,12 +60,28 @@
                     android:hint="Nombre"
                     android:inputType="textPersonName"/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Telefono:"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginTop="5dp"/>
+
                 <EditText
                     android:id="@+id/editTextTelefono_MiPerfil"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Telefono"
                     android:inputType="number"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Correo Electronico:"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginTop="5dp"/>
 
                 <EditText
                     android:id="@+id/editTextCorreo_MiPerfil"
@@ -78,6 +109,14 @@
                 android:layout_marginTop="10dp"
                 android:visibility="gone">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Contraseña Administrador:"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginTop="5dp"/>
+
                 <EditText
                     android:id="@+id/editTextContrasenaActual_MiPerfil"
                     android:layout_width="match_parent"
@@ -85,12 +124,28 @@
                     android:hint="Contraseña Administrador"
                     android:inputType="textPassword"/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nueva Contraseña:"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginTop="5dp"/>
+
                 <EditText
                     android:id="@+id/editTextContrasenaNueva_MiPerfil"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Nueva Contraseña"
                     android:inputType="textPassword"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Verificar Contraseña:"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginTop="5dp"/>
 
                 <EditText
                     android:id="@+id/editTextVerifiContrasena_MiPerfil"

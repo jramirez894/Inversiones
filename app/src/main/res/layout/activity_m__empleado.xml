@@ -16,6 +16,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cedula:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black" />
+
             <EditText
                 android:id="@+id/editCedula_M_Empleado"
                 android:layout_width="match_parent"
@@ -24,13 +31,28 @@
                 android:textSize="20sp"
                 android:inputType="number"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="5dp"/>
+
             <EditText
                 android:id="@+id/editNombre_M_Empleado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Nombre"
                 android:textSize="20sp"
-                android:inputType="text"
+                android:inputType="text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dirección:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
                 android:layout_marginTop="5dp"/>
 
             <EditText
@@ -39,7 +61,14 @@
                 android:layout_height="wrap_content"
                 android:hint="Direccion"
                 android:textSize="20sp"
-                android:inputType="text"
+                android:inputType="text" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Telefono:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
                 android:layout_marginTop="5dp"/>
 
             <EditText
@@ -48,7 +77,14 @@
                 android:layout_height="wrap_content"
                 android:hint="Telefono"
                 android:textSize="20sp"
-                android:inputType="number"
+                android:inputType="number" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Correo Electronico:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
                 android:layout_marginTop="5dp"/>
 
             <EditText
@@ -57,7 +93,14 @@
                 android:layout_height="wrap_content"
                 android:hint="Correo Electronico"
                 android:textSize="20sp"
-                android:inputType="textEmailAddress"
+                android:inputType="textEmailAddress" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contrasña:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
                 android:layout_marginTop="5dp"/>
 
             <EditText
@@ -66,7 +109,14 @@
                 android:layout_height="wrap_content"
                 android:hint="Contraseña"
                 android:textSize="20sp"
-                android:inputType="textPassword"
+                android:inputType="textPassword" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Verificar Contraseña:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
                 android:layout_marginTop="5dp"/>
 
             <EditText
@@ -75,8 +125,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Verificacion Contrasena"
                 android:textSize="20sp"
-                android:inputType="textPassword"
-                android:layout_marginTop="5dp"/>
+                android:inputType="textPassword" />
+
         </LinearLayout>
 
     </ScrollView>

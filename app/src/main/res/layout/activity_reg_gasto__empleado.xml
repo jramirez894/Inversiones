@@ -21,11 +21,18 @@
             android:textStyle="bold"
             android:layout_marginTop="40dp"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tipo de Gasto:"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="20dp"/>
+
         <Spinner
             android:id="@+id/spinnerReg_Gasto_Gasto_Empleado"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp">
+            android:layout_height="wrap_content">
         </Spinner>
 
         <TextView

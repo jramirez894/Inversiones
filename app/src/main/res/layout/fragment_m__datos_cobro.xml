@@ -39,36 +39,64 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fecha de Venta:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="5dp"/>
+
             <EditText
                 android:id="@+id/editFechaVenta_DatosCobro_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Fecha de Venta"
                 android:inputType="date"
-                android:layout_marginTop="5dp"
                 android:enabled="false"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total a Pagar:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="5dp"/>
 
             <EditText
                 android:id="@+id/editTotalPagar_DatosCobro_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Total a Pagar"
-                android:layout_marginTop="5dp"
                 android:inputType="number"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Saldo Restante:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="5dp"/>
 
             <EditText
                 android:id="@+id/editSaldoRestante_DatosCobro_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Saldo Restante"
-                android:layout_marginTop="5dp"
                 android:enabled="false"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Abono:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="10dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp">
+                android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/editTextAbono_DatosCobro_Mcliente"
@@ -95,12 +123,19 @@
                 android:inputType="date"
                 android:visibility="gone"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Valor Restante:"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="5dp"/>
+
             <EditText
                 android:id="@+id/editTextValorRestante_DatosCobro_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginTop="5dp"
                 android:hint="Valor Restante"
                 android:inputType="number"
                 android:enabled="false"/>

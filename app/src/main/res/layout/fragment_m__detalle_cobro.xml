@@ -55,45 +55,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Fecha de Cobro"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textColor="@android:color/background_dark"
                 android:layout_marginTop="10dp"/>
 
             <Spinner
                 android:id="@+id/spinnerFechaCobro_DetalleCobro_Mcliente"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
+                android:layout_height="wrap_content">
             </Spinner>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Día de Cobro"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textColor="@android:color/background_dark"
                 android:layout_marginTop="10dp"/>
 
             <Spinner
                 android:id="@+id/spinnerDiaCobro_DetalleCobro_Mcliente"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
+                android:layout_height="wrap_content">
             </Spinner>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Hora de Cobro"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textColor="@android:color/background_dark"
                 android:layout_marginTop="10dp"/>
 
             <Spinner
                 android:id="@+id/spinnerHoraCobro_DetalleCobro_Mcliente"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
+                android:layout_height="wrap_content">
             </Spinner>
 
         </LinearLayout>
