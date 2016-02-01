@@ -26,6 +26,7 @@ import com.example.billy.menu_principal.ItemListaPersonalizada;
 import com.example.billy.menu_principal.PagerAdapter;
 import com.example.billy.inversiones.R;
 import com.example.billy.menu_principal.PrincipalMenu;
+import com.example.billy.productos.Productos;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -89,6 +90,9 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
     //Varibales createClient
     boolean resul;
     Object respuesta = "";
+
+    //Variable para update producto
+    String respuestaProducto = "";
 
     //Variables listadoClientes
     boolean existe = false;
@@ -777,6 +781,33 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
                 createSale.execute(String.valueOf(totalPorProducto), DatosCobro.arrayListItems.get(i).getCantidad(), "En Venta", idFactura, DatosCobro.arrayList.get(posicionProducto).getIdProducto());
             }
 
+            //Descontar la cantidad de productos
+            for (int i = 0; i < DatosCobro.arrayListItems.size(); i++)
+            {
+                String nombre = DatosCobro.arrayListItems.get(i).getNomProducto();
+                String cantidadBD = "";
+                String cantidadRegistrada = DatosCobro.arrayListItems.get(i).getCantidad();
+
+                for (int j = 0; j < DatosCobro.arrayList.size(); j++)
+                {
+                    if(nombre.equalsIgnoreCase(DatosCobro.arrayList.get(j).getNombre()))
+                    {
+                        cantidadBD = DatosCobro.arrayList.get(j).getCantidad();
+                        int resta = Integer.valueOf(cantidadBD) - Integer.valueOf(cantidadRegistrada);
+
+                        TareaUpdadteProducto tareaUpdadteProducto = new TareaUpdadteProducto();
+                        tareaUpdadteProducto.execute(DatosCobro.arrayList.get(j).getIdProducto(),
+                                DatosCobro.arrayList.get(j).getNombre(),
+                                DatosCobro.arrayList.get(j).getDescripcion(),
+                                String.valueOf(resta),
+                                DatosCobro.arrayList.get(j).getGarantia(),
+                                DatosCobro.arrayList.get(j).getPrecioCompra(),
+                                DatosCobro.arrayList.get(j).getPrecioVenta(),
+                                DatosCobro.arrayList.get(j).getIdCategoria());
+                    }
+                }
+            }
+
             if(insertarAbono)
             {
                 TareaCreateCharge tareaCreateCharge = new TareaCreateCharge();
@@ -938,6 +969,87 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
             Intent intent = new Intent(AgregarCliente.this, PrincipalMenu.class);
             startActivity(intent);
             finish();
+        }
+    }
+
+    //Clases Asyntask para actualizar la cantidad de un producto
+    private class TareaUpdadteProducto extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerProducto.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("idProducto", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("nombre", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("descripcion", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("cantidad", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("tiempoGarantia", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("precioCompra", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("precioVenta", params[6]));
+            nameValuePairs.add(new BasicNameValuePair("idCategoria", params[7]));
+            nameValuePairs.add(new BasicNameValuePair("option", "updateProduct"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                respuestaProducto= String.valueOf(objItems);
+
+                if(respuestaProducto.equalsIgnoreCase("No Existe"))
+                {
+                    existe = false;
+                }
+                else
+                {
+                    existe = true;
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(Perfil.this, respStr, Toast.LENGTH_SHORT).show();
         }
     }
 }

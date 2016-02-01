@@ -41,6 +41,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -87,6 +88,11 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
     //Variables para insertar en la tabla de cobros
     String idVendedor = "";
     String idFactura = "";
+
+    //Variable para update producto
+    String respuestaProducto = "";
+    boolean existe = false;
+    int posicionListaProductos = 0;
 
     @Override
     public void onClick(View view)
@@ -638,6 +644,7 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                                 {
                                     total = Constantes.itemsVenta.get(j).getTotal();
                                     cantidad = Constantes.itemsVenta.get(j).getCantidad();
+                                    posicionListaProductos = j;
                                 }
                                 else
                                 {
@@ -645,12 +652,42 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
 
                                     int operacion = Integer.valueOf(cantidad) * Integer.valueOf(precioProducto);
                                     total = String.valueOf(operacion);
+
+                                    //guardar posicion en la lista para poder saber la cantidad que hay que descontar en los productos
+                                    posicionListaProductos = j;
                                 }
                             }
                         }
 
                         TareaUpdateSale tareaUpdateSale = new TareaUpdateSale();
                         tareaUpdateSale.execute(idVenta, total, cantidad, estado, idFactura, idProducto);
+
+                        //Para descontar de la cantidad total de productos en caso de que añada nuevos.
+
+                        int restaP = Integer.valueOf(cantidad) - Integer.valueOf(Constantes.itemsVenta.get(posicionListaProductos).getCantidad());
+
+                        //Comprobar si se cambio la cantidad que habia para poder restar de la cantidad total
+                        if(!cantidad.equalsIgnoreCase(Constantes.itemsVenta.get(posicionListaProductos).getCantidad()))
+                        {
+                            for(int k = 0; k < M_DatosCobro.arrayListP.size(); k++)
+                            {
+                                if(idProducto.equalsIgnoreCase(M_DatosCobro.arrayListP.get(k).getIdProducto()))
+                                {
+                                    restaP = Integer.valueOf(M_DatosCobro.arrayListP.get(k).getCantidad()) - restaP;
+
+                                    TareaUpdadteProducto tareaUpdadteProducto = new TareaUpdadteProducto();
+                                    tareaUpdadteProducto.execute(M_DatosCobro.arrayListP.get(k).getIdProducto(),
+                                            M_DatosCobro.arrayListP.get(k).getNombre(),
+                                            M_DatosCobro.arrayListP.get(k).getDescripcion(),
+                                            String.valueOf(restaP),
+                                            M_DatosCobro.arrayListP.get(k).getGarantia(),
+                                            M_DatosCobro.arrayListP.get(k).getPrecioCompra(),
+                                            M_DatosCobro.arrayListP.get(k).getPrecioVenta(),
+                                            M_DatosCobro.arrayListP.get(k).getIdCategoria());
+                                }
+                            }
+
+                        }
 
                         break;
 
@@ -676,6 +713,26 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
 
                         TareaCreateSale tareaCreateSale = new TareaCreateSale();
                         tareaCreateSale.execute(total, cantidad, estado, idFactura, idProducto);
+
+                        //Para descontar de la cantidad total de productos en caso de que añada nuevos.
+
+                        for(int k = 0; k < Constantes.itemsProductos.size(); k++)
+                        {
+                            if(idProducto.equalsIgnoreCase(Constantes.itemsProductos.get(k).getIdProducto()))
+                            {
+                                int restaProductos = Integer.valueOf(Constantes.itemsProductos.get(k).getCantidad()) - Integer.valueOf(cantidad);
+
+                                TareaUpdadteProducto tareaUpdadteProducto = new TareaUpdadteProducto();
+                                tareaUpdadteProducto.execute(Constantes.itemsProductos.get(k).getIdProducto(),
+                                        Constantes.itemsProductos.get(k).getNombre(),
+                                        Constantes.itemsProductos.get(k).getDescripcion(),
+                                        String.valueOf(restaProductos),
+                                        Constantes.itemsProductos.get(k).getGarantia(),
+                                        Constantes.itemsProductos.get(k).getPrecioCompra(),
+                                        Constantes.itemsProductos.get(k).getPrecioVenta(),
+                                        Constantes.itemsProductos.get(k).getIdCategoria());
+                            }
+                        }
 
                         break;
                 }
@@ -1062,6 +1119,87 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
             Intent intent = new Intent(ModificarCliente.this, PrincipalMenu.class);
             startActivity(intent);
             finish();
+        }
+    }
+
+    //Clases Asyntask para actualizar la cantidad de un producto
+    private class TareaUpdadteProducto extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerProducto.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("idProducto", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("nombre", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("descripcion", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("cantidad", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("tiempoGarantia", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("precioCompra", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("precioVenta", params[6]));
+            nameValuePairs.add(new BasicNameValuePair("idCategoria", params[7]));
+            nameValuePairs.add(new BasicNameValuePair("option", "updateProduct"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                respuestaProducto= String.valueOf(objItems);
+
+                if(respuestaProducto.equalsIgnoreCase("No Existe"))
+                {
+                    existe = false;
+                }
+                else
+                {
+                    existe = true;
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(Perfil.this, respStr, Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -15,30 +15,32 @@
     android:textColor="@android:color/background_dark"
     android:textStyle="bold"/>
 
-        <ScrollView
+
+
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteBuscarProducto_DatosCobro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre Producto"
+        android:layout_marginTop="15dp"
+        android:completionThreshold="1"
+        android:drawableRight="@android:drawable/ic_menu_search"
+        android:inputType="text"/>
+
+    <ListView
+        android:id="@+id/listViewListaProductos_DatosCobro"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-
-                <AutoCompleteTextView
-                    android:id="@+id/autoCompleteBuscarProducto_DatosCobro"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Nombre Producto"
-                    android:layout_marginTop="15dp"
-                    android:completionThreshold="1"
-                    android:drawableRight="@android:drawable/ic_menu_search"
-                    android:inputType="text"/>
-
-                <ListView
-                    android:id="@+id/listViewListaProductos_DatosCobro"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
                 <EditText
                     android:id="@+id/editFechaVenta_DatosCobro"

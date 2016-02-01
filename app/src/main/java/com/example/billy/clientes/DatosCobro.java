@@ -1,7 +1,9 @@
 package com.example.billy.clientes;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -140,27 +142,60 @@ public class DatosCobro extends Fragment implements View.OnClickListener
 
                 ItemsListaProductos_Productos producto = arrayList.get(posicion);
 
-                buscarProducto.setText("");
-                arrayListItems.add(new ItemListaProdutos_DatosCobro(producto.getNombre(), "1", R.mipmap.informacion, R.mipmap.eliminar));
-                lista.setAdapter(new AdapterLista_Productos_DatosCobro(getActivity(), arrayListItems));
+                boolean existe = true;
 
-                //Filtrar Los Precios De los Producto Para Multiplicarlos Por La Cantidad
-
-                for (int j = 0; j < arrayList.size(); j++) {
-                    if (nombre.equalsIgnoreCase(arrayList.get(j).getNombre())) {
-                        int precio = Integer.valueOf(arrayList.get(j).getPrecioVenta());
-                        int cantidad = 0;
-
-                        for (int i = 0; i < arrayListItems.size(); i++) {
-                            if (nombre.equalsIgnoreCase(arrayListItems.get(i).getNomProducto())) {
-                                cantidad = Integer.valueOf(arrayListItems.get(i).getCantidad());
+                for(int i = 0; i < arrayListItems.size(); i++)
+                {
+                    if(nombre.equalsIgnoreCase(arrayListItems.get(i).getNomProducto()))
+                    {
+                        AlertDialog.Builder alerta = new AlertDialog.Builder(getActivity());
+                        alerta.setTitle("Alerta");
+                        alerta.setIcon(R.mipmap.informacion);
+                        alerta.setMessage("El producto ya existe, debe modificar la cantidad del producto.");
+                        alerta.setCancelable(false);
+                        alerta.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                buscarProducto.setText("");
                             }
-                        }
+                        });
+                        alerta.show();
 
-                        int resultado = precio * cantidad;
-                        total = Integer.valueOf(totalPagar.getText().toString());
-                        total = total + resultado;
-                        totalPagar.setText(String.valueOf(total));
+                        existe = false;
+                    }
+                }
+
+                if (existe)
+                {
+                    buscarProducto.setText("");
+                    arrayListItems.add(new ItemListaProdutos_DatosCobro(producto.getNombre(), "1", R.mipmap.informacion, R.mipmap.eliminar));
+                    lista.setAdapter(new AdapterLista_Productos_DatosCobro(getActivity(), arrayListItems));
+
+                    //Filtrar Los Precios De los Producto Para Multiplicarlos Por La Cantidad
+
+                    for (int j = 0; j < arrayList.size(); j++) {
+                        if (nombre.equalsIgnoreCase(arrayList.get(j).getNombre())) {
+                            int precio = Integer.valueOf(arrayList.get(j).getPrecioVenta());
+                            int cantidad = 0;
+
+                            for (int i = 0; i < arrayListItems.size(); i++) {
+                                if (nombre.equalsIgnoreCase(arrayListItems.get(i).getNomProducto())) {
+                                    cantidad = Integer.valueOf(arrayListItems.get(i).getCantidad());
+                                }
+                            }
+
+                            int resultado = precio * cantidad;
+                            total = Integer.valueOf(totalPagar.getText().toString());
+                            total = total + resultado;
+                            totalPagar.setText(String.valueOf(total));
+                        }
+                    }
+
+                    //Informar al usuario que se estan agotando los productos
+                    int cantidadP = Integer.valueOf(producto.getCantidad());
+                    if(cantidadP <= 10)
+                    {
+                        alertaAgotamientoProductos(producto.getNombre(), producto.getCantidad());
                     }
                 }
             }
@@ -190,12 +225,21 @@ public class DatosCobro extends Fragment implements View.OnClickListener
 
                         break;
                 }
-
-
             }
         });
 
         return view;
+    }
+
+    public void alertaAgotamientoProductos(String nombre, String cantidad)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setIcon(R.mipmap.informacion);
+        builder.setTitle("Urgente");
+        builder.setMessage("El producto " + nombre + " se está agotando, restan " + cantidad + " en el inventario");
+        builder.setPositiveButton("Aceptar", null);
+        builder.setCancelable(false);
+        builder.show();
     }
 
     private void setDateTimeField()

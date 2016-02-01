@@ -580,6 +580,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                 JSONArray objVendedores = objItems.getJSONArray(0);
 
                 Constantes.itemsProductos.clear();
+                Constantes.itemsProductosFull.clear();
 
                 for(int i = 0; i < Constantes.itemsVenta.size(); i++)
                 {
@@ -587,6 +588,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                     {
                         JSONObject obj = objVendedores.getJSONObject(j);
 
+                        //Productos Filtrados
                         if(obj.getString("idProducto").equalsIgnoreCase(Constantes.itemsVenta.get(i).getIdProducto()))
                         {
                             Constantes.itemsProductos.add(new ItemsListaProductos_Productos(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, obj.getString("idProducto"), obj.getString("descripcion"), obj.getString("cantidad"), obj.getString("tiempoGarantia"), obj.getString("precioCompra"), obj.getString("precioVenta"), obj.getString("idCategoria")));

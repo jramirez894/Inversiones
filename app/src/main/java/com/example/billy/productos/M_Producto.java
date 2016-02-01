@@ -310,7 +310,7 @@ public class M_Producto extends AppCompatActivity
         }
     }
 
-    //Clases Asyntask para login y rol del usuario que inicia sesion
+    //Clases Asyntask para actualizar un producto
     private class TareaUpdadte extends AsyncTask<String,Integer,Boolean>
     {
         private String respStr;
