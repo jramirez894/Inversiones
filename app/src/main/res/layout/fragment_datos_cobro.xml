@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="Total a Pagar"
-                    android:text="0"
+                    android:text="$ 0"
                     android:inputType="number"
                     android:enabled="false"/>
 
@@ -99,7 +99,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Abono"
+                android:hint="$ 0"
                 android:inputType="number" />
 
             <TextView
@@ -115,7 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Valor Restante"
+                android:hint="$ 0"
                 android:inputType="number"
                 android:enabled="false"/>
 

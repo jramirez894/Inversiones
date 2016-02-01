@@ -121,7 +121,7 @@
                     android:id="@+id/editTextContrasenaActual_MiPerfil"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Contraseña Administrador"
+                    android:hint="*****"
                     android:inputType="textPassword"/>
 
                 <TextView
@@ -136,7 +136,7 @@
                     android:id="@+id/editTextContrasenaNueva_MiPerfil"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Nueva Contraseña"
+                    android:hint="*****"
                     android:inputType="textPassword"/>
 
                 <TextView
@@ -151,7 +151,7 @@
                     android:id="@+id/editTextVerifiContrasena_MiPerfil"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Verificar Contraseña"
+                    android:hint="*****"
                     android:inputType="textPassword"/>
 
             </LinearLayout>

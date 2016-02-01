@@ -103,7 +103,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Abono"
+                    android:hint="$ 0"
                     android:inputType="number"/>
 
                 <ImageView
@@ -136,7 +136,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Valor Restante"
+                android:hint="$ 0"
                 android:inputType="number"
                 android:enabled="false"/>
 
