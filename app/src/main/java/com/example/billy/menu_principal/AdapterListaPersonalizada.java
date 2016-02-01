@@ -580,7 +580,6 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                 JSONArray objVendedores = objItems.getJSONArray(0);
 
                 Constantes.itemsProductos.clear();
-                Constantes.itemsProductosFull.clear();
 
                 for(int i = 0; i < Constantes.itemsVenta.size(); i++)
                 {
