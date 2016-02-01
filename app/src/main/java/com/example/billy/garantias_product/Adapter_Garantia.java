@@ -3,6 +3,7 @@ package com.example.billy.garantias_product;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,22 +38,37 @@ public class Adapter_Garantia extends ArrayAdapter
 
         Items_Garantia_Visualizar items = (Items_Garantia_Visualizar)getItem(position);
 
-        TextView nombre = (TextView)convertView.findViewById(R.id.textViewNombre_ItemsGarantia);
-        TextView telefono = (TextView)convertView.findViewById(R.id.textViewTelefono_ItemsGarantia);
+        //TextView nombre = (TextView)convertView.findViewById(R.id.textViewNombre_ItemsGarantia);
+        //TextView telefono = (TextView)convertView.findViewById(R.id.textViewTelefono_ItemsGarantia);
         TextView nomProducto = (TextView)convertView.findViewById(R.id.textViewNombreProducto_ItemsGarantia);
-        TextView cantidad = (TextView)convertView.findViewById(R.id.textViewCantidadProducto_ItemsGarantia);
+        //TextView cantidad = (TextView)convertView.findViewById(R.id.textViewCantidadProducto_ItemsGarantia);
         TextView fecha = (TextView)convertView.findViewById(R.id.textViewFecha_ItemsGarantia);
-        TextView descripcion = (TextView)convertView.findViewById(R.id.textViewDescripcion_ItemsGarantia);
+        //TextView descripcion = (TextView)convertView.findViewById(R.id.textViewDescripcion_ItemsGarantia);
         TextView estado = (TextView)convertView.findViewById(R.id.textViewEstado_ItemsGarantia);
 
+        View layout = (View)convertView.findViewById(R.id.layout);
 
-        nombre.setText("Nombre: " + items.getNombre());
-        telefono.setText("Telefono: " + items.getTelefono());
+
+        //nombre.setText("Nombre: " + items.getNombre());
+        //telefono.setText("Telefono: " + items.getTelefono());
         nomProducto.setText("Producto: " + items.getNombreProducto());
-        cantidad.setText("Cantidad: " + items.getCantidad());
+        //cantidad.setText("Cantidad: " + items.getCantidad());
         fecha.setText("Fecha: " + items.getFecha());
-        descripcion.setText("Descripcion: " + items.getDescripcion());
+        //descripcion.setText("Descripcion: " + items.getDescripcion());
         estado.setText(items.getEstado());
+
+        //Para cambiar el color de fondo segun el estado de la garantia
+        if(items.getEstado().equalsIgnoreCase("En espera"))
+        {
+            layout.setBackgroundColor(Color.parseColor("#8fff2109"));
+        }
+        else
+        {
+            if(items.getEstado().equalsIgnoreCase("Pendiente"))
+            {
+                layout.setBackgroundColor(Color.parseColor("#8f2868ff"));
+            }
+        }
 
         return convertView;
     }

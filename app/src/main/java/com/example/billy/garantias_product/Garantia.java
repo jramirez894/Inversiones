@@ -1,6 +1,7 @@
 package com.example.billy.garantias_product;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
@@ -54,6 +55,8 @@ public class Garantia extends AppCompatActivity
 
     AutoCompleteTextView autoCompleteTextViewBuscar;
     RadioGroup radioGroup;
+    RadioButton rbVerTodos_Garantia;
+    RadioButton rbVendedor_Garantia;
 
     boolean existe = false;
     String respuesta = "";
@@ -64,6 +67,9 @@ public class Garantia extends AppCompatActivity
     public static ArrayList<Items_Garantia_Visualizar> arrayListFiltroVendedor = new ArrayList<Items_Garantia_Visualizar>();
 
     boolean verificar;
+
+    //Para sacar los datos de la garantia que sea seleccionada
+    String idGarantia = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -106,7 +112,7 @@ public class Garantia extends AppCompatActivity
                 {
                     if (idVendedor.equalsIgnoreCase(arrayList.get(j).getIdVendedor()))
                     {
-                        arrayListFiltroVendedor.add(new Items_Garantia_Visualizar(arrayList.get(j).getNombre(), arrayList.get(j).getTelefono(), arrayList.get(j).getNombreProducto(), arrayList.get(j).getCantidad(), arrayList.get(j).getFecha(), arrayList.get(j).getDescripcion(), arrayList.get(j).getEstado(), arrayList.get(j).getIdVendedor()));
+                        arrayListFiltroVendedor.add(new Items_Garantia_Visualizar(arrayList.get(j).getIdGarantia(), arrayList.get(j).getNombre(), arrayList.get(j).getTelefono(), arrayList.get(j).getNombreProducto(), arrayList.get(j).getCantidad(), arrayList.get(j).getFecha(), arrayList.get(j).getDescripcion(), arrayList.get(j).getEstado(), arrayList.get(j).getIdVendedor()));
                     }
                 }
 
@@ -114,7 +120,7 @@ public class Garantia extends AppCompatActivity
             }
         });
 
-            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
         {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId)
@@ -134,6 +140,42 @@ public class Garantia extends AppCompatActivity
                 }
             }
         });
+
+        //para buscar la garantia que haya sido seleccionada
+
+        rbVendedor_Garantia = (RadioButton) findViewById(R.id.rbVendedor_Garantia);
+        rbVerTodos_Garantia = (RadioButton) findViewById(R.id.rbVerTodos_Garantia);
+
+        listaGarantia.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                if(rbVendedor_Garantia.isChecked())
+                {
+                    idGarantia = arrayListFiltroVendedor.get(position).getIdGarantia();
+
+                    Intent intent = new Intent(Garantia.this, VisualizarGarantia.class);
+                    intent.putExtra("idGarantia", idGarantia);
+                    intent.putExtra("tipo", "Vendedor");
+                    startActivity(intent);
+                }
+                else
+                {
+                    if (rbVerTodos_Garantia.isChecked())
+                    {
+                        idGarantia = arrayList.get(position).getIdGarantia();
+
+                        Intent intent = new Intent(Garantia.this, VisualizarGarantia.class);
+                        intent.putExtra("idGarantia", idGarantia);
+                        intent.putExtra("tipo", "Todos");
+                        startActivity(intent);
+                    }
+                }
+            }
+        });
+
+
     }
 
     public void ActualizarLista()
@@ -160,12 +202,6 @@ public class Garantia extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings)
-        {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -308,7 +344,7 @@ public class Garantia extends AppCompatActivity
                             }
                         }
 
-                        arrayList.add(new Items_Garantia_Visualizar(nom, tel, nomPr, obj.getString("cantidad"), obj.getString("fecha"), obj.getString("descripcion"), obj.getString("estado"),obj.getString("idVendedor")));
+                        arrayList.add(new Items_Garantia_Visualizar(obj.getString("idGarantia"), nom, tel, nomPr, obj.getString("cantidad"), obj.getString("fecha"), obj.getString("descripcion"), obj.getString("estado"),obj.getString("idVendedor")));
                     }
 
                     resul = true;

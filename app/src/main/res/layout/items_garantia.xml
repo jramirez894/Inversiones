@@ -2,7 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:id="@+id/layout"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,37 +14,11 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textViewNombre_ItemsGarantia"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Nombre"
-            android:textSize="12sp"
-            android:textColor="@android:color/black"/>
-
-        <TextView
-            android:id="@+id/textViewTelefono_ItemsGarantia"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Telefono"
-            android:textSize="12sp"
-            android:layout_marginTop="5dp"
-            android:textColor="@android:color/black"/>
-
-        <TextView
             android:id="@+id/textViewNombreProducto_ItemsGarantia"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Producto"
-            android:textSize="12sp"
-            android:textColor="@android:color/black"
-            android:layout_marginTop="5dp"/>
-
-        <TextView
-            android:id="@+id/textViewCantidadProducto_ItemsGarantia"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cantidad"
-            android:textSize="12sp"
+            android:textSize="16sp"
             android:textColor="@android:color/black"
             android:layout_marginTop="5dp"/>
 
@@ -50,16 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Fecha"
-            android:textSize="12sp"
-            android:textColor="@android:color/black"
-            android:layout_marginTop="5dp"/>
-
-        <TextView
-            android:id="@+id/textViewDescripcion_ItemsGarantia"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Descripcion"
-            android:textSize="12sp"
+            android:textSize="16sp"
             android:textColor="@android:color/black"
             android:layout_marginTop="5dp"/>
 
@@ -75,8 +43,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Estado"
-            android:textSize="12sp"
+            android:textSize="16sp"
             android:textColor="@android:color/black"
+            android:textStyle="bold"
             android:layout_gravity="center"/>
 
         <TextView
@@ -84,9 +53,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="12sp"
+            android:textSize="16sp"
             android:textColor="@android:color/black"
-            android:layout_marginTop="5dp"
+            android:textStyle="bold"
             android:layout_gravity="center"
             android:layout_marginBottom="5dp"/>
 

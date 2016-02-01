@@ -139,4 +139,5 @@
         <item>Decoracion</item>
     </string-array>
     <string name="title_activity_prueba_volley">PruebaVolley</string>
+    <string name="title_activity_visualizar_garantia">VisualizarGarantia</string>
 </resources>

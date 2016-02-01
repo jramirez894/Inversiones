@@ -1,6 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.billy.interfaces_empleado.modificar_cliente.MCliente_DatosPersonales">
-
+    tools:context="com.example.billy.garantias_product.VisualizarGarantia">
 </menu>

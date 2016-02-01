@@ -5,6 +5,7 @@ package com.example.billy.garantias_product;
  */
 public class Items_Garantia_Visualizar
 {
+    String idGarantia;
     String nombre;
     String telefono;
     String nombreProducto;
@@ -15,7 +16,8 @@ public class Items_Garantia_Visualizar
     String idVendedor;
 
 
-    public Items_Garantia_Visualizar(String nombre, String telefono, String nombreProducto, String cantidad, String fecha, String descripcion, String estado, String idVendedor) {
+    public Items_Garantia_Visualizar(String idGarantia, String nombre, String telefono, String nombreProducto, String cantidad, String fecha, String descripcion, String estado, String idVendedor) {
+        this.idGarantia = idGarantia;
         this.nombre = nombre;
         this.telefono = telefono;
         this.nombreProducto = nombreProducto;
@@ -24,6 +26,14 @@ public class Items_Garantia_Visualizar
         this.descripcion = descripcion;
         this.estado = estado;
         this.idVendedor = idVendedor;
+    }
+
+    public String getIdGarantia() {
+        return idGarantia;
+    }
+
+    public void setIdGarantia(String idGarantia) {
+        this.idGarantia = idGarantia;
     }
 
     public String getIdVendedor() {

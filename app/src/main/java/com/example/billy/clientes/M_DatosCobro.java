@@ -247,7 +247,12 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
 
                     totalPagar.setText(String.valueOf(suma));
 
-
+                    //Informar al usuario que se estan agotando los productos
+                    int cantidadP = Integer.valueOf(producto.getCantidad());
+                    if(cantidadP <= 10)
+                    {
+                        alertaAgotamientoProductos(producto.getNombre(), producto.getCantidad());
+                    }
                 }
             }
         });
@@ -318,6 +323,16 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
         return view;
     }
 
+    public void alertaAgotamientoProductos(String nombre, String cantidad)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setIcon(R.mipmap.informacion);
+        builder.setTitle("Urgente");
+        builder.setMessage("El producto " + nombre + " se está agotando, restan " + cantidad + " en el inventario");
+        builder.setPositiveButton("Aceptar", null);
+        builder.setCancelable(false);
+        builder.show();
+    }
 
     private void setDateTimeFieldPendiente()
     {
