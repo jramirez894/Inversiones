@@ -1,7 +1,9 @@
 package com.example.billy.empleado;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
@@ -53,12 +55,16 @@ public class Empleados extends AppCompatActivity
     boolean existe = false;
     String respuesta = "";
 
+    //Alerta Cargando
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_empleados);
+
+        AlertaCargando();
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Volver");
@@ -118,6 +124,16 @@ public class Empleados extends AppCompatActivity
         });
     }
 
+    public void AlertaCargando()
+    {
+        //Alerta que carga mientras se cargan los Clientes
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.setCancelable(false);
+    }
+
     public void ActualizarLista()
     {
         listaEmpleado.setAdapter(new AdapterListaEmpleado(this, arrayList));
@@ -175,7 +191,6 @@ public class Empleados extends AppCompatActivity
         @TargetApi(Build.VERSION_CODES.KITKAT)
         protected Boolean doInBackground(String... params)
         {
-            boolean resul = true;
             HttpClient httpClient;
             List<NameValuePair> nameValuePairs;
             HttpPost httpPost;
@@ -216,37 +231,43 @@ public class Empleados extends AppCompatActivity
                         existe = true;
                     }
                 }
-
-                resul = true;
             }
             catch(UnsupportedEncodingException e)
             {
                 e.printStackTrace();
-                resul = false;
+                existe = false;
             }
 
             catch(ClientProtocolException e)
             {
                 e.printStackTrace();
-                resul = false;
+                existe = false;
             }
 
             catch (IOException e)
             {
                 e.printStackTrace();
-                resul = false;
+                existe = false;
             }
             catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            return resul;
+            return existe;
         }
 
         protected void onPostExecute(Boolean result)
         {
-            //Toast.makeText(Empleados.this, respuesta, Toast.LENGTH_SHORT).show();
-            listaEmpleado.setAdapter(new AdapterListaEmpleado(Empleados.this, arrayList));
+            if(existe)
+            {
+                listaEmpleado.setAdapter(new AdapterListaEmpleado(Empleados.this, arrayList));
+                progressDialog.dismiss();
+            }
+            else
+            {
+                Toast.makeText(Empleados.this, "Error al Modificar Usuario", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
         }
     }
 }

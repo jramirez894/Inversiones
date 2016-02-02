@@ -35,6 +35,4 @@ public class V_DetalleCobro extends Fragment
         return view;
     }
 
-
-
 }

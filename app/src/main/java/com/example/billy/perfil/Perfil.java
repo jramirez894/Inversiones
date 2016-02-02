@@ -2,8 +2,10 @@ package com.example.billy.perfil;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.SystemClock;
@@ -62,6 +64,9 @@ public class Perfil extends AppCompatActivity
 
     String respuesta = "";
     boolean existe = false;
+
+    //Alerta Cargando
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -136,6 +141,16 @@ public class Perfil extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    public void AlertaCargando()
+    {
+        //Alerta que carga mientras se cargan los Clientes
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.setCancelable(false);
+    }
+
     public void guardarPerfil()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -153,6 +168,8 @@ public class Perfil extends AppCompatActivity
                 {
                     TareaUpdadte updadte = new TareaUpdadte();
                     updadte.execute(cedula.getText().toString(), nombre.getText().toString(), telefono.getText().toString(), correo.getText().toString());
+
+                    AlertaCargando();
                 }
                 else
                 {
@@ -172,6 +189,8 @@ public class Perfil extends AppCompatActivity
                                 SesionUsuarios.setContrasena(ceduNueva);
                                 TareaUpdadte updadte = new TareaUpdadte();
                                 updadte.execute(cedula.getText().toString(), nombre.getText().toString(), telefono.getText().toString(), correo.getText().toString());
+
+                                AlertaCargando();
                             }
                             else
                             {
@@ -324,10 +343,13 @@ public class Perfil extends AppCompatActivity
                 Intent intent = new Intent(Perfil.this, PrincipalMenu.class);
                 startActivity(intent);
                 finish();
+
+                progressDialog.dismiss();
             }
             else
             {
                 Toast.makeText(Perfil.this, "Error al Modificar Usuario", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         }
     }

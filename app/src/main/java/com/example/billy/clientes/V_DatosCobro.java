@@ -46,7 +46,7 @@ public class V_DatosCobro extends Fragment
             }
         });
 
-        fechaVenta.setText("Fecha de Venta: " + VisualizarCliente.fechaFactura);
+        fechaVenta.setText("Fecha de Venta:\n" + VisualizarCliente.fechaFactura);
         totalPagar.setText("Total a Pagar: $ " + VisualizarCliente.totalFactura);
         valorRestante.setText("Valor Restante: $ " + VisualizarCliente.valorRestante);
 

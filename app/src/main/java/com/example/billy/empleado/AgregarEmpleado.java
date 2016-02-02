@@ -2,8 +2,10 @@ package com.example.billy.empleado;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
@@ -47,6 +49,9 @@ public class AgregarEmpleado extends AppCompatActivity
     boolean resul;
 
     Object respuesta = "";
+
+    //Alerta Cargando
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -129,6 +134,17 @@ public class AgregarEmpleado extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
+    public void AlertaCargando()
+    {
+        //Alerta que carga mientras se cargan los Clientes
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.setCancelable(false);
+    }
+
     public static boolean isEmailValid(String email) {
         boolean isValid = false;
 
@@ -156,6 +172,8 @@ public class AgregarEmpleado extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
+                AlertaCargando();
+
                 String ced = cedula.getText().toString();
                 String nom = nombreE.getText().toString();
                 String dir = direccion.getText().toString();
@@ -263,6 +281,8 @@ public class AgregarEmpleado extends AppCompatActivity
                 if(resp.equalsIgnoreCase("La cedula ya existe"))
                 {
                     Toast.makeText(AgregarEmpleado.this, resp, Toast.LENGTH_SHORT).show();
+
+                    progressDialog.dismiss();
                 }
                 else
                 {
@@ -273,12 +293,15 @@ public class AgregarEmpleado extends AppCompatActivity
                         Intent intent = new Intent(AgregarEmpleado.this, Empleados.class);
                         startActivity(intent);
                         finish();
+
+                        progressDialog.dismiss();
                     }
                 }
             }
             else
             {
                 Toast.makeText(AgregarEmpleado.this, "Error al Agregar Vendedor", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         }
     }

@@ -3,8 +3,10 @@ package com.example.billy.gastos;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
@@ -73,6 +75,9 @@ public class Reg_Gasto extends AppCompatActivity implements View.OnClickListener
     boolean resul;
     Object respuesta = "";
 
+    //Alerta Cargando
+    ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -135,6 +140,16 @@ public class Reg_Gasto extends AppCompatActivity implements View.OnClickListener
         });
     }
 
+    public void AlertaCargando()
+    {
+        //Alerta que carga mientras se cargan los Clientes
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.setCancelable(false);
+    }
+
     private void setDateTimeField()
     {
         fecha.setOnClickListener(this);
@@ -191,6 +206,8 @@ public class Reg_Gasto extends AppCompatActivity implements View.OnClickListener
                 //Clase AsynTask
                 TareaCreateGasto createGasto = new TareaCreateGasto();
                 createGasto.execute(valor.getText().toString(), fechaHoraModificada, descripcion.getText().toString(), idTipoGasto);
+
+                AlertaCargando();
             }
         });
 
@@ -258,6 +275,8 @@ public class Reg_Gasto extends AppCompatActivity implements View.OnClickListener
 
     public void cargarTipoGasto()
     {
+        AlertaCargando();
+
         arrayListNombresTipoGasto.clear();
         arrayListTipoGasto.clear();
         TareaTipoGasto tipoGasto = new TareaTipoGasto();
@@ -332,6 +351,7 @@ public class Reg_Gasto extends AppCompatActivity implements View.OnClickListener
         {
             //Toast.makeText(Reg_Gasto.this, respStr, Toast.LENGTH_SHORT).show();
             tipoGasto.setAdapter(new ArrayAdapter<String>(Reg_Gasto.this, android.R.layout.simple_spinner_dropdown_item, arrayListNombresTipoGasto));
+            progressDialog.dismiss();
         }
     }
 
@@ -413,12 +433,15 @@ public class Reg_Gasto extends AppCompatActivity implements View.OnClickListener
                     Intent intent = new Intent(Reg_Gasto.this, Reg_Gasto.class);
                     startActivity(intent);
                     finish();
+
+                    progressDialog.dismiss();
                 }
 
             }
             else
             {
                 Toast.makeText(Reg_Gasto.this, "Error al Agregar el Gasto", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         }
     }

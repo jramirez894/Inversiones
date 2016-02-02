@@ -2,8 +2,10 @@ package com.example.billy.inversiones;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.SystemClock;
@@ -11,6 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,9 +61,6 @@ public class MainActivity extends AppCompatActivity
     ProgressBar progressLogin;
     View layoutProgress;
     View layoutLogin;
-
-
-    //que funcione!!
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

@@ -1,7 +1,9 @@
 package com.example.billy.productos;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
@@ -50,6 +52,7 @@ public class Productos extends AppCompatActivity
     ImageView buscar;
     public static ListView listaProductos;
     public static ArrayList<ItemsListaProductos_Productos> arrayList = new ArrayList<ItemsListaProductos_Productos>();
+    public static ArrayList<ItemsListaProductos_Productos> arrayListFiltrado = new ArrayList<ItemsListaProductos_Productos>();
     public static ArrayList<String> arrayListNombresProductos = new ArrayList<String>();
 
     public static ArrayList<ItemsListaCategoria> arrayListCategoria = new ArrayList<ItemsListaCategoria>();
@@ -58,13 +61,16 @@ public class Productos extends AppCompatActivity
     Spinner categoria;
     TextView descripcion;
 
+    //Alerta Cargando
+    ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_productos);
 
-        ActionBar actionBar =getSupportActionBar();
+        final ActionBar actionBar =getSupportActionBar();
         actionBar.setTitle("Volver");
         actionBar.show();
 
@@ -73,8 +79,6 @@ public class Productos extends AppCompatActivity
         categoria =(Spinner)findViewById(R.id.spinnerCategoria_FiltarProducto);
         descripcion =(TextView)findViewById(R.id.textDescripcion_Producto);
         listaProductos = (ListView)findViewById(R.id.listaProductos_Producto);
-
-        ActualizarLista();
 
         listaProductos.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
@@ -108,10 +112,25 @@ public class Productos extends AppCompatActivity
             {
                 ItemsListaCategoria categoria = arrayListCategoria.get(position);
                 descripcion.setText(categoria.getDescripcion());
+                String idCategoria = categoria.getIdCategoria();
+
+                //Cada que seleccione una categoria cambie los productos de la lista
+                arrayListFiltrado.clear();
+
+                for(int i = 0; i < arrayList.size(); i++)
+                {
+                    if(idCategoria.equalsIgnoreCase(arrayList.get(i).getIdCategoria()))
+                    {
+                        arrayListFiltrado.add(new ItemsListaProductos_Productos(arrayList.get(i).getNombre(), R.mipmap.editar, R.mipmap.eliminar, arrayList.get(i).getIdProducto(), arrayList.get(i).getDescripcion(), arrayList.get(i).getCantidad(), arrayList.get(i).getGarantia(), arrayList.get(i).getPrecioCompra(), arrayList.get(i).getPrecioVenta(), arrayList.get(i).getIdCategoria()));
+                    }
+                }
+
+                listaProductos.setAdapter(new AdapterListaProductos_Productos(Productos.this, arrayListFiltrado));
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onNothingSelected(AdapterView<?> parent)
+            {
 
             }
         });
@@ -156,6 +175,16 @@ public class Productos extends AppCompatActivity
         });
     }
 
+    public void AlertaCargando()
+    {
+        //Alerta que carga mientras se cargan los Clientes
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.setCancelable(false);
+    }
+
     public String cargarCategoriaActual(String idC)
     {
         int position = 0;
@@ -174,6 +203,8 @@ public class Productos extends AppCompatActivity
 
     public void cargarCategorias()
     {
+        AlertaCargando();
+
         arrayListCategoria.clear();
         arrayListNombresCategoria.clear();
         TareaCategorias categorias = new TareaCategorias();
@@ -306,6 +337,9 @@ public class Productos extends AppCompatActivity
         {
             //Toast.makeText(Productos.this, respStr, Toast.LENGTH_SHORT).show();
             categoria.setAdapter(new ArrayAdapter<String>(Productos.this, android.R.layout.simple_spinner_dropdown_item, arrayListNombresCategoria));
+
+            //Cargar los productos despues de las categorias
+            ActualizarLista();
         }
     }
 
@@ -378,11 +412,24 @@ public class Productos extends AppCompatActivity
             return resul;
         }
 
-        protected void onPostExecute(Boolean result)
-        {
+        protected void onPostExecute(Boolean result) {
             //Toast.makeText(Productos.this, respStr, Toast.LENGTH_SHORT).show();
-            listaProductos.setAdapter(new AdapterListaProductos_Productos(Productos.this, arrayList));
             buscarProducto.setAdapter(new ArrayAdapter<String>(Productos.this, android.R.layout.simple_dropdown_item_1line, arrayListNombresProductos));
+
+            //Cada que seleccione una categoria cambie los productos de la lista
+            arrayListFiltrado.clear();
+
+            for(int i = 0; i < arrayList.size(); i++)
+            {
+                if(arrayList.get(i).getIdCategoria().equalsIgnoreCase(arrayListCategoria.get(0).getIdCategoria()))
+                {
+                    arrayListFiltrado.add(new ItemsListaProductos_Productos(arrayList.get(i).getNombre(), R.mipmap.editar, R.mipmap.eliminar, arrayList.get(i).getIdProducto(), arrayList.get(i).getDescripcion(), arrayList.get(i).getCantidad(), arrayList.get(i).getGarantia(), arrayList.get(i).getPrecioCompra(), arrayList.get(i).getPrecioVenta(), arrayList.get(i).getIdCategoria()));
+                }
+            }
+
+            listaProductos.setAdapter(new AdapterListaProductos_Productos(Productos.this, arrayListFiltrado));
+
+            progressDialog.dismiss();
         }
     }
 }

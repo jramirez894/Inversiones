@@ -3,9 +3,11 @@ package com.example.billy.clientes;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.Fragment;
@@ -93,6 +95,9 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
     String respuestaProducto = "";
     boolean existe = false;
     int posicionListaProductos = 0;
+
+    //Alerta Cargando
+    ProgressDialog progressDialog;
 
     @Override
     public void onClick(View view)
@@ -222,6 +227,15 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         mTabHost.setOnTabChangedListener(this);
     }
 
+    public void AlertaCargando()
+    {
+        //Alerta que carga mientras se cargan los Clientes
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.setCancelable(false);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -384,6 +398,8 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                             {
                                 TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
                                 tareaUpdateClient.execute(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa, editCalificacion_AlertaMCliente.getText().toString());
+
+                                AlertaCargando();
                             }
                             else
                             {
@@ -397,6 +413,8 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                                     {
                                         TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
                                         tareaUpdateClient.execute(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa, editCalificacion_AlertaMCliente.getText().toString());
+
+                                        AlertaCargando();
                                     }
                                 }
                                 else
@@ -767,9 +785,6 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                 idVendedor = M_DetalleCobro.idVendedor;
             }
 
-            //Determinar cual sera el nuevo total y el valor restante del cliente
-            //if(Constantes.totalFactura.equalsIgnoreCase(String.valueOf(sumaTotalFactura)))
-            //{
             if(valorRestante == 1)
             {
                 TareaUpdateBill tareaUpdateBill = new TareaUpdateBill();
@@ -798,24 +813,6 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                         idVendedor,
                         Constantes.itemsFactura.get(0).getIdCliente());
             }
-            /*}
-            else
-            {
-                //int diferencia = sumaTotalFactura - Integer.valueOf(Constantes.totalFactura);
-                //int nuevoValorRestante = diferencia + Integer.valueOf(M_DatosCobro.valorRestante.getText().toString());
-
-                TareaUpdateBill tareaUpdateBill = new TareaUpdateBill();
-                tareaUpdateBill.execute(idFactura,
-                        Constantes.itemsFactura.get(0).getFecha(),
-                        String.valueOf(sumaTotalFactura),
-                        M_DatosCobro.valorRestante.getText().toString(),
-                        Constantes.itemsFactura.get(0).getEstado(),
-                        fechaCobro,
-                        diaCobro,
-                        horaCobro,
-                        idVendedor,
-                        Constantes.itemsFactura.get(0).getIdCliente());
-            }*/
         }
     }
 
@@ -1045,6 +1042,8 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                 Intent intent = new Intent(ModificarCliente.this, PrincipalMenu.class);
                 startActivity(intent);
                 finish();
+
+                progressDialog.dismiss();
             }
         }
     }
@@ -1119,6 +1118,8 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
             Intent intent = new Intent(ModificarCliente.this, PrincipalMenu.class);
             startActivity(intent);
             finish();
+
+            progressDialog.dismiss();
         }
     }
 

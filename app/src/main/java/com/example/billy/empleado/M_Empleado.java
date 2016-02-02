@@ -2,8 +2,10 @@ package com.example.billy.empleado;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
@@ -63,6 +65,9 @@ public class M_Empleado extends AppCompatActivity
 
     String respuesta = "";
     boolean existe = false;
+
+    //Alerta Cargando
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -182,6 +187,16 @@ public class M_Empleado extends AppCompatActivity
         return isValid;
     }
 
+    public void AlertaCargando()
+    {
+        //Alerta que carga mientras se cargan los Clientes
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.setCancelable(false);
+    }
+
     //Alerta de Confirmacion
     public void ModificarEmpleado()
     {
@@ -194,6 +209,8 @@ public class M_Empleado extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
+                AlertaCargando();
+
                 TareaUpdadte updadte = new TareaUpdadte();
                 updadte.execute(ced, nom, tel, cor, dir, pas);
 
@@ -305,10 +322,12 @@ public class M_Empleado extends AppCompatActivity
                 Intent intent = new Intent(M_Empleado.this, Empleados.class);
                 startActivity(intent);
                 finish();
+                progressDialog.dismiss();
             }
             else
             {
                 Toast.makeText(M_Empleado.this, "Error al Modificar Usuario", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         }
     }

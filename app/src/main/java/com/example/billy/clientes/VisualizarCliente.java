@@ -141,31 +141,6 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
         PrincipalMenu.itemsProductos.clear();
     }
 
-    //Variables de los Tab
-    public void capturarVariables()
-    {
-        //Variables DatosPersonales
-        String cedula = V_DatosPersonales.cedula.getText().toString();
-        String nombre = V_DatosPersonales.nombre.getText().toString();
-        String direccion = V_DatosPersonales.direccion.getText().toString();
-        String telefono = V_DatosPersonales.telefono.getText().toString();
-        String correo = V_DatosPersonales.correo.getText().toString();
-        String nomEmpresa = V_DatosPersonales.nomEmpresa.getText().toString();
-        String dirEmpresa = V_DatosPersonales.dirEmpresa.getText().toString();
-
-        //Variables DatosCobro
-        long lista = V_DatosCobro.lista.getItemIdAtPosition((int) posicion);
-        String fechaVenta = V_DatosCobro.fechaVenta.getText().toString();
-        String totalPagar = V_DatosCobro.totalPagar.getText().toString();
-        String valorRestante = V_DatosCobro.valorRestante.getText().toString();
-
-        //Variables DetalleCobro
-        String nomEmpleado = V_DetalleCobro.nomEmpleado.getText().toString();
-        String fechaCobro = V_DetalleCobro.fechaCobro.getText().toString();
-        String diaCobro = V_DetalleCobro.diaCobro.getText().toString();
-        String horaCobro = V_DetalleCobro.horaCobro.getText().toString();
-    }
-
     protected void onResume(Bundle savedInstanceState)
     {
         if (savedInstanceState != null)

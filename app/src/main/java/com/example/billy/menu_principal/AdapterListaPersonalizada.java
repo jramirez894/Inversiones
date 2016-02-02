@@ -2,9 +2,11 @@ package com.example.billy.menu_principal;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.view.KeyEvent;
@@ -66,7 +68,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
     String idCliente;
 
     //Alerta Cargando
-    AlertDialog alert;
+    ProgressDialog progressDialog;
     boolean existe = false;
 
 
@@ -142,18 +144,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                         nombreEmpresa = posicionItems.getNombreEmpresa();
                         direccionEmpresa = posicionItems.getDireccionEmpresa();
 
-                        //Alerta personalizada
-                        LayoutInflater inflaterAlert = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        View dialoglayout = inflaterAlert.inflate(R.layout.alerta_cargando, null);
-
-                        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setTitle("Cargando");
-                        //builder.setMessage(idClienteCliente + " " + cedula + " " + nombre+ " " + direccion+ " " +telefono+ " " +correo);
-                        builder.setView(dialoglayout);
-                        builder.setCancelable(false);
-
-                        alert = builder.create();
-                        alert.show();
+                        AlertaCargando();
 
                         TareaGetBill tareaGetBill = new TareaGetBill();
                         tareaGetBill.execute();
@@ -244,6 +235,16 @@ public class AdapterListaPersonalizada extends ArrayAdapter
         });*/
 
         return convertView;
+    }
+
+    public void AlertaCargando()
+    {
+        //Alerta que carga mientras se cargan los Clientes
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.show();
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.setCancelable(false);
     }
 
     //Alerta de Confirmacion
@@ -449,7 +450,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
             }
             else
             {
-                alert.cancel();
+                progressDialog.dismiss();
                 Toast.makeText(getContext(), "Error al cargar el cliente", Toast.LENGTH_LONG).show();
             }
         }
@@ -543,7 +544,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
             }
             else
             {
-                alert.cancel();
+                progressDialog.dismiss();
                 Toast.makeText(getContext(), "Error al cargar el cliente", Toast.LENGTH_LONG).show();
             }
         }
@@ -631,7 +632,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
             }
             else
             {
-                alert.cancel();
+                progressDialog.dismiss();
                 Toast.makeText(getContext(), "Error al cargar el cliente", Toast.LENGTH_LONG).show();
             }
         }
@@ -719,7 +720,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
             //Toast.makeText(Empleados.this, respuesta, Toast.LENGTH_SHORT).show();
             if(existe)
             {
-                alert.cancel();
+                progressDialog.dismiss();
                 //Toast.makeText(getContext(), idClienteCliente + " " + cedula + " " + nombre+ " " + direccion+ " " +telefono+ " " +correo, Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(getContext(), ModificarCliente.class);
 
@@ -747,7 +748,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
             }
             else
             {
-                alert.cancel();
+                progressDialog.dismiss();
                 Toast.makeText(getContext(), "Error al cargar el cliente", Toast.LENGTH_LONG).show();
             }
         }

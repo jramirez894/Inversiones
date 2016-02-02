@@ -2,7 +2,9 @@ package com.example.billy.gastos;
 
 import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.SystemClock;
@@ -66,6 +68,9 @@ public class Historial extends AppCompatActivity implements View.OnClickListener
     String capInicio;
     String capFin;
 
+    //Alerta Cargando
+    ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -119,9 +124,20 @@ public class Historial extends AppCompatActivity implements View.OnClickListener
                     arrayList.clear();
                     TareaFecha tareaFecha = new TareaFecha();
                     tareaFecha.execute(capInicio, capFin);
+                    AlertaCargando();
                 }
             }
         });
+    }
+
+    public void AlertaCargando()
+    {
+        //Alerta que carga mientras se cargan los Clientes
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.setCancelable(false);
     }
 
     private void setDateTimeFieldInicio()
@@ -301,6 +317,7 @@ public class Historial extends AppCompatActivity implements View.OnClickListener
         {
             Intent intent = new Intent(Historial.this,Inf_Historial.class);
             startActivity(intent);
+            progressDialog.dismiss();
         }
     }
 }

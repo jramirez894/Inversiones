@@ -19,11 +19,18 @@
             android:textColor="@android:color/background_dark"
             android:textStyle="bold"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Categorias:"
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="5dp"/>
+
         <Spinner
             android:id="@+id/spinnerCategoria_FiltarProducto"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp">
+            android:layout_height="wrap_content">
 
         </Spinner>
 

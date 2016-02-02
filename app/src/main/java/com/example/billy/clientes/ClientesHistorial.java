@@ -1,6 +1,8 @@
 package com.example.billy.clientes;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,6 +44,9 @@ public class ClientesHistorial extends Fragment
     public static ArrayList<ItemsCobro_AgregarCliente> itemsCobro = new ArrayList<ItemsCobro_AgregarCliente>();
     boolean existe = false;
 
+    //Alerta Cargando
+    ProgressDialog progressDialog;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -52,6 +57,8 @@ public class ClientesHistorial extends Fragment
 
         lista = (ListView)view.findViewById(R.id.listViewLista_ClienteHistorial);
         ActualizarLista();
+
+        AlertaCargando();
 
         return view;
     }
@@ -158,6 +165,8 @@ public class ClientesHistorial extends Fragment
 
         protected void onPostExecute(Boolean result)
         {
+            progressDialog.dismiss();
+
             arrayList.clear();
 
             for(int i = 0; i < itemsCobro.size(); i++)
@@ -173,4 +182,13 @@ public class ClientesHistorial extends Fragment
         }
     }
 
+    public void AlertaCargando()
+    {
+        //Alerta que carga mientras se cargan los Clientes
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.show();
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.setCancelable(false);
+    }
 }

@@ -1,7 +1,9 @@
 package com.example.billy.garantias_product;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
@@ -71,6 +73,9 @@ public class Garantia extends AppCompatActivity
     //Para sacar los datos de la garantia que sea seleccionada
     String idGarantia = "";
 
+    //Alerta Cargando
+    ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -86,9 +91,6 @@ public class Garantia extends AppCompatActivity
 
         autoCompleteTextViewBuscar = (AutoCompleteTextView)findViewById(R.id.complete_Garantia);
         radioGroup = (RadioGroup)findViewById(R.id.radioButton_Garantias);
-
-        TareaListado tareaListado = new TareaListado();
-        tareaListado.execute();
 
         autoCompleteTextViewBuscar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -178,8 +180,20 @@ public class Garantia extends AppCompatActivity
 
     }
 
+    public void AlertaCargando()
+    {
+        //Alerta que carga mientras se cargan los Clientes
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.setCancelable(false);
+    }
+
     public void ActualizarLista()
     {
+        AlertaCargando();
+
         arrayListProductos.clear();
         arrayList.clear();
 
@@ -378,6 +392,9 @@ public class Garantia extends AppCompatActivity
         protected void onPostExecute(Boolean result)
         {
             listaGarantia.setAdapter(new Adapter_Garantia(Garantia.this, arrayList));
+
+            TareaListado tareaListado = new TareaListado();
+            tareaListado.execute();
         }
     }
 
@@ -463,6 +480,8 @@ public class Garantia extends AppCompatActivity
         {
             //Toast.makeText(Empleados.this, respuesta, Toast.LENGTH_SHORT).show();
             autoCompleteTextViewBuscar.setAdapter(new ArrayAdapter<String>(Garantia.this, android.R.layout.simple_dropdown_item_1line, arrayListNombresVendedores));
+
+            progressDialog.dismiss();
         }
     }
 }

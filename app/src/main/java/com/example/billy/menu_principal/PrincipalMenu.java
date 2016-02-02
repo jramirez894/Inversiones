@@ -2,10 +2,12 @@ package com.example.billy.menu_principal;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -117,7 +119,7 @@ public class PrincipalMenu extends AppCompatActivity
     public static ArrayList<ItemsListaProductos_Productos> itemsProductos = new ArrayList<ItemsListaProductos_Productos>();
 
     //Alerta Cargando
-    AlertDialog alert;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -252,17 +254,7 @@ public class PrincipalMenu extends AppCompatActivity
                 direccionEmpresaCliente = cliente.getDireccionEmpresa();
                 idClienteCliente = cliente.getIdCliente();
 
-                //Alerta personalizada
-                LayoutInflater inflaterAlert = (LayoutInflater) PrincipalMenu.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View dialoglayout = inflaterAlert.inflate(R.layout.alerta_cargando, null);
-
-                final AlertDialog.Builder builder = new AlertDialog.Builder(PrincipalMenu.this);
-                builder.setTitle("Cargando");
-                builder.setView(dialoglayout);
-                builder.setCancelable(false);
-
-                alert = builder.create();
-                alert.show();
+                AlertaCargando();
 
                 TareaGetBill tareaGetBill = new TareaGetBill();
                 tareaGetBill.execute();
@@ -271,9 +263,11 @@ public class PrincipalMenu extends AppCompatActivity
             }
         });
 
-        //Listado de Vendedores
+        //Listado de Clientes
         TareaListado tareaListado = new TareaListado();
         tareaListado.execute();
+
+        AlertaCargando();
 
         //Filtro de los clientes
         autocompleteBuscarClientes_MenuPrincipal = (AutoCompleteTextView) findViewById(R.id.autocompleteBuscarClientes_MenuPrincipal);
@@ -306,17 +300,7 @@ public class PrincipalMenu extends AppCompatActivity
                 direccionEmpresaCliente = cliente.getDireccionEmpresa();
                 idClienteCliente = cliente.getIdCliente();
 
-                //Alerta personalizada
-                LayoutInflater inflaterAlert = (LayoutInflater) PrincipalMenu.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View dialoglayout = inflaterAlert.inflate(R.layout.alerta_cargando, null);
-
-                final AlertDialog.Builder builder = new AlertDialog.Builder(PrincipalMenu.this);
-                builder.setTitle("Cargando");
-                builder.setView(dialoglayout);
-                builder.setCancelable(false);
-
-                alert = builder.create();
-                alert.show();
+                AlertaCargando();
 
                 TareaGetBill tareaGetBill = new TareaGetBill();
                 tareaGetBill.execute();
@@ -326,11 +310,17 @@ public class PrincipalMenu extends AppCompatActivity
 
     public void ActualizarLista()
     {
-        //items.clear();
-        //items.add(new ItemListaPersonalizada("jeniffer",R.mipmap.editar,R.mipmap.eliminar, ""));
-        //items.add(new ItemListaPersonalizada("miguel", R.mipmap.editar, R.mipmap.eliminar, ""));
-
         listaClientes.setAdapter(new AdapterListaPersonalizada(PrincipalMenu.this, items));
+    }
+
+    public void AlertaCargando()
+    {
+        //Alerta que carga mientras se cargan los Clientes
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.setCancelable(false);
     }
 
     @Override
@@ -505,6 +495,7 @@ public class PrincipalMenu extends AppCompatActivity
         protected void onPostExecute(Boolean result)
         {
             //Toast.makeText(PrincipalMenu.this, respuesta, Toast.LENGTH_SHORT).show();
+            progressDialog.dismiss();
             listaClientes.setAdapter(new AdapterListaPersonalizada(PrincipalMenu.this, items));
             autocompleteBuscarClientes_MenuPrincipal.setAdapter(new ArrayAdapter<String>(PrincipalMenu.this, android.R.layout.simple_dropdown_item_1line, itemsNombreCliente));
         }
@@ -608,7 +599,7 @@ public class PrincipalMenu extends AppCompatActivity
             }
             else
             {
-                alert.cancel();
+                progressDialog.dismiss();
                 Toast.makeText(PrincipalMenu.this, "Error al cargar el cliente", Toast.LENGTH_LONG).show();
             }
         }
@@ -703,7 +694,7 @@ public class PrincipalMenu extends AppCompatActivity
             }
             else
             {
-                alert.cancel();
+                progressDialog.dismiss();
                 Toast.makeText(PrincipalMenu.this, "Error al cargar el cliente", Toast.LENGTH_LONG).show();
             }
         }
@@ -790,7 +781,7 @@ public class PrincipalMenu extends AppCompatActivity
             }
             else
             {
-                alert.cancel();
+                progressDialog.dismiss();
                 Toast.makeText(PrincipalMenu.this, "Error al cargar el cliente", Toast.LENGTH_LONG).show();
             }
         }
@@ -877,7 +868,7 @@ public class PrincipalMenu extends AppCompatActivity
             //Toast.makeText(Empleados.this, respuesta, Toast.LENGTH_SHORT).show();
             if(existe)
             {
-                alert.cancel();
+                progressDialog.dismiss();
 
                 Intent intent = new Intent(PrincipalMenu.this, VisualizarCliente.class);
 
@@ -904,7 +895,7 @@ public class PrincipalMenu extends AppCompatActivity
             }
             else
             {
-                alert.cancel();
+                progressDialog.dismiss();
                 Toast.makeText(PrincipalMenu.this, "Error al cargar el cliente", Toast.LENGTH_LONG).show();
             }
         }
