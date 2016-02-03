@@ -25,22 +25,46 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textViewCedula_VClienteClienteCancelado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Cedula:"
-                android:layout_marginTop="20dp"
+                android:text="Nombre:"
+                android:layout_marginTop="10dp"
                 android:textColor="@android:color/black"
-                android:textSize="20sp"/>
+                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/textViewNombre_VClienteClienteCancelado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Nombre:"
+                android:layout_marginTop="5dp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cedula:"
                 android:layout_marginTop="10dp"
                 android:textColor="@android:color/black"
-                android:textSize="20sp"/>
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/textViewCedula_VClienteClienteCancelado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cedula:"
+                android:layout_marginTop="5dp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Direccion:"
+                android:layout_marginTop="10dp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/textViewDireccion_VClienteClienteCancelado"
@@ -48,35 +72,67 @@
                 android:layout_height="wrap_content"
                 android:text="Direccion:"
                 android:textColor="@android:color/black"
+                android:layout_marginTop="5dp"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Telefono:"
                 android:layout_marginTop="10dp"
-                android:textSize="20sp"/>
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/textViewTelefono_VClienteClienteCancelado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Telefono:"
+                android:layout_marginTop="5dp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Correo:"
                 android:layout_marginTop="10dp"
                 android:textColor="@android:color/black"
-                android:textSize="20sp"/>
+                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/textViewCorreo_VClienteClienteCancelado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Correo:"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:textColor="@android:color/black"
-                android:textSize="20sp"/>
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nombre Empresa:"
+                android:layout_marginTop="25dp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/textViewNombreEmpresa_VClienteClienteCancelado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Nombre Empresa:"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="5dp"
                 android:textColor="@android:color/black"
-                android:textSize="20sp"/>
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Direccion Empresa:"
+                android:layout_marginTop="25dp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/textViewDireccionEmpresa_ClienteCancelado"
@@ -85,7 +141,15 @@
                 android:text="Direccion Empresa:"
                 android:layout_marginTop="10dp"
                 android:textColor="@android:color/black"
-                android:textSize="20sp"/>
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sugerencia:"
+                android:layout_marginTop="25dp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/textViewSugerencia_ClienteCancelado"
@@ -94,7 +158,7 @@
                 android:text="Sugerencia:"
                 android:layout_marginTop="10dp"
                 android:textColor="@android:color/black"
-                android:textSize="20sp"/>
+                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/texViewEstado_ClienteCancelado"
@@ -103,7 +167,7 @@
                 android:text="Estado del Cliente Actualmente:"
                 android:layout_marginTop="10dp"
                 android:textColor="@android:color/black"
-                android:textSize="20sp"/>
+                android:textSize="18sp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -115,7 +179,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="3dp"
                     android:layout_gravity="center">
 
                 </Spinner>

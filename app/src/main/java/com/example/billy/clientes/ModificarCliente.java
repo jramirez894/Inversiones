@@ -49,9 +49,11 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -81,8 +83,9 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
     boolean resul;
     Object respuesta = "";
 
-    //Variable para decidir el estado del cliente
+    //Variable para decidir el estado del cliente y de la factura
     String estadoCliente = "";
+    String estadoFactura = "Activo";
 
     //Variable para insertar un abono
     boolean insertarAbono;
@@ -369,6 +372,7 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                     }
 
                     estadoCliente = "Inactivo";
+                    estadoFactura = "Inactivo";
                     insertarAbono = true;
                 }
             }
@@ -422,14 +426,14 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                                     if (fecha.equals("") ||
                                             calificacion.equals(""))
                                     {
-                                        Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar aqui", Toast.LENGTH_SHORT).show();
                                     }
                                     else
                                     {
-                                        Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(ModificarCliente.this, PrincipalMenu.class);
-                                        startActivity(intent);
-                                        finish();
+                                        TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
+                                        tareaUpdateClient.execute(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa, editCalificacion_AlertaMCliente.getText().toString());
+
+                                        AlertaCargando();
                                     }
                                 }
                             }
@@ -549,6 +553,7 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         return super.onKeyUp(keyCode, event);
     }
 
+    //Tarea modificar cliente
     private class TareaUpdateClient extends AsyncTask<String,Integer,Boolean>
     {
         private String respStr;
@@ -759,6 +764,7 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
             }
 
             //Variables spinner clase detalle cobro
+            String fecha = "";
             String fechaCobro = "";
             String diaCobro = "";
             String horaCobro = "";
@@ -768,12 +774,30 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                 fechaCobro = M_DetalleCobro.fechaDeCobro.getSelectedItem().toString();
                 diaCobro = M_DetalleCobro.diaCobro.getSelectedItem().toString();
                 horaCobro = M_DetalleCobro.horaCobro.getSelectedItem().toString();
+
+                for(int i = 0; i < Constantes.itemsFactura.size(); i++)
+                {
+                    if(Constantes.idClienteFactura.equalsIgnoreCase(Constantes.itemsFactura.get(i).getIdCliente()))
+                    {
+                        fecha = Constantes.itemsFactura.get(i).getFecha();
+                    }
+                }
+
             }
             catch (Exception e)
             {
-                fechaCobro = Constantes.itemsFactura.get(0).getFechaCobro();
-                diaCobro = Constantes.itemsFactura.get(0).getDiaCobro();
-                horaCobro = Constantes.itemsFactura.get(0).getHoraCobro();
+                //Identiicar cual es el id del cliente que se selecciono para traer los datos correspondientes
+
+                for(int i = 0; i < Constantes.itemsFactura.size(); i++)
+                {
+                    if(Constantes.idClienteFactura.equalsIgnoreCase(Constantes.itemsFactura.get(i).getIdCliente()))
+                    {
+                        fechaCobro = Constantes.itemsFactura.get(i).getFechaCobro();
+                        diaCobro = Constantes.itemsFactura.get(i).getDiaCobro();
+                        horaCobro = Constantes.itemsFactura.get(i).getHoraCobro();
+                        fecha = Constantes.itemsFactura.get(i).getFecha();
+                    }
+                }
             }
 
             if(M_DetalleCobro.idVendedor.equalsIgnoreCase(""))
@@ -789,29 +813,29 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
             {
                 TareaUpdateBill tareaUpdateBill = new TareaUpdateBill();
                 tareaUpdateBill.execute(idFactura,
-                        Constantes.itemsFactura.get(0).getFecha(),
+                        fecha,
                         String.valueOf(sumaTotalFactura),
                         M_DatosCobro.saldoRestante.getText().toString(),
-                        Constantes.itemsFactura.get(0).getEstado(),
+                        estadoFactura,
                         fechaCobro,
                         diaCobro,
                         horaCobro,
                         idVendedor,
-                        Constantes.itemsFactura.get(0).getIdCliente());
+                        Constantes.idClienteFactura);
             }
             else
             {
                 TareaUpdateBill tareaUpdateBill = new TareaUpdateBill();
                 tareaUpdateBill.execute(idFactura,
-                        Constantes.itemsFactura.get(0).getFecha(),
+                        fecha,
                         String.valueOf(sumaTotalFactura),
                         M_DatosCobro.valorRestante.getText().toString(),
-                        Constantes.itemsFactura.get(0).getEstado(),
+                        estadoFactura,
                         fechaCobro,
                         diaCobro,
                         horaCobro,
                         idVendedor,
-                        Constantes.itemsFactura.get(0).getIdCliente());
+                        Constantes.idClienteFactura);
             }
         }
     }
@@ -1033,8 +1057,12 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         {
             if(insertarAbono)
             {
+                Date date = new Date();
+                DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
+                String fechaVentaModificada = fecha + " " + hourFormat.format(date);
+
                 TareaCreateCharge tareaCreateCharge = new TareaCreateCharge();
-                tareaCreateCharge.execute(fecha, M_DatosCobro.abono.getText().toString(), idVendedor, idFactura);
+                tareaCreateCharge.execute(fechaVentaModificada, M_DatosCobro.abono.getText().toString(), idVendedor, idFactura);
             }
             else
             {

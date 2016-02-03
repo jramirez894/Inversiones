@@ -159,7 +159,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                     public void onClick(View view)
                     {
                         posicionItems = (ItemListaPersonalizada) getItem(position);
-                        EliminarCliente();
+                        //EliminarCliente();
                     }
                 });
 
@@ -648,6 +648,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
         @TargetApi(Build.VERSION_CODES.KITKAT)
         protected Boolean doInBackground(String... params)
         {
+            boolean respu = false;
             HttpClient httpClient;
             List<NameValuePair> nameValuePairs;
             HttpPost httpPost;
@@ -675,6 +676,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                 if(respuesta.equalsIgnoreCase("No Existe"))
                 {
                     existe = false;
+                    respu = false;
                 }
                 else
                 {
@@ -687,6 +689,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                             telefonoVendedorUsuarios = obj.getString("telefono");
                         }
                         existe = true;
+                        respu = true;
                     }
                 }
             }
@@ -694,25 +697,29 @@ public class AdapterListaPersonalizada extends ArrayAdapter
             {
                 e.printStackTrace();
                 existe = false;
+                respu = false;
             }
 
             catch(ClientProtocolException e)
             {
                 e.printStackTrace();
                 existe = false;
+                respu = false;
             }
 
             catch (IOException e)
             {
                 e.printStackTrace();
                 existe = false;
+                respu = false;
             }
             catch (JSONException e) {
                 e.printStackTrace();
                 existe = false;
+                respu = false;
             }
 
-            return existe;
+            return respu;
         }
 
         protected void onPostExecute(Boolean result)

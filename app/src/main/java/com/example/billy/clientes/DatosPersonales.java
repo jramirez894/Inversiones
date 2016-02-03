@@ -1,6 +1,8 @@
 package com.example.billy.clientes;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,7 +14,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.billy.constantes.Constantes;
 import com.example.billy.empleado.ItemListaEmpleado;
 import com.example.billy.inversiones.R;
 import com.example.billy.menu_principal.AdapterListaPersonalizada;
@@ -50,8 +54,17 @@ public class DatosPersonales extends Fragment
     boolean existe = false;
     String respuesta = "";
 
-    ArrayList<ItemsDatosClientes> arrayListDatosClientes = new ArrayList<ItemsDatosClientes>();
+    public static ArrayList<ItemsDatosClientes> arrayListDatosClientes = new ArrayList<ItemsDatosClientes>();
     ArrayList<String> arrayListCedulas = new ArrayList<String>();
+
+    //Array para guardar todas las facturas
+    public static ArrayList<ItemFactura_AgregarCliente> itemsFactura = new ArrayList<ItemFactura_AgregarCliente>();
+
+    //Para decidir si se actualiza o se inserta un cliente
+    public static boolean updateCliente = false;
+
+    //Para saber que cliente fue seleccionado y extraer todos los datos
+    public static ItemsDatosClientes cliente;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -90,17 +103,81 @@ public class DatosPersonales extends Fragment
                     }
                 }
 
-                ItemsDatosClientes cliente = arrayListDatosClientes.get(posicion);
+                cliente = arrayListDatosClientes.get(posicion);
 
-                nom.setText(cliente.getNombreCliente());
-                direccion.setText(cliente.getDireccion());
-                telefono.setText(cliente.getTelefono());
-                correo.setText(cliente.getCorreo());
-                nomEmpresa.setText(cliente.getNombreEmpresa());
-                dircEmpresa.setText(cliente.getDireccionEmpresa());
+                //Determinar si el cliente esta activo o inactivo y notificarle al usuario
+                String estado = cliente.getEstado();
+                String mensaje = "";
+
+                if(estado.equalsIgnoreCase("Activo"))
+                {
+                    for(int i = 0; i < itemsFactura.size(); i++)
+                    {
+                        if(cliente.getIdCliente().equalsIgnoreCase(itemsFactura.get(i).getIdCliente()))
+                        {
+                            if(itemsFactura.get(i).getEstado().equalsIgnoreCase("Activo"))
+                            {
+                                mensaje = "Este cliente ya tiene una factura activa, no se pueden tener dos facturas al tiempo debe modificar la factura existente.";
+                                AlertaEstadoCliente(mensaje, "");
+                                buscarCedula.setText("");
+                            }
+                        }
+                    }
+
+                    if(mensaje.equalsIgnoreCase(""))
+                    {
+                        updateCliente = true;
+
+                        nom.setText(cliente.getNombreCliente());
+                        direccion.setText(cliente.getDireccion());
+                        telefono.setText(cliente.getTelefono());
+                        correo.setText(cliente.getCorreo());
+                        nomEmpresa.setText(cliente.getNombreEmpresa());
+                        dircEmpresa.setText(cliente.getDireccionEmpresa());
+                    }
+                }
+                else
+                {
+                    if(estado.equalsIgnoreCase("Inactivo"))
+                    {
+                        mensaje = "Este cliente se encuentra Inactivo, ¿Desea activarlo?";
+                        AlertaEstadoCliente(mensaje, "Inactivo");
+                        updateCliente = true;
+                    }
+                }
             }
         });
         return view;
+    }
+
+    public void AlertaEstadoCliente(String mensaje, final String clic)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setIcon(R.mipmap.perfil);
+        builder.setTitle("Estado del Cliente");
+        builder.setMessage(mensaje);
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (clic)
+                {
+                    case "Inactivo":
+
+                        nom.setText(cliente.getNombreCliente());
+                        direccion.setText(cliente.getDireccion());
+                        telefono.setText(cliente.getTelefono());
+                        correo.setText(cliente.getCorreo());
+                        nomEmpresa.setText(cliente.getNombreEmpresa());
+                        dircEmpresa.setText(cliente.getDireccionEmpresa());
+
+                        break;
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancelar", null);
+        builder.setCancelable(false);
+        builder.show();
     }
 
     //Clases Asyntask para traer los clientes
@@ -184,10 +261,90 @@ public class DatosPersonales extends Fragment
         protected void onPostExecute(Boolean result)
         {
             //Toast.makeText(PrincipalMenu.this, respuesta, Toast.LENGTH_SHORT).show();
-
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_dropdown_item,arrayListCedulas);
             buscarCedula.setAdapter(arrayAdapter);
+
+            TareaGetBill tareaGetBill = new TareaGetBill();
+            tareaGetBill.execute();
         }
     }
 
+    //Clases Asyntask para traer las facturas
+    private class TareaGetBill extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerFactura.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option",  "getAllBill"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objFacturas = objItems.getJSONArray(0);
+
+                //String obj
+                String respuesta= String.valueOf(objFacturas);
+
+                if(respuesta.equalsIgnoreCase("No Existe"))
+                {
+                    existe = false;
+                }
+
+                else
+                {
+                    itemsFactura.clear();
+                    for(int i=0; i<objFacturas.length(); i++)
+                    {
+                        JSONObject obj = objFacturas.getJSONObject(i);
+                        itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("valorRestante"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("diaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
+                        existe = true;
+                    }
+                }
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                existe = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                existe = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                existe = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                existe = false;
+            }
+
+            return existe;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+
+        }
+    }
 }

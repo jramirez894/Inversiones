@@ -412,7 +412,6 @@ public class PrincipalMenu extends AppCompatActivity
     }
 
     //Clases Asyntask para traer los clientes
-
     private class TareaListado extends AsyncTask<String,Integer,Boolean>
     {
         private String respStr;

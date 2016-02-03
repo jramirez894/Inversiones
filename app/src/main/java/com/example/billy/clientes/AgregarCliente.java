@@ -104,6 +104,8 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
     //variable para saber si hay que insertar un abono o no
     boolean insertarAbono;
 
+    String idClienteUpdate = "";
+
     private class TabInfo
     {
         private String tag;
@@ -207,30 +209,31 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
 
         try
         {
-            //Variables Asociadas tab DatosPersonales
-            cedula = DatosPersonales.buscarCedula.getText().toString();
-            nombre = DatosPersonales.nom.getText().toString();
-            direccion = DatosPersonales.direccion.getText().toString();
-            telefono = DatosPersonales.telefono.getText().toString();
-            correo = DatosPersonales.correo.getText().toString();
-            nomEmpresa = DatosPersonales.nomEmpresa.getText().toString();
-            dirEmpresa = DatosPersonales.dircEmpresa.getText().toString();
-
-            //Variables Asociadas tab DatosCobro
-            fechaVenta =DatosCobro.fechaVenta.getText().toString();
-            totalPagar =DatosCobro.totalPagar.getText().toString();
-            abono =DatosCobro.abono.getText().toString();
-            valorRestante =DatosCobro.valorRestante.getText().toString();
-
-            //Variables Asociadas tab DetalleCobro
-            nomEmpleado =DetalleCobro.buscarEmpleado.getText().toString();
-            fechaCobro = DetalleCobro.fechaDeCobro.getSelectedItem().toString();
-            diaCobro = DetalleCobro.diaCobro.getSelectedItem().toString();
-            horaCobro = DetalleCobro.horaCobro.getSelectedItem().toString();
-
             switch (item.getItemId())
             {
                 case R.id.guardarCliente_AgregarCliente:
+
+                    //Variables Asociadas tab DatosPersonales
+                    cedula = DatosPersonales.buscarCedula.getText().toString();
+                    nombre = DatosPersonales.nom.getText().toString();
+                    direccion = DatosPersonales.direccion.getText().toString();
+                    telefono = DatosPersonales.telefono.getText().toString();
+                    correo = DatosPersonales.correo.getText().toString();
+                    nomEmpresa = DatosPersonales.nomEmpresa.getText().toString();
+                    dirEmpresa = DatosPersonales.dircEmpresa.getText().toString();
+
+                    //Variables Asociadas tab DatosCobro
+                    fechaVenta =DatosCobro.fechaVenta.getText().toString();
+                    totalPagar =DatosCobro.totalPagar.getText().toString();
+                    abono =DatosCobro.abono.getText().toString();
+                    valorRestante =DatosCobro.valorRestante.getText().toString();
+
+                    //Variables Asociadas tab DetalleCobro
+                    nomEmpleado =DetalleCobro.buscarEmpleado.getText().toString();
+                    fechaCobro = DetalleCobro.fechaDeCobro.getSelectedItem().toString();
+                    diaCobro = DetalleCobro.diaCobro.getSelectedItem().toString();
+                    horaCobro = DetalleCobro.horaCobro.getSelectedItem().toString();
+
                     if (cedula.equals("")||
                             nombre.equals("")||
                             direccion.equals("")||
@@ -398,8 +401,113 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                TareaCreateCient createCient = new TareaCreateCient();
-                createCient.execute(cedula, nombre, direccion, telefono, correo, nombreEmpresa, direccionEmpresa);
+                //Para saber si el cliente ya se agrego
+                boolean createClient = false;
+
+                //Para informarle al usuario que no se puede agregar el cliente seleccionado
+                boolean stop = false;
+
+
+                //Determinar si el cliente esta activo o inactivo y notificarle al usuario
+                String cedula = DatosPersonales.buscarCedula.getText().toString();
+                String estado = "";
+                String mensaje = "";
+
+                String calificacion = "";
+
+                for(int i = 0; i < DatosPersonales.arrayListDatosClientes.size(); i++)
+                {
+                    if(cedula.equalsIgnoreCase(DatosPersonales.arrayListDatosClientes.get(i).getCedula()))
+                    {
+                        estado = DatosPersonales.arrayListDatosClientes.get(i).getEstado();
+                        idClienteUpdate = DatosPersonales.arrayListDatosClientes.get(i).getIdCliente();
+                        calificacion = DatosPersonales.arrayListDatosClientes.get(i).getCalificacion();
+                    }
+                }
+
+                if(estado.equalsIgnoreCase(""))
+                {
+                    createClient = true;
+
+                    TareaCreateCient createCient = new TareaCreateCient();
+                    createCient.execute(cedula, nombre, direccion, telefono, correo, nombreEmpresa, direccionEmpresa);
+                }
+                else
+                {
+                    if(estado.equalsIgnoreCase("Activo"))
+                    {
+                        for(int i = 0; i < DatosPersonales.itemsFactura.size(); i++)
+                        {
+                            if(idClienteUpdate.equalsIgnoreCase(DatosPersonales.itemsFactura.get(i).getIdCliente()))
+                            {
+                                if(DatosPersonales.itemsFactura.get(i).getEstado().equalsIgnoreCase("Activo"))
+                                {
+                                    mensaje = "Este cliente ya tiene una factura activa, no se pueden tener dos facturas al tiempo debe modificar la factura existente.";
+                                    AlertaEstadoCliente(mensaje, "Activo con Factura");
+                                    stop = true;
+                                }
+                            }
+                        }
+
+                        if(mensaje.equalsIgnoreCase(""))
+                        {
+                            DatosPersonales.updateCliente = true;
+                        }
+                    }
+                    else
+                    {
+                        if(estado.equalsIgnoreCase("Inactivo"))
+                        {
+                            DatosPersonales.updateCliente = true;
+                        }
+                    }
+                }
+
+                if(!stop)
+                {
+                    if(DatosPersonales.updateCliente)
+                    {
+                        TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
+                        tareaUpdateClient.execute(idClienteUpdate, cedula, nombre, direccion, telefono, correo, nombreEmpresa,
+                                direccionEmpresa, "Activo", calificacion);
+                    }
+                    else
+                    {
+                        if(!createClient)
+                        {
+                            TareaCreateCient createCient = new TareaCreateCient();
+                            createCient.execute(cedula, nombre, direccion, telefono, correo, nombreEmpresa, direccionEmpresa);
+                        }
+                    }
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancelar", null);
+        builder.setCancelable(false);
+        builder.show();
+    }
+
+    public void AlertaEstadoCliente(String mensaje, final String clic)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(AgregarCliente.this);
+        builder.setIcon(R.mipmap.perfil);
+        builder.setTitle("Estado del Cliente");
+        builder.setMessage(mensaje);
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (clic)
+                {
+                    case "Inactivo":
+
+                        break;
+
+                    case "Activo con Factura":
+
+
+                        break;
+                }
             }
         });
 
@@ -591,15 +699,33 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
 
             if(abono.equalsIgnoreCase(""))
             {
-                TareaCreateBill createBill = new TareaCreateBill();
-                createBill.execute(fechaVentaModificada, totalPagar, totalPagar, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idCliente);
-                insertarAbono = false;
+                if(DatosPersonales.updateCliente)
+                {
+                    TareaCreateBill createBill = new TareaCreateBill();
+                    createBill.execute(fechaVentaModificada, totalPagar, totalPagar, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idClienteUpdate);
+                    insertarAbono = false;
+                }
+                else
+                {
+                    TareaCreateBill createBill = new TareaCreateBill();
+                    createBill.execute(fechaVentaModificada, totalPagar, totalPagar, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idCliente);
+                    insertarAbono = false;
+                }
             }
             else
             {
-                TareaCreateBill createBill = new TareaCreateBill();
-                createBill.execute(fechaVentaModificada, totalPagar, valorRestante, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idCliente);
-                insertarAbono = true;
+                if(DatosPersonales.updateCliente)
+                {
+                    TareaCreateBill createBill = new TareaCreateBill();
+                    createBill.execute(fechaVentaModificada, totalPagar, valorRestante, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idClienteUpdate);
+                    insertarAbono = true;
+                }
+                else
+                {
+                    TareaCreateBill createBill = new TareaCreateBill();
+                    createBill.execute(fechaVentaModificada, totalPagar, valorRestante, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idCliente);
+                    insertarAbono = true;
+                }
             }
         }
     }
@@ -1050,6 +1176,72 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
         protected void onPostExecute(Boolean result)
         {
             //Toast.makeText(Perfil.this, respStr, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class TareaUpdateClient extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        JSONObject respJSON;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerCliente.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("idCliente", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("cedula", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("nombre", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("direccion", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("telefono", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("correo", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("nombreEmpresa", params[6]));
+            nameValuePairs.add(new BasicNameValuePair("direccionEmpresa", params[7]));
+            nameValuePairs.add(new BasicNameValuePair("estado", params[8]));
+            nameValuePairs.add(new BasicNameValuePair("calificacion", params[9]));
+            nameValuePairs.add(new BasicNameValuePair("option", "updateClient"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            TareaListado listado = new TareaListado();
+            listado.execute();
         }
     }
 }

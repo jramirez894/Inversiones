@@ -113,8 +113,8 @@
     <string name="title_activity_inf__cliente_cancelados">Inf_ClienteCancelados</string>
 
     <string-array name="estado_cliente">
-        <item>Activo</item>
         <item>Inactivo</item>
+        <item>Activo</item>
     </string-array>
     <string name="title_activity_perfil">Perfil</string>
     <string name="title_activity_historial_cliente">HistorialCliente</string>
