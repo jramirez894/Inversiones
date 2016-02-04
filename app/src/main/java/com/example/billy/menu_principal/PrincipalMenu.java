@@ -457,7 +457,7 @@ public class PrincipalMenu extends AppCompatActivity
                         JSONObject obj = objVendedores.getJSONObject(i);
                         if(obj.getString("estado").equalsIgnoreCase("Activo"))
                         {
-                            items.add(new ItemListaPersonalizada(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, "", obj.getString("idCliente"), obj.getString("cedula"), obj.getString("direccion"), obj.getString("telefono"), obj.getString("correo"), obj.getString("nombreEmpresa"), obj.getString("direccionEmpresa"), obj.getString("estado"), obj.getString("calificacion")));
+                            items.add(new ItemListaPersonalizada(obj.getString("nombre"), R.mipmap.editar, "", obj.getString("idCliente"), obj.getString("cedula"), obj.getString("direccion"), obj.getString("telefono"), obj.getString("correo"), obj.getString("nombreEmpresa"), obj.getString("direccionEmpresa"), obj.getString("estado"), obj.getString("calificacion")));
                             itemsNombreCliente.add(obj.getString("nombre"));
                         }
                     }

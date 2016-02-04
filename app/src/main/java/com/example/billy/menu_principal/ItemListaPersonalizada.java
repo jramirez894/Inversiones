@@ -7,7 +7,6 @@ public class ItemListaPersonalizada
 {
     public String nombreLista;
     public int editar;
-    public int eliminar;
     public String ediOrganizar;
 
     public String idCliente;
@@ -20,10 +19,9 @@ public class ItemListaPersonalizada
     public String estado;
     public String calificacion;
 
-    public ItemListaPersonalizada(String nombreLista, int editar, int eliminar, String ediOrganizar, String idCliente, String cedula, String direccion, String telefono, String correo, String nombreEmpresa, String direccionEmpresa, String estado, String calificacion) {
+    public ItemListaPersonalizada(String nombreLista, int editar, String ediOrganizar, String idCliente, String cedula, String direccion, String telefono, String correo, String nombreEmpresa, String direccionEmpresa, String estado, String calificacion) {
         this.nombreLista = nombreLista;
         this.editar = editar;
-        this.eliminar = eliminar;
         this.ediOrganizar = ediOrganizar;
         this.idCliente = idCliente;
         this.cedula = cedula;
@@ -50,14 +48,6 @@ public class ItemListaPersonalizada
 
     public void setEditar(int editar) {
         this.editar = editar;
-    }
-
-    public int getEliminar() {
-        return eliminar;
-    }
-
-    public void setEliminar(int eliminar) {
-        this.eliminar = eliminar;
     }
 
     public String getEdiOrganizar() {

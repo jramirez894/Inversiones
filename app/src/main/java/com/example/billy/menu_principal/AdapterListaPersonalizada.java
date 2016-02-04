@@ -56,7 +56,6 @@ public class AdapterListaPersonalizada extends ArrayAdapter
 
     public static ItemListaPersonalizada posicionItems;
     public static ImageView editar;
-    public static ImageView eliminar;
     public static EditText organizar;
     public static TextView nombreLista;
     public static Spinner spinOrden;
@@ -64,7 +63,6 @@ public class AdapterListaPersonalizada extends ArrayAdapter
     boolean resul;
 
     String respuesta = "";
-    Object respuestaObj = "";
     String idCliente;
 
     //Alerta Cargando
@@ -118,13 +116,11 @@ public class AdapterListaPersonalizada extends ArrayAdapter
 
                 nombreLista = (TextView)convertView.findViewById(R.id.textViewNombreListaPersonalizada);
                 editar = (ImageView)convertView.findViewById(R.id.imageViewEditarListaPersonalizada);
-                eliminar = (ImageView)convertView.findViewById(R.id.imageViewEliminarListaPersonalizada);
                 organizar = (EditText)convertView.findViewById(R.id.edit_OrganizarListaPersonalizada);
                 spinOrden = (Spinner)convertView.findViewById(R.id.spinOrdenListaPersonalizada);
 
                 nombreLista.setText(items.getNombreLista());
                 editar.setImageResource(items.getEditar());
-                eliminar.setImageResource(items.getEliminar());
                 organizar.setText(items.getEdiOrganizar());
 
                 editar.setOnClickListener(new View.OnClickListener()
@@ -153,20 +149,9 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                     }
                 });
 
-                eliminar.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        posicionItems = (ItemListaPersonalizada) getItem(position);
-                        //EliminarCliente();
-                    }
-                });
-
                 organizar.setVisibility(View.GONE);
                 spinOrden.setVisibility(View.GONE);
                 editar.setVisibility(View.VISIBLE);
-                eliminar.setVisibility(View.VISIBLE);
 
                 break;
 
@@ -176,7 +161,6 @@ public class AdapterListaPersonalizada extends ArrayAdapter
 
                 nombreLista = (TextView)convertView.findViewById(R.id.textViewNombreListaPersonalizada);
                 editar = (ImageView)convertView.findViewById(R.id.imageViewEditarListaPersonalizada);
-                eliminar = (ImageView)convertView.findViewById(R.id.imageViewEliminarListaPersonalizada);
                 organizar = (EditText)convertView.findViewById(R.id.edit_OrganizarListaPersonalizada);
                 spinOrden = (Spinner)convertView.findViewById(R.id.spinOrdenListaPersonalizada);
 
@@ -186,7 +170,6 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                 organizar.setVisibility(View.VISIBLE);
                 spinOrden.setVisibility(View.VISIBLE);
                 editar.setVisibility(View.GONE);
-                eliminar.setVisibility(View.GONE);
 
                 ArrayList<String> arrayLimiteOrden = new ArrayList<String>();
                 arrayLimiteOrden.clear();
@@ -245,110 +228,6 @@ public class AdapterListaPersonalizada extends ArrayAdapter
         progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         progressDialog.setContentView(R.layout.progress_bar);
         progressDialog.setCancelable(false);
-    }
-
-    //Alerta de Confirmacion
-    public void EliminarCliente()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setIcon(R.mipmap.borrar);
-        builder.setTitle("Eliminar");
-        builder.setMessage("¿Eliminar Cliente?");
-        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                //Captura la Posicion del item de la lista
-
-                //Borrar un item de la lista
-                idCliente = posicionItems.getIdCliente();
-
-                TareaDelete delete = new TareaDelete();
-                delete.execute(idCliente);
-            }
-        });
-
-        builder.setNegativeButton("Cancelar", null);
-        builder.setCancelable(false);
-        builder.show();
-    }
-
-    private class TareaDelete extends AsyncTask<String,Integer,Boolean>
-    {
-        private String respStr;
-        JSONObject respJSON;
-
-        @TargetApi(Build.VERSION_CODES.KITKAT)
-        protected Boolean doInBackground(String... params)
-        {
-            resul = true;
-            HttpClient httpClient;
-            List<NameValuePair> nameValuePairs;
-            HttpPost httpPost;
-            httpClient= new DefaultHttpClient();
-            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerCliente.php");
-
-            nameValuePairs = new ArrayList<NameValuePair>();
-            nameValuePairs.add(new BasicNameValuePair("idCliente", params[0]));
-            nameValuePairs.add(new BasicNameValuePair("option", "deleteClient"));
-
-            try
-            {
-                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                HttpResponse resp= httpClient.execute(httpPost);
-
-                respStr = EntityUtils.toString(resp.getEntity());
-
-                respJSON = new JSONObject(respStr);
-
-                respuestaObj= respJSON.get("items");
-                resul = true;
-            }
-            catch(UnsupportedEncodingException e)
-            {
-                e.printStackTrace();
-                resul = false;
-            }
-
-            catch(ClientProtocolException e)
-            {
-                e.printStackTrace();
-                resul = false;
-            }
-
-            catch (IOException e)
-            {
-                e.printStackTrace();
-                resul = false;
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            return resul;
-        }
-
-        protected void onPostExecute(Boolean result)
-        {
-            String resp = respuesta.toString();
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setIcon(android.R.drawable.ic_menu_save);
-            builder.setTitle("Eliminar");
-            builder.setMessage(resp + " " + idCliente);
-            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which)
-                {//Borrar un item de la lista
-                    ArrayAdapter adapter = new AdapterListaPersonalizada(getContext(), PrincipalMenu.items);
-                    adapter.remove(posicionItems);
-                    //Se carga de nuevo la vista
-                    PrincipalMenu.listaClientes.setAdapter(adapter);
-                }
-            });
-            builder.setCancelable(false);
-            builder.show();
-        }
     }
 
     //Clases Asyntask para traer las facturas

@@ -26,14 +26,6 @@
             android:src="@mipmap/editar"
             android:visibility="visible"/>
 
-        <ImageView
-            android:id="@+id/imageViewEliminarListaPersonalizada"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/eliminar"
-            android:layout_marginLeft="10dp"
-            android:visibility="visible"/>
-
         <Spinner
             android:id="@+id/spinOrdenListaPersonalizada"
             android:layout_width="wrap_content"

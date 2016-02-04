@@ -2,9 +2,11 @@ package com.example.billy.clientes;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -105,6 +107,9 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
     boolean insertarAbono;
 
     String idClienteUpdate = "";
+
+    //Alerta Cargando
+    ProgressDialog progressDialog;
 
     private class TabInfo
     {
@@ -431,6 +436,8 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
 
                     TareaCreateCient createCient = new TareaCreateCient();
                     createCient.execute(cedula, nombre, direccion, telefono, correo, nombreEmpresa, direccionEmpresa);
+
+                    AlertaCargando();
                 }
                 else
                 {
@@ -470,6 +477,8 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
                         TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
                         tareaUpdateClient.execute(idClienteUpdate, cedula, nombre, direccion, telefono, correo, nombreEmpresa,
                                 direccionEmpresa, "Activo", calificacion);
+
+                        AlertaCargando();
                     }
                     else
                     {
@@ -477,6 +486,8 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
                         {
                             TareaCreateCient createCient = new TareaCreateCient();
                             createCient.execute(cedula, nombre, direccion, telefono, correo, nombreEmpresa, direccionEmpresa);
+
+                            AlertaCargando();
                         }
                     }
                 }
@@ -486,6 +497,16 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
         builder.setNegativeButton("Cancelar", null);
         builder.setCancelable(false);
         builder.show();
+    }
+
+    public void AlertaCargando()
+    {
+        //Alerta que carga mientras se cargan los Clientes
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.setCancelable(false);
     }
 
     public void AlertaEstadoCliente(String mensaje, final String clic)
@@ -571,28 +592,34 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
                 //String obj
                 respuesta= respJSON.get("items");
                 resul = true;
+
+                existe = true;
             }
             catch(UnsupportedEncodingException e)
             {
                 e.printStackTrace();
                 resul = false;
+                existe = false;
             }
 
             catch(ClientProtocolException e)
             {
                 e.printStackTrace();
                 resul = false;
+                existe = false;
             }
 
             catch (IOException e)
             {
                 e.printStackTrace();
                 resul = false;
+                existe = false;
             }
 
             catch (JSONException e)
             {
                 e.printStackTrace();
+                existe = false;
             }
 
             return resul;
@@ -600,9 +627,16 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
 
         protected void onPostExecute(Boolean result)
         {
-            //Toast.makeText(AgregarEmpleado.this, respuesta.toString(), Toast.LENGTH_SHORT).show();
-            TareaListado listado = new TareaListado();
-            listado.execute();
+            if (existe)
+            {
+                TareaListado listado = new TareaListado();
+                listado.execute();
+            }
+            else
+            {
+                Toast.makeText(AgregarCliente.this, "Error al Crear el Cliente", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
+            }
         }
     }
 
@@ -650,7 +684,7 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
                     for(int i=0; i<objVendedores.length(); i++)
                     {
                         JSONObject obj = objVendedores.getJSONObject(i);
-                        items.add(new ItemListaPersonalizada(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, "", obj.getString("idCliente"), obj.getString("cedula"), obj.getString("direccion"), obj.getString("telefono"), obj.getString("correo"), obj.getString("nombreEmpresa"), obj.getString("direccionEmpresa"), obj.getString("estado"), obj.getString("calificacion")));
+                        items.add(new ItemListaPersonalizada(obj.getString("nombre"), R.mipmap.editar, "", obj.getString("idCliente"), obj.getString("cedula"), obj.getString("direccion"), obj.getString("telefono"), obj.getString("correo"), obj.getString("nombreEmpresa"), obj.getString("direccionEmpresa"), obj.getString("estado"), obj.getString("calificacion")));
                         existe = true;
                     }
                 }
@@ -661,21 +695,26 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
             {
                 e.printStackTrace();
                 resul = false;
+                existe = false;
             }
 
             catch(ClientProtocolException e)
             {
                 e.printStackTrace();
                 resul = false;
+                existe = false;
             }
 
             catch (IOException e)
             {
                 e.printStackTrace();
                 resul = false;
+                existe = false;
             }
-            catch (JSONException e) {
+            catch (JSONException e)
+            {
                 e.printStackTrace();
+                existe = false;
             }
 
             return resul;
@@ -683,49 +722,57 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
 
         protected void onPostExecute(Boolean result)
         {
-            String idCliente = "";
-            //Toast.makeText(PrincipalMenu.this, respuesta, Toast.LENGTH_SHORT).show();
-            for (int i = 0; i < items.size(); i++)
+            if (existe)
             {
-                if(nombre.equalsIgnoreCase(items.get(i).getNombreLista()))
+                String idCliente = "";
+                //Toast.makeText(PrincipalMenu.this, respuesta, Toast.LENGTH_SHORT).show();
+                for (int i = 0; i < items.size(); i++)
                 {
-                    idCliente = items.get(i).getIdCliente();
+                    if(nombre.equalsIgnoreCase(items.get(i).getNombreLista()))
+                    {
+                        idCliente = items.get(i).getIdCliente();
+                    }
                 }
-            }
 
-            Date date = new Date();
-            DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
-            String fechaVentaModificada = fechaVenta + " " + hourFormat.format(date);
+                Date date = new Date();
+                DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
+                String fechaVentaModificada = fechaVenta + " " + hourFormat.format(date);
 
-            if(abono.equalsIgnoreCase(""))
-            {
-                if(DatosPersonales.updateCliente)
+                if(abono.equalsIgnoreCase(""))
                 {
-                    TareaCreateBill createBill = new TareaCreateBill();
-                    createBill.execute(fechaVentaModificada, totalPagar, totalPagar, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idClienteUpdate);
-                    insertarAbono = false;
+                    if(DatosPersonales.updateCliente)
+                    {
+                        TareaCreateBill createBill = new TareaCreateBill();
+                        createBill.execute(fechaVentaModificada, totalPagar, totalPagar, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idClienteUpdate);
+                        insertarAbono = false;
+                    }
+                    else
+                    {
+                        TareaCreateBill createBill = new TareaCreateBill();
+                        createBill.execute(fechaVentaModificada, totalPagar, totalPagar, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idCliente);
+                        insertarAbono = false;
+                    }
                 }
                 else
                 {
-                    TareaCreateBill createBill = new TareaCreateBill();
-                    createBill.execute(fechaVentaModificada, totalPagar, totalPagar, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idCliente);
-                    insertarAbono = false;
+                    if(DatosPersonales.updateCliente)
+                    {
+                        TareaCreateBill createBill = new TareaCreateBill();
+                        createBill.execute(fechaVentaModificada, totalPagar, valorRestante, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idClienteUpdate);
+                        insertarAbono = true;
+                    }
+                    else
+                    {
+                        TareaCreateBill createBill = new TareaCreateBill();
+                        createBill.execute(fechaVentaModificada, totalPagar, valorRestante, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idCliente);
+                        insertarAbono = true;
+                    }
                 }
             }
             else
             {
-                if(DatosPersonales.updateCliente)
-                {
-                    TareaCreateBill createBill = new TareaCreateBill();
-                    createBill.execute(fechaVentaModificada, totalPagar, valorRestante, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idClienteUpdate);
-                    insertarAbono = true;
-                }
-                else
-                {
-                    TareaCreateBill createBill = new TareaCreateBill();
-                    createBill.execute(fechaVentaModificada, totalPagar, valorRestante, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idCliente);
-                    insertarAbono = true;
-                }
+                Toast.makeText(AgregarCliente.this, "Error al Crear el Cliente", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
             }
         }
     }
@@ -772,28 +819,33 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
                 //String obj
                 respuesta= respJSON.get("items");
                 resul = true;
+                existe = true;
             }
             catch(UnsupportedEncodingException e)
             {
                 e.printStackTrace();
                 resul = false;
+                existe = false;
             }
 
             catch(ClientProtocolException e)
             {
                 e.printStackTrace();
                 resul = false;
+                existe = false;
             }
 
             catch (IOException e)
             {
                 e.printStackTrace();
                 resul = false;
+                existe = false;
             }
 
             catch (JSONException e)
             {
                 e.printStackTrace();
+                existe = false;
             }
 
             return resul;
@@ -801,9 +853,17 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
 
         protected void onPostExecute(Boolean result)
         {
-            //Toast.makeText(AgregarCliente.this, respStr.toString(), Toast.LENGTH_SHORT).show();
-            TareaListadoBill listadoBill = new TareaListadoBill();
-            listadoBill.execute();
+            if (existe)
+            {
+                TareaListadoBill listadoBill = new TareaListadoBill();
+                listadoBill.execute();
+            }
+            else
+            {
+                Toast.makeText(AgregarCliente.this, "Error al Crear el Cliente", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
+            }
+
         }
     }
 
@@ -861,20 +921,26 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
             {
                 e.printStackTrace();
                 resul = false;
+                existe = false;
             }
 
             catch(ClientProtocolException e)
             {
                 e.printStackTrace();
                 resul = false;
+                existe = false;
             }
 
             catch (IOException e)
             {
                 e.printStackTrace();
                 resul = false;
-            } catch (JSONException e) {
+                existe = false;
+            }
+            catch (JSONException e)
+            {
                 e.printStackTrace();
+                existe = false;
             }
 
             return resul;
@@ -882,71 +948,79 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
 
         protected void onPostExecute(Boolean result)
         {
-            //Toast.makeText(AgregarCliente.this, idFactura, Toast.LENGTH_SHORT).show();
-
-            for (int i = 0; i < DatosCobro.arrayListItems.size(); i++)
+            if (existe)
             {
-                String nombre = DatosCobro.arrayListItems.get(i).getNomProducto();
-                int precioProducto = 0;
-                int posicionProducto = 0;
-
-                for (int j = 0; j < DatosCobro.arrayList.size(); j++)
+                for (int i = 0; i < DatosCobro.arrayListItems.size(); i++)
                 {
-                    if(nombre.equalsIgnoreCase(DatosCobro.arrayList.get(j).getNombre()))
+                    String nombre = DatosCobro.arrayListItems.get(i).getNomProducto();
+                    int precioProducto = 0;
+                    int posicionProducto = 0;
+
+                    for (int j = 0; j < DatosCobro.arrayList.size(); j++)
                     {
-                        precioProducto = Integer.valueOf(DatosCobro.arrayList.get(j).getPrecioVenta());
-                        posicionProducto = j;
+                        if(nombre.equalsIgnoreCase(DatosCobro.arrayList.get(j).getNombre()))
+                        {
+                            precioProducto = Integer.valueOf(DatosCobro.arrayList.get(j).getPrecioVenta());
+                            posicionProducto = j;
+                        }
+                    }
+
+                    int totalPorProducto = 0;
+
+                    totalPorProducto = Integer.valueOf(DatosCobro.arrayListItems.get(i).getCantidad()) * precioProducto;
+
+                    TareaCreateSale createSale = new TareaCreateSale();
+                    createSale.execute(String.valueOf(totalPorProducto), DatosCobro.arrayListItems.get(i).getCantidad(), "En Venta", idFactura, DatosCobro.arrayList.get(posicionProducto).getIdProducto());
+                }
+
+                //Descontar la cantidad de productos
+                for (int i = 0; i < DatosCobro.arrayListItems.size(); i++)
+                {
+                    String nombre = DatosCobro.arrayListItems.get(i).getNomProducto();
+                    String cantidadBD = "";
+                    String cantidadRegistrada = DatosCobro.arrayListItems.get(i).getCantidad();
+
+                    for (int j = 0; j < DatosCobro.arrayList.size(); j++)
+                    {
+                        if(nombre.equalsIgnoreCase(DatosCobro.arrayList.get(j).getNombre()))
+                        {
+                            cantidadBD = DatosCobro.arrayList.get(j).getCantidad();
+                            int resta = Integer.valueOf(cantidadBD) - Integer.valueOf(cantidadRegistrada);
+
+                            TareaUpdadteProducto tareaUpdadteProducto = new TareaUpdadteProducto();
+                            tareaUpdadteProducto.execute(DatosCobro.arrayList.get(j).getIdProducto(),
+                                    DatosCobro.arrayList.get(j).getNombre(),
+                                    DatosCobro.arrayList.get(j).getDescripcion(),
+                                    String.valueOf(resta),
+                                    DatosCobro.arrayList.get(j).getGarantia(),
+                                    DatosCobro.arrayList.get(j).getPrecioCompra(),
+                                    DatosCobro.arrayList.get(j).getPrecioVenta(),
+                                    DatosCobro.arrayList.get(j).getIdCategoria());
+                        }
                     }
                 }
 
-                int totalPorProducto = 0;
-
-                totalPorProducto = Integer.valueOf(DatosCobro.arrayListItems.get(i).getCantidad()) * precioProducto;
-
-                TareaCreateSale createSale = new TareaCreateSale();
-                createSale.execute(String.valueOf(totalPorProducto), DatosCobro.arrayListItems.get(i).getCantidad(), "En Venta", idFactura, DatosCobro.arrayList.get(posicionProducto).getIdProducto());
-            }
-
-            //Descontar la cantidad de productos
-            for (int i = 0; i < DatosCobro.arrayListItems.size(); i++)
-            {
-                String nombre = DatosCobro.arrayListItems.get(i).getNomProducto();
-                String cantidadBD = "";
-                String cantidadRegistrada = DatosCobro.arrayListItems.get(i).getCantidad();
-
-                for (int j = 0; j < DatosCobro.arrayList.size(); j++)
+                if(insertarAbono)
                 {
-                    if(nombre.equalsIgnoreCase(DatosCobro.arrayList.get(j).getNombre()))
-                    {
-                        cantidadBD = DatosCobro.arrayList.get(j).getCantidad();
-                        int resta = Integer.valueOf(cantidadBD) - Integer.valueOf(cantidadRegistrada);
-
-                        TareaUpdadteProducto tareaUpdadteProducto = new TareaUpdadteProducto();
-                        tareaUpdadteProducto.execute(DatosCobro.arrayList.get(j).getIdProducto(),
-                                DatosCobro.arrayList.get(j).getNombre(),
-                                DatosCobro.arrayList.get(j).getDescripcion(),
-                                String.valueOf(resta),
-                                DatosCobro.arrayList.get(j).getGarantia(),
-                                DatosCobro.arrayList.get(j).getPrecioCompra(),
-                                DatosCobro.arrayList.get(j).getPrecioVenta(),
-                                DatosCobro.arrayList.get(j).getIdCategoria());
-                    }
+                    TareaCreateCharge tareaCreateCharge = new TareaCreateCharge();
+                    tareaCreateCharge.execute(fechaVenta, abono, DetalleCobro.idVendedor, idFactura);
                 }
-            }
+                else
+                {
+                    DetalleCobro.telefono = "";
+                    DetalleCobro.direccion = "";
 
-            if(insertarAbono)
-            {
-                TareaCreateCharge tareaCreateCharge = new TareaCreateCharge();
-                tareaCreateCharge.execute(fechaVenta, abono, DetalleCobro.idVendedor, idFactura);
+                    Intent intent = new Intent(AgregarCliente.this, PrincipalMenu.class);
+                    startActivity(intent);
+                    finish();
+
+                    progressDialog.dismiss();
+                }
             }
             else
             {
-                DetalleCobro.telefono = "";
-                DetalleCobro.direccion = "";
-
-                Intent intent = new Intent(AgregarCliente.this, PrincipalMenu.class);
-                startActivity(intent);
-                finish();
+                Toast.makeText(AgregarCliente.this, "Error al Crear el Cliente", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
             }
         }
     }
@@ -1059,28 +1133,33 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
                 //String obj
                 respuesta= respJSON.get("items");
                 resul = true;
+                existe = true;
             }
             catch(UnsupportedEncodingException e)
             {
                 e.printStackTrace();
                 resul = false;
+                existe = false;
             }
 
             catch(ClientProtocolException e)
             {
                 e.printStackTrace();
                 resul = false;
+                existe = false;
             }
 
             catch (IOException e)
             {
                 e.printStackTrace();
                 resul = false;
+                existe = false;
             }
 
             catch (JSONException e)
             {
                 e.printStackTrace();
+                existe = false;
             }
 
             return resul;
@@ -1088,13 +1167,23 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
 
         protected void onPostExecute(Boolean result)
         {
-            DetalleCobro.telefono = "";
-            DetalleCobro.direccion = "";
+            if (existe)
+            {
+                DetalleCobro.telefono = "";
+                DetalleCobro.direccion = "";
 
-            Toast.makeText(AgregarCliente.this, "Cliente agregado satisfactoriamente", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(AgregarCliente.this, PrincipalMenu.class);
-            startActivity(intent);
-            finish();
+                Toast.makeText(AgregarCliente.this, "Cliente agregado satisfactoriamente", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(AgregarCliente.this, PrincipalMenu.class);
+                startActivity(intent);
+                finish();
+
+                progressDialog.dismiss();
+            }
+            else
+            {
+                Toast.makeText(AgregarCliente.this, "Error al Crear el Cliente", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
+            }
         }
     }
 
@@ -1240,8 +1329,16 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
 
         protected void onPostExecute(Boolean result)
         {
-            TareaListado listado = new TareaListado();
-            listado.execute();
+            if (existe)
+            {
+                TareaListado listado = new TareaListado();
+                listado.execute();
+            }
+            else
+            {
+                Toast.makeText(AgregarCliente.this, "Error al Crear el Cliente", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
+            }
         }
     }
 }

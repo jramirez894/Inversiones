@@ -78,6 +78,8 @@ public class Inf_ClienteCancelados extends ActionBarActivity
     boolean resul;
     Object respuesta = "";
 
+    Object respuestaObj = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -154,13 +156,6 @@ public class Inf_ClienteCancelados extends ActionBarActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        switch (item.getItemId())
-        {
-            case R.id.eliminar_ClienteCancelado:
-                Eliminar();
-                break;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -169,50 +164,30 @@ public class Inf_ClienteCancelados extends ActionBarActivity
     {
         final String capSpinner = estado.getSelectedItem().toString();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setIcon(android.R.drawable.ic_menu_save);
+        if(capSpinner.equalsIgnoreCase("Inactivo"))
+        {
+            Toast.makeText(Inf_ClienteCancelados.this, "Este cliente ya se encuentra Inactivo", Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setIcon(android.R.drawable.ic_menu_save);
             builder.setTitle("Estado");
-        builder.setMessage("¿Cambiar de Estado?"+capSpinner);
-        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
+            builder.setMessage("¿Cambiar de Estado?"+capSpinner);
+            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
             {
-                TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
-                tareaUpdateClient.execute(capSpinner);
-            }
-        });
+                @Override
+                public void onClick(DialogInterface dialog, int which)
+                {
+                    TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
+                    tareaUpdateClient.execute(capSpinner);
+                }
+            });
 
-        builder.setNegativeButton("Cancelar",null );
-        builder.setCancelable(false);
-        builder.show();
-    }
-
-
-    //Alerta de Confirmacion para eliminar
-    public void Eliminar()
-    {
-        final String capSpinner = estado.getSelectedItem().toString();
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setIcon(R.mipmap.borrar);
-        builder.setTitle("Eliminar");
-        builder.setMessage("¿Eliminar Cliente?");
-        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                Intent intent = new Intent(Inf_ClienteCancelados.this,Cancelados.class);
-                startActivity(intent);
-                finish();
-                Toast.makeText(Inf_ClienteCancelados.this,"El Cliente Fue Elimino Correctamente",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        builder.setNegativeButton("Cancelar",null );
-        builder.setCancelable(false);
-        builder.show();
+            builder.setNegativeButton("Cancelar",null );
+            builder.setCancelable(false);
+            builder.show();
+        }
     }
 
     @Override
@@ -304,6 +279,66 @@ public class Inf_ClienteCancelados extends ActionBarActivity
             startActivity(intent);
             finish();
             Toast.makeText(Inf_ClienteCancelados.this,"El Estado del Cliente se Modifico Correctamente",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private class TareaDelete extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        JSONObject respJSON;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerCliente.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("idCliente", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("option", "deleteClient"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                respJSON = new JSONObject(respStr);
+
+                respuestaObj= respJSON.get("items");
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+
         }
     }
 }
