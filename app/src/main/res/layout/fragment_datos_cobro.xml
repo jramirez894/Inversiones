@@ -6,33 +6,10 @@
     android:orientation="vertical"
     android:padding="20dp">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Datos Del Cobro"
-        android:textSize="25sp"
-        android:gravity="center"
-        android:textColor="@android:color/background_dark"
-        android:textStyle="bold"/>
-
-    <AutoCompleteTextView
-        android:id="@+id/autoCompleteBuscarProducto_DatosCobro"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Nombre Producto"
-        android:layout_marginTop="15dp"
-        android:completionThreshold="1"
-        android:drawableRight="@android:drawable/ic_menu_search"
-        android:inputType="text"/>
-
-    <ListView
-        android:id="@+id/listViewListaProductos_DatosCobro"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"/>
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/scroll">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,12 +17,36 @@
             android:orientation="vertical">
 
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Datos Del Cobro"
+                android:textSize="25sp"
+                android:gravity="center"
+                android:textColor="@android:color/background_dark"
+                android:textStyle="bold"/>
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteBuscarProducto_DatosCobro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nombre Producto"
+                android:layout_marginTop="15dp"
+                android:completionThreshold="1"
+                android:drawableRight="@android:drawable/ic_menu_search"
+                android:inputType="text"/>
+
+            <ListView
+                android:id="@+id/listViewListaProductos_DatosCobro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Fecha de Venta:"
                 android:textSize="16sp"
                 android:textColor="@android:color/black"
-                android:layout_marginTop="5dp"/>
+                android:layout_marginTop="15dp"/>
 
             <EditText
                 android:id="@+id/editFechaVenta_DatosCobro"

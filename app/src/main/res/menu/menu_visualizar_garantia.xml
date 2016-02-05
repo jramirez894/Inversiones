@@ -2,4 +2,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.billy.garantias_product.VisualizarGarantia">
+
+    <item
+        android:id="@+id/guardarGarantia_VisualizarGarantia"
+        app:showAsAction="ifRoom"
+        android:icon="@mipmap/guardar"
+        android:title="Agregar Garantia"/>
+
 </menu>

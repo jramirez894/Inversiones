@@ -257,13 +257,20 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
                     }
                     else
                     {
-                        if(isEmailValid(correo))
+                        if(DatosCobro.arrayListItems.isEmpty())
                         {
-                            guardarCliente(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa);
+                            Toast.makeText(AgregarCliente.this,"Debe añadir productos a la lista",Toast.LENGTH_SHORT).show();
                         }
                         else
                         {
-                            Toast.makeText(AgregarCliente.this,"Debe Ingresar un Correo Valido",Toast.LENGTH_SHORT).show();
+                            if(isEmailValid(correo))
+                            {
+                                guardarCliente(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa);
+                            }
+                            else
+                            {
+                                Toast.makeText(AgregarCliente.this,"Debe Ingresar un Correo Valido",Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                     break;

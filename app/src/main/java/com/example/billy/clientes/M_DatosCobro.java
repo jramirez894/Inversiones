@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -225,6 +226,8 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                     arrayList.add(new ItemListaroductos_MDatosCobro(producto.getNombre(), R.mipmap.garantia, R.mipmap.devolucion, R.mipmap.eliminar, "insert", "1", producto.getIdProducto(), ""));
                     lista.setAdapter(new AdapterLista_Productos_MDatosCobro(getActivity(), arrayList));
 
+                    ajustarLista(lista);
+
                     //Sumar el precio del nuevo producto al total
                     String precioVenta = "";
 
@@ -323,6 +326,26 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
         return view;
     }
 
+    //Para ajustar la lista de productos
+    public static void ajustarLista(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+    }
+
     public void alertaAgotamientoProductos(String nombre, String cantidad)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -371,6 +394,8 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
         }
 
         lista.setAdapter(new AdapterLista_Productos_MDatosCobro(getActivity(), arrayList));
+
+        ajustarLista(lista);
     }
 
     public void ModificarLista()
@@ -401,6 +426,8 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
         }
 
         lista.setAdapter(new AdapterLista_Productos_MDatosCobro(getActivity(), arrayList));
+
+        ajustarLista(lista);
     }
 
     //Clases Asyntask para traer los datos de la tabla productos

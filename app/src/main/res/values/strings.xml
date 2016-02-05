@@ -59,7 +59,6 @@
         <item>16</item>
         <item>17</item>
         <item>18</item>
-        <item>18</item>
         <item>20</item>
         <item>21</item>
         <item>22</item>
@@ -140,4 +139,10 @@
     </string-array>
     <string name="title_activity_prueba_volley">PruebaVolley</string>
     <string name="title_activity_visualizar_garantia">VisualizarGarantia</string>
+
+    <string-array name="estado_garantia">
+        <item>Pendiente</item>
+        <item>Aceptado</item>
+        <item>Sin Garantia</item>
+    </string-array>
 </resources>

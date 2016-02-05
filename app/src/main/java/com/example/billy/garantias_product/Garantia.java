@@ -114,7 +114,7 @@ public class Garantia extends AppCompatActivity
                 {
                     if (idVendedor.equalsIgnoreCase(arrayList.get(j).getIdVendedor()))
                     {
-                        arrayListFiltroVendedor.add(new Items_Garantia_Visualizar(arrayList.get(j).getIdGarantia(), arrayList.get(j).getNombre(), arrayList.get(j).getTelefono(), arrayList.get(j).getNombreProducto(), arrayList.get(j).getCantidad(), arrayList.get(j).getFecha(), arrayList.get(j).getDescripcion(), arrayList.get(j).getEstado(), arrayList.get(j).getIdVendedor()));
+                        arrayListFiltroVendedor.add(new Items_Garantia_Visualizar(arrayList.get(j).getIdGarantia(), arrayList.get(j).getNombre(), arrayList.get(j).getTelefono(), arrayList.get(j).getNombreProducto(), arrayList.get(j).getCantidad(), arrayList.get(j).getFecha(), arrayList.get(j).getDescripcion(), arrayList.get(j).getEstado(), arrayList.get(j).getIdVendedor(), arrayList.get(j).getIdCliente(), arrayList.get(j).getIdProducto()));
                     }
                 }
 
@@ -159,6 +159,13 @@ public class Garantia extends AppCompatActivity
 
                     Intent intent = new Intent(Garantia.this, VisualizarGarantia.class);
                     intent.putExtra("idGarantia", idGarantia);
+                    intent.putExtra("estado", arrayListFiltroVendedor.get(position).getEstado());
+                    intent.putExtra("descripcion", arrayListFiltroVendedor.get(position).getDescripcion());
+                    intent.putExtra("fecha", arrayListFiltroVendedor.get(position).getFecha());
+                    intent.putExtra("cantidad", arrayListFiltroVendedor.get(position).getCantidad());
+                    intent.putExtra("idVendedor", arrayListFiltroVendedor.get(position).getIdVendedor());
+                    intent.putExtra("idCliente", arrayListFiltroVendedor.get(position).getIdCliente());
+                    intent.putExtra("idProducto", arrayListFiltroVendedor.get(position).getIdProducto());
                     intent.putExtra("tipo", "Vendedor");
                     startActivity(intent);
                 }
@@ -170,6 +177,13 @@ public class Garantia extends AppCompatActivity
 
                         Intent intent = new Intent(Garantia.this, VisualizarGarantia.class);
                         intent.putExtra("idGarantia", idGarantia);
+                        intent.putExtra("estado", arrayList.get(position).getEstado());
+                        intent.putExtra("descripcion", arrayList.get(position).getDescripcion());
+                        intent.putExtra("fecha", arrayList.get(position).getFecha());
+                        intent.putExtra("cantidad", arrayList.get(position).getCantidad());
+                        intent.putExtra("idVendedor", arrayList.get(position).getIdVendedor());
+                        intent.putExtra("idCliente", arrayList.get(position).getIdCliente());
+                        intent.putExtra("idProducto", arrayList.get(position).getIdProducto());
                         intent.putExtra("tipo", "Todos");
                         startActivity(intent);
                     }
@@ -358,7 +372,7 @@ public class Garantia extends AppCompatActivity
                             }
                         }
 
-                        arrayList.add(new Items_Garantia_Visualizar(obj.getString("idGarantia"), nom, tel, nomPr, obj.getString("cantidad"), obj.getString("fecha"), obj.getString("descripcion"), obj.getString("estado"),obj.getString("idVendedor")));
+                        arrayList.add(new Items_Garantia_Visualizar(obj.getString("idGarantia"), nom, tel, nomPr, obj.getString("cantidad"), obj.getString("fecha"), obj.getString("descripcion"), obj.getString("estado"),obj.getString("idVendedor"), obj.getString("idCliente"), obj.getString("idProducto")));
                     }
 
                     resul = true;

@@ -14,9 +14,11 @@ public class Items_Garantia_Visualizar
     String descripcion;
     String estado;
     String idVendedor;
+    String idCliente;
+    String idProducto;
 
 
-    public Items_Garantia_Visualizar(String idGarantia, String nombre, String telefono, String nombreProducto, String cantidad, String fecha, String descripcion, String estado, String idVendedor) {
+    public Items_Garantia_Visualizar(String idGarantia, String nombre, String telefono, String nombreProducto, String cantidad, String fecha, String descripcion, String estado, String idVendedor, String idCliente, String idProducto) {
         this.idGarantia = idGarantia;
         this.nombre = nombre;
         this.telefono = telefono;
@@ -26,6 +28,24 @@ public class Items_Garantia_Visualizar
         this.descripcion = descripcion;
         this.estado = estado;
         this.idVendedor = idVendedor;
+        this.idCliente = idCliente;
+        this.idProducto = idProducto;
+    }
+
+    public String getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(String idCliente) {
+        this.idCliente = idCliente;
+    }
+
+    public String getIdProducto() {
+        return idProducto;
+    }
+
+    public void setIdProducto(String idProducto) {
+        this.idProducto = idProducto;
     }
 
     public String getIdGarantia() {

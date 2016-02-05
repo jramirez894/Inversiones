@@ -21,7 +21,9 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ScrollView;
 
 import com.example.billy.inversiones.R;
 import com.example.billy.productos.AdapterListaProductos_Productos;
@@ -171,6 +173,9 @@ public class DatosCobro extends Fragment implements View.OnClickListener
                     arrayListItems.add(new ItemListaProdutos_DatosCobro(producto.getNombre(), "1", R.mipmap.informacion, R.mipmap.eliminar));
                     lista.setAdapter(new AdapterLista_Productos_DatosCobro(getActivity(), arrayListItems));
 
+                    //Ajustar la lista de productos
+                    ajustarLista(lista);
+
                     //Filtrar Los Precios De los Producto Para Multiplicarlos Por La Cantidad
 
                     for (int j = 0; j < arrayList.size(); j++) {
@@ -229,6 +234,26 @@ public class DatosCobro extends Fragment implements View.OnClickListener
         });
 
         return view;
+    }
+
+    //Para ajustar la lista de productos
+    public static void ajustarLista(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
     }
 
     public void alertaAgotamientoProductos(String nombre, String cantidad)

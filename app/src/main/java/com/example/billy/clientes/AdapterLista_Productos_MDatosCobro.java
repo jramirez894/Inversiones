@@ -225,8 +225,10 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         //Borrar un item de la lista
         ArrayAdapter adapter = new AdapterLista_Productos_MDatosCobro(getContext(), M_DatosCobro.arrayList);
         adapter.remove(posicionItems);
+
         //Se carga de nuevo la vista
         M_DatosCobro.lista.setAdapter(adapter);
+        M_DatosCobro.ajustarLista(M_DatosCobro.lista);
     }
 
     //Alerta Personalizada Para la garantia del producto

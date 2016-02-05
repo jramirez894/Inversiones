@@ -38,23 +38,14 @@ public class Adapter_Garantia extends ArrayAdapter
 
         Items_Garantia_Visualizar items = (Items_Garantia_Visualizar)getItem(position);
 
-        //TextView nombre = (TextView)convertView.findViewById(R.id.textViewNombre_ItemsGarantia);
-        //TextView telefono = (TextView)convertView.findViewById(R.id.textViewTelefono_ItemsGarantia);
         TextView nomProducto = (TextView)convertView.findViewById(R.id.textViewNombreProducto_ItemsGarantia);
-        //TextView cantidad = (TextView)convertView.findViewById(R.id.textViewCantidadProducto_ItemsGarantia);
         TextView fecha = (TextView)convertView.findViewById(R.id.textViewFecha_ItemsGarantia);
-        //TextView descripcion = (TextView)convertView.findViewById(R.id.textViewDescripcion_ItemsGarantia);
         TextView estado = (TextView)convertView.findViewById(R.id.textViewEstado_ItemsGarantia);
 
         View layout = (View)convertView.findViewById(R.id.layout);
 
-
-        //nombre.setText("Nombre: " + items.getNombre());
-        //telefono.setText("Telefono: " + items.getTelefono());
         nomProducto.setText("Producto: " + items.getNombreProducto());
-        //cantidad.setText("Cantidad: " + items.getCantidad());
         fecha.setText("Fecha: " + items.getFecha());
-        //descripcion.setText("Descripcion: " + items.getDescripcion());
         estado.setText(items.getEstado());
 
         //Para cambiar el color de fondo segun el estado de la garantia

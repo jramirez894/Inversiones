@@ -106,7 +106,7 @@ public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
                 adapter.remove(posicionItems);
                 //Se carga de nuevo la vista
                 DatosCobro.lista.setAdapter(adapter);
-
+                DatosCobro.ajustarLista(DatosCobro.lista);
 
                 int precioVenta = 0;
 
