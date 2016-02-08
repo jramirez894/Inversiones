@@ -34,8 +34,7 @@ public class Devolucion extends AppCompatActivity
     {
         arrayList.clear();
 
-        arrayList.add(new Items_Devolucion("Cliente: Miguel", "Producto: Sabanas", "Fecha: 20-10-2015", "Descripcion: Que pereza", R.mipmap.eliminar));
-        arrayList.add(new Items_Devolucion("Cliente: Jeniffer", "Producto: Sabanas", "Fecha: 20-10-2015", "Descripcion: Que pereza", R.mipmap.eliminar));
+        //arrayList.add(new Items_Devolucion("Cliente: Miguel", "Producto: Sabanas", "Fecha: 20-10-2015", "Descripcion: Que pereza", R.mipmap.eliminar));
 
         listaDevolucion.setAdapter(new Adapter_Devolucion(this,arrayList));
     }

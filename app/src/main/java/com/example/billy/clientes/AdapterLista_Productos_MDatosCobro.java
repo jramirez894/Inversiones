@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.billy.constantes.Constantes;
+import com.example.billy.devolucion.Items_Devolucion;
 import com.example.billy.empleado.Empleados;
 import com.example.billy.garantias_product.Items_Garantia;
 import com.example.billy.inversiones.R;
@@ -74,7 +75,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
     String capDescripcion = "";
     String capFecha = "";
     String cantidadP = "";
-    int posicionListaGarantia = 0;
+    int posicionLista = 0;
 
     String respuestaGarantia = "";
     boolean existe = false;
@@ -282,6 +283,8 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         {
             if(idP.equalsIgnoreCase(Constantes.itemsGarantias.get(l).getIdProducto()) && Constantes.idClienteCliente.equalsIgnoreCase(Constantes.itemsGarantias.get(l).getIdCliente()))
             {
+                //Aqui iria la suma de garantias y devoluciones
+
                 if(cantidadProductos.equalsIgnoreCase(Constantes.itemsGarantias.get(l).getCantidad()))
                 {
                     editDescripcionGarantia.setVisibility(View.GONE);
@@ -294,9 +297,8 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 }
                 else
                 {
-
                     //Para sacar la posicion en la que se encuentra la garantia que fue selecionada.
-                    posicionListaGarantia = l;
+                    posicionLista = l;
 
                     editDescripcionGarantia.setText(Constantes.itemsGarantias.get(l).getDescripcion());
                     editFechaGarantia.setText(Constantes.itemsGarantias.get(l).getFecha());
@@ -310,6 +312,23 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
             }
         }
 
+        //Para mostrar el tiempo de garantia de cada producto
+        String tiempoGarantia = "";
+
+        for (int j = 0; j < M_DatosCobro.arrayListP.size(); j++)
+        {
+            if (idP.equalsIgnoreCase(M_DatosCobro.arrayListP.get(j).getIdProducto()))
+            {
+                tiempoGarantia = M_DatosCobro.arrayListP.get(j).getGarantia();
+
+                if(txtTextoDescripcion.getText().toString().equalsIgnoreCase(""))
+                {
+                    txtTextoDescripcion.setText("Tiempo de garantia: " + tiempoGarantia);
+                }
+            }
+        }
+
+        //Para llenar el spinner con los productos que puede enviar por garantia
         ArrayList<String> arrayListSpin = new ArrayList<String>();
         arrayListSpin.clear();
 
@@ -345,11 +364,11 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                         capFecha = editFechaGarantia.getText().toString();
                         cantidadP = spinCantidadGarantia.getSelectedItem().toString();
 
-                        sumaCantidad = Integer.valueOf(Constantes.itemsGarantias.get(posicionListaGarantia).getCantidad()) + Integer.valueOf(cantidadP);
+                        sumaCantidad = Integer.valueOf(Constantes.itemsGarantias.get(posicionLista).getCantidad()) + Integer.valueOf(cantidadP);
                         cantidadP = String.valueOf(sumaCantidad);
                         //Enviar fecha con hora
 
-                        if(!capFecha.equalsIgnoreCase(Constantes.itemsGarantias.get(posicionListaGarantia).getFecha()))
+                        if(!capFecha.equalsIgnoreCase(Constantes.itemsGarantias.get(posicionLista).getFecha()))
                         {
                             Date date = new Date();
                             DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
@@ -357,7 +376,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                         }
 
                         TareaUpdadteGarantia updadteGarantia = new TareaUpdadteGarantia();
-                        updadteGarantia.execute(Constantes.itemsGarantias.get(posicionListaGarantia).getIdGarantia(),"En espera", capDescripcion, capFecha,cantidadP, Constantes.itemsGarantias.get(posicionListaGarantia).getIdVendedor(),Constantes.itemsGarantias.get(posicionListaGarantia).getIdCliente(), Constantes.itemsGarantias.get(posicionListaGarantia).getIdProducto());
+                        updadteGarantia.execute(Constantes.itemsGarantias.get(posicionLista).getIdGarantia(),"En espera", capDescripcion, capFecha,cantidadP, Constantes.itemsGarantias.get(posicionLista).getIdVendedor(),Constantes.itemsGarantias.get(posicionLista).getIdCliente(), Constantes.itemsGarantias.get(posicionLista).getIdProducto());
                     }
                     else
                     {
@@ -413,39 +432,185 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         View dialoglayout = inflaterAlert.inflate(R.layout.alert_devolucion_mdatoscobro, null);
 
         final EditText editDescripcionDevolucion = (EditText) dialoglayout.findViewById(R.id.editDescripcion_Devolucion_MDatosCobro);
+        final TextView txtTextoDescripcion = (TextView) dialoglayout.findViewById(R.id.txtTiempo_Devolucion_MDatosCobro);
+        final Spinner spinCantidadDevolucion = (Spinner) dialoglayout.findViewById(R.id.spinCantidad_Devolucion_MDatosCobro);
 
-        //Fecha Personalizada para la garantia
+        final View layoutDevolucion = (View) dialoglayout.findViewById(R.id.layoutDevolucion);
+
+        //Fecha Personalizada para la devolucion
         dateFormatterDevolucion = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         editFechaDevolucion = (EditText) dialoglayout.findViewById(R.id.editFecha_Devolucion_MDatosCobro);
         editFechaDevolucion.setInputType(InputType.TYPE_NULL);
         editFechaDevolucion.requestFocus();
         setDateTimeFieldDevolucion();
 
+        //Llenar el spinner segun la cantidad que haya registrada
+
+        String idVenta = posicionItems.getIdVenta();
+        String cantidadProductos = "";
+        String idP = "";
+
+        //variables para definir las probabilidades del usuario
+        boolean accionAceptar = false;
+        boolean verificarDevolucion = false;
+
+        for(int j = 0; j < Constantes.itemsVenta.size(); j++)
+        {
+            if(idVenta.equalsIgnoreCase(Constantes.itemsVenta.get(j).getIdVenta()))
+            {
+                if(Constantes.itemsVenta.get(j).getNuevaCantidad().equalsIgnoreCase("0"))
+                {
+                    cantidadProductos = Constantes.itemsVenta.get(j).getCantidad();
+                    idP = Constantes.itemsVenta.get(j).getIdProducto();
+                }
+                else
+                {
+                    cantidadProductos = Constantes.itemsVenta.get(j).getNuevaCantidad();
+                    idP = Constantes.itemsVenta.get(j).getIdProducto();
+                }
+            }
+        }
+
+        //Para saber si todas las devoluciones ya estan registradas
+
+        for(int l = 0; l < Constantes.itemsDevoluciones.size(); l++)
+        {
+            if(idP.equalsIgnoreCase(Constantes.itemsDevoluciones.get(l).getIdProducto()) && Constantes.idClienteCliente.equalsIgnoreCase(Constantes.itemsDevoluciones.get(l).getIdCliente()))
+            {
+                //Aqui va la suma de garantias y devoluciones
+
+                if(cantidadProductos.equalsIgnoreCase(Constantes.itemsDevoluciones.get(l).getCantidad()))
+                {
+                    editDescripcionDevolucion.setVisibility(View.GONE);
+                    editFechaDevolucion.setVisibility(View.GONE);
+                    layoutDevolucion.setVisibility(View.GONE);
+
+                    txtTextoDescripcion.setText("Los productos ya se encuentran registrados por devolución");
+
+                    accionAceptar = true;
+                }
+                else
+                {
+                    //Para sacar la posicion en la que se encuentra la devolucion que fue selecionada.
+                    posicionLista = l;
+
+                    editDescripcionDevolucion.setText(Constantes.itemsDevoluciones.get(l).getDescripcion());
+                    editFechaDevolucion.setText(Constantes.itemsDevoluciones.get(l).getFecha());
+
+                    //resta para la cantidad de los productos que estan registrados por devolucion
+                    int canP = Integer.valueOf(cantidadProductos) - Integer.valueOf(Constantes.itemsDevoluciones.get(l).getCantidad());
+                    cantidadProductos = String.valueOf(canP);
+
+                    verificarDevolucion = true;
+                }
+            }
+        }
+
+        //Para mostrar el tiempo de garantia de cada producto
+        String tiempoGarantia = "";
+
+        for (int j = 0; j < M_DatosCobro.arrayListP.size(); j++)
+        {
+            if (idP.equalsIgnoreCase(M_DatosCobro.arrayListP.get(j).getIdProducto()))
+            {
+                tiempoGarantia = M_DatosCobro.arrayListP.get(j).getGarantia();
+
+                if(txtTextoDescripcion.getText().toString().equalsIgnoreCase(""))
+                {
+                    txtTextoDescripcion.setText("Tiempo de garantia: " + tiempoGarantia);
+                }
+            }
+        }
+
+        //Para llenar el spinner con los productos que puede enviar por devolucion
+        ArrayList<String> arrayListSpin = new ArrayList<String>();
+        arrayListSpin.clear();
+
+        for(int m = 1; m <= Integer.valueOf(cantidadProductos); m++)
+        {
+            arrayListSpin.add(String.valueOf(m));
+        }
+
+        spinCantidadDevolucion.setAdapter(new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, arrayListSpin));
+
+        //Alerta personalizada
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setIcon(R.mipmap.devolucion);
-        builder.setTitle("Devolcion");
+        builder.setTitle("Devolución");
         builder.setView(dialoglayout);
+        final boolean finalAccionAceptar = accionAceptar;
+        final boolean finalVerificarDevolucion = verificarDevolucion;
         builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
         {
             @Override
             public void onClick(DialogInterface dialogInterface, int i)
             {
-                //Capturar variables de la alerta
-                String capDescripcion = editDescripcionDevolucion.getText().toString();
-                String capFecha = editFechaDevolucion.getText().toString();
-                if (capDescripcion.equals("")||
-                        capFecha.equals(""))
+                if (finalAccionAceptar)
                 {
-                    Toast.makeText(getContext(), "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
+                    //Sin Accion
                 }
                 else
                 {
-                    //Borrar un item de la lista
-                    ArrayAdapter adapter = new AdapterLista_Productos_MDatosCobro(getContext(), M_DatosCobro.arrayList);
-                    adapter.remove(posicionItems);
-                    //Se carga de nuevo la vista
-                    M_DatosCobro.lista.setAdapter(adapter);
-                    Toast.makeText(getContext(), "Producto Registrado por Devolucion", Toast.LENGTH_SHORT).show();
+                    if (finalVerificarDevolucion)
+                    {
+                        //Capturar variables de la alerta
+                        capDescripcion = editDescripcionDevolucion.getText().toString();
+                        capFecha = editFechaDevolucion.getText().toString();
+                        cantidadP = spinCantidadDevolucion.getSelectedItem().toString();
+
+                        sumaCantidad = Integer.valueOf(Constantes.itemsDevoluciones.get(posicionLista).getCantidad()) + Integer.valueOf(cantidadP);
+                        cantidadP = String.valueOf(sumaCantidad);
+                        //Enviar fecha con hora
+
+                        if(!capFecha.equalsIgnoreCase(Constantes.itemsDevoluciones.get(posicionLista).getFecha()))
+                        {
+                            Date date = new Date();
+                            DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
+                            capFecha = capFecha + " " + hourFormat.format(date);
+                        }
+
+                        TareaUpdadteDevolucion updadteDevolucion= new TareaUpdadteDevolucion();
+                        updadteDevolucion.execute(Constantes.itemsDevoluciones.get(posicionLista).getIdDevolucion(),"En espera", capDescripcion, capFecha,cantidadP, Constantes.itemsDevoluciones.get(posicionLista).getIdVendedor(),Constantes.itemsDevoluciones.get(posicionLista).getIdCliente(), Constantes.itemsDevoluciones.get(posicionLista).getIdProducto());
+                    }
+                    else
+                    {
+                        //Capturar variables de la alerta
+                        capDescripcion = editDescripcionDevolucion.getText().toString();
+                        capFecha = editFechaDevolucion.getText().toString();
+                        if (capDescripcion.equals("") || capFecha.equals(""))
+                        {
+                            Toast.makeText(getContext(), "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            for (int j = 0; j < M_DatosCobro.arrayListP.size(); j++)
+                            {
+                                if (posicionItems.getNombre().equalsIgnoreCase(M_DatosCobro.arrayListP.get(j).getNombre()))
+                                {
+                                    idProducto = M_DatosCobro.arrayListP.get(j).getIdProducto();
+                                }
+                            }
+
+                            if(M_DetalleCobro.idVendedor.equalsIgnoreCase(""))
+                            {
+                                idVendedor = Constantes.idVendedorFactura;
+                            }
+                            else
+                            {
+                                idVendedor = M_DetalleCobro.idVendedor;
+                            }
+
+                            //Enviar fecha con hora
+                            Date date = new Date();
+                            DateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
+                            capFecha = capFecha + " " + hourFormat.format(date);
+
+                            cantidadP = spinCantidadDevolucion.getSelectedItem().toString();
+
+                            TareaCreateReturn tareaCreateReturn = new TareaCreateReturn();
+                            tareaCreateReturn.execute("En espera", capDescripcion, capFecha, cantidadP, idVendedor, Constantes.idClienteCliente, idProducto);
+                        }
+                    }
                 }
 
             }
@@ -505,7 +670,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         }
     }
 
-    //Clases Asyntask para agregar una factura
+    //Clases Asyntask para agregar una garantia
     private class TareaCreateWarranty extends AsyncTask<String,Integer,Boolean>
     {
         private String respStr;
@@ -675,7 +840,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 TareaObtenerGarantias tareaObtenerGarantias = new TareaObtenerGarantias();
                 tareaObtenerGarantias.execute();
 
-                Toast.makeText(getContext(), "Los Cambios Fueron Exitosos (update)", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
             }
             else
             {
@@ -724,6 +889,262 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                     if(obj.getString("estado").equalsIgnoreCase("En espera") || obj.getString("estado").equalsIgnoreCase("Pendiente"))
                     {
                         Constantes.itemsGarantias.add(new Items_Garantia(obj.getString("idGarantia"), obj.getString("estado"), obj.getString("descripcion"), obj.getString("fecha"), obj.getString("cantidad"), obj.getString("idVendedor"), obj.getString("idCliente"), obj.getString("idProducto")));
+                    }
+
+                    resul = true;
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(getActivity(), respStr, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //Clases Asyntask para agregar una devolucion
+    private class TareaCreateReturn extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        JSONObject respJSON;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerDevolucion.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("estado", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("descripcion", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("fecha", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("cantidad", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("idCliente", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("idProducto",  params[6]));
+            nameValuePairs.add(new BasicNameValuePair("option",  "createReturn"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                respJSON = new JSONObject(respStr);
+                //JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                respuesta= respJSON.get("items");
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            if (resul)
+            {
+                //Obtener las garantias si las hay
+                Constantes.itemsDevoluciones.clear();
+                TareaObtenerDevoluciones tareaObtenerDevoluciones = new TareaObtenerDevoluciones();
+                tareaObtenerDevoluciones.execute();
+
+                Toast.makeText(getContext(), "Producto Registrado por Devolución", Toast.LENGTH_LONG).show();
+            }
+            else
+            {
+                Toast.makeText(getContext(), "Error de servidor", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    //Clases Asyntask para actualizar una garantia
+    private class TareaUpdadteDevolucion extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerDevolucion.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("idDevolucion", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("estado", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("descripcion", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("fecha", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("cantidad", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("idCliente", params[6]));
+            nameValuePairs.add(new BasicNameValuePair("idProducto", params[7]));
+            nameValuePairs.add(new BasicNameValuePair("option", "updateReturn"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                respuestaGarantia = String.valueOf(objItems);
+
+                if(respuestaGarantia.equalsIgnoreCase("No Existe"))
+                {
+                    existe = false;
+                }
+                else
+                {
+                    existe = true;
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(Perfil.this, respStr, Toast.LENGTH_SHORT).show();
+
+            if(existe)
+            {
+                //Obtener las garantias si las hay
+                Constantes.itemsDevoluciones.clear();
+                TareaObtenerDevoluciones tareaObtenerDevoluciones = new TareaObtenerDevoluciones();
+                tareaObtenerDevoluciones.execute();
+
+                Toast.makeText(getContext(), "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                Toast.makeText(getContext(), "Error al Modificar Usuario", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    //Clases Asyntask para traer los datos de la tabla garantias
+    private class TareaObtenerDevoluciones extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerDevolucion.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "getAllReturn"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+                //JSONObject obj = objItems.getJSONObject(0);
+
+                //String obj
+
+                for(int i=0; i<objVendedores.length(); i++)
+                {
+                    JSONObject obj = objVendedores.getJSONObject(i);
+
+                    if(obj.getString("estado").equalsIgnoreCase("En espera") || obj.getString("estado").equalsIgnoreCase("Pendiente"))
+                    {
+                        Constantes.itemsDevoluciones.add(new Items_Devolucion(obj.getString("idDevolucion"), obj.getString("estado"), obj.getString("descripcion"), obj.getString("fecha"), obj.getString("cantidad"), obj.getString("idVendedor"), obj.getString("idCliente"), obj.getString("idProducto")));
                     }
 
                     resul = true;

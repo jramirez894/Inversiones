@@ -27,6 +27,7 @@ import com.example.billy.empleado.AdapterListaEmpleado;
 import com.example.billy.empleado.ItemListaEmpleado;
 import com.example.billy.empleado.V_Empleado;
 import com.example.billy.inversiones.R;
+import com.example.billy.menu_principal.ItemListaPersonalizada;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -85,10 +86,9 @@ public class Productos extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
             {
-                ItemsListaProductos_Productos producto = arrayList.get(position);
+                ItemsListaProductos_Productos producto = arrayListFiltrado.get(position);
 
                 Intent intent = new Intent(Productos.this, V_Producto.class);
-
                 intent.putExtra("nombre", producto.getNombre());
                 intent.putExtra("descripcion", producto.getDescripcion());
                 intent.putExtra("cantidad", producto.getCantidad());

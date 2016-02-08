@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.billy.constantes.Constantes;
+import com.example.billy.devolucion.Items_Devolucion;
 import com.example.billy.garantias_product.Items_Garantia;
 import com.example.billy.inversiones.R;
 import com.example.billy.menu_principal.AdapterListaPersonalizada;
@@ -116,10 +117,14 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
 
         lista=(ListView)view.findViewById(R.id.listViewListaProductos_DatosCobro_Mcliente);
 
-        //Obtener las garantias si las hay
+        //Obtener las garantias y devoluciones si las hay
         Constantes.itemsGarantias.clear();
         TareaObtenerGarantias tareaObtenerGarantias = new TareaObtenerGarantias();
         tareaObtenerGarantias.execute();
+
+        Constantes.itemsDevoluciones.clear();
+        TareaObtenerDevoluciones tareaObtenerDevoluciones = new TareaObtenerDevoluciones();
+        tareaObtenerDevoluciones.execute();
 
         ActualizarLista();
         setDateTimeFieldPendiente();
@@ -272,7 +277,9 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                 String disponibles = "";
                 String cantidad = "";
                 String idProducto = "";
+
                 String garantias = "";
+                String devoluciones = "";
 
                 nombreProducto = arrayList.get(position).getNombre();
 
@@ -319,7 +326,16 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                     }
                 }
 
-                AlertaInfoProducto(nombreProducto, descripcion, precioVenta, cantidad, disponibles, idProducto, position, garantias);
+                //Para saber si tiene devoluciones
+                for(int i = 0; i < Constantes.itemsDevoluciones.size(); i++)
+                {
+                    if(idProducto.equalsIgnoreCase(Constantes.itemsDevoluciones.get(i).getIdProducto()))
+                    {
+                        devoluciones = Constantes.itemsDevoluciones.get(i).getCantidad();
+                    }
+                }
+
+                AlertaInfoProducto(nombreProducto, descripcion, precioVenta, cantidad, disponibles, idProducto, position, garantias, devoluciones);
             }
         });
 
@@ -467,7 +483,7 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                 arrayListP.clear();
                 arrayListNombresProductos.clear();
 
-                for(int i=0; i<objVendedores.length(); i++)
+                for(int i=0; i < objVendedores.length(); i++)
                 {
                     JSONObject obj = objVendedores.getJSONObject(i);
                     arrayListP.add(new ItemsListaProductos_Productos(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, obj.getString("idProducto"), obj.getString("descripcion"), obj.getString("cantidad"), obj.getString("tiempoGarantia"), obj.getString("precioCompra"), obj.getString("precioVenta"), obj.getString("idCategoria")));
@@ -509,7 +525,7 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
         }
     }
 
-    public void AlertaInfoProducto(final String nom, String descri, String precio, final String can, String dispo, final String idProducto, final int posicionLista, final String garantias)
+    public void AlertaInfoProducto(final String nom, String descri, String precio, final String can, String dispo, final String idProducto, final int posicionLista, final String garantias, final String devolucion)
     {
         LayoutInflater inflaterAlert = (LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View dialoglayout = inflaterAlert.inflate(R.layout.alert_info_producto, null);
@@ -519,8 +535,10 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
         final EditText disponibles = (EditText)dialoglayout.findViewById(R.id.editDisponibles_AlertInfo);
         final EditText cantidad = (EditText)dialoglayout.findViewById(R.id.editCantidad_AlertInfo);
         final EditText editGarantia = (EditText)dialoglayout.findViewById(R.id.editGarantias_AlertInfo);
+        final EditText editDevolucion = (EditText)dialoglayout.findViewById(R.id.editDevolucion_AlertInfo);
 
         final View layoutGarantia = (View)dialoglayout.findViewById(R.id.layoutGarantia);
+        final View layoutDevolucion = (View)dialoglayout.findViewById(R.id.layoutDevolucion);
 
         descripcion.setText(descri);
         precioVenta.setText(precio);
@@ -535,6 +553,16 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
         else
         {
             editGarantia.setText(garantias);
+        }
+
+        //Para saber si hay que mostrar o no las devoluciones
+        if(devolucion.equalsIgnoreCase(""))
+        {
+            layoutDevolucion.setVisibility(View.GONE);
+        }
+        else
+        {
+            editDevolucion.setText(devolucion);
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -754,6 +782,82 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                     if(obj.getString("estado").equalsIgnoreCase("En espera") || obj.getString("estado").equalsIgnoreCase("Pendiente"))
                     {
                         Constantes.itemsGarantias.add(new Items_Garantia(obj.getString("idGarantia"), obj.getString("estado"), obj.getString("descripcion"), obj.getString("fecha"), obj.getString("cantidad"), obj.getString("idVendedor"), obj.getString("idCliente"), obj.getString("idProducto")));
+                    }
+
+                    resul = true;
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(getActivity(), respStr, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //Clases Asyntask para traer los datos de la tabla devoluciones
+    private class TareaObtenerDevoluciones extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerDevolucion.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "getAllReturn"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+                //JSONObject obj = objItems.getJSONObject(0);
+
+                //String obj
+
+                for(int i=0; i<objVendedores.length(); i++)
+                {
+                    JSONObject obj = objVendedores.getJSONObject(i);
+
+                    if(obj.getString("estado").equalsIgnoreCase("En espera") || obj.getString("estado").equalsIgnoreCase("Pendiente"))
+                    {
+                        Constantes.itemsDevoluciones.add(new Items_Devolucion(obj.getString("idDevolucion"), obj.getString("estado"), obj.getString("descripcion"), obj.getString("fecha"), obj.getString("cantidad"), obj.getString("idVendedor"), obj.getString("idCliente"), obj.getString("idProducto")));
                     }
 
                     resul = true;

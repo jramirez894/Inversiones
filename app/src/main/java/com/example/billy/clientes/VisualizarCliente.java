@@ -82,7 +82,7 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
     public static String idClienteCliente;
 
     //Tabla Factura
-    public static  String idFactura;
+    public static String idFactura;
     public static String fechaFactura;
     public static String totalFactura;
     public static String valorRestante;

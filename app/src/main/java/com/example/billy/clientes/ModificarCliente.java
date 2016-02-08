@@ -4,9 +4,11 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -28,6 +30,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.billy.base_datos.ConexionBD;
 import com.example.billy.constantes.Constantes;
 import com.example.billy.interfaces_empleado.PrincipalEmpleado;
 import com.example.billy.menu_principal.PagerAdapter;
@@ -102,6 +105,9 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
     //Alerta Cargando
     ProgressDialog progressDialog;
 
+    //Base de datos para agregar fechas pendientes
+    SQLiteDatabase db;
+
     @Override
     public void onClick(View view)
     {
@@ -162,6 +168,8 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modificar_cliente);
+
+        db = ConexionBD.getDb();
 
         ActionBar actionBar =getSupportActionBar();
         actionBar.setTitle("Volver");
@@ -403,6 +411,11 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                                 TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
                                 tareaUpdateClient.execute(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa, editCalificacion_AlertaMCliente.getText().toString());
 
+                                if(!M_DatosCobro.fechaPendiente.getText().toString().equalsIgnoreCase(""))
+                                {
+                                    guardarFechaPendiente();
+                                }
+
                                 AlertaCargando();
                             }
                             else
@@ -418,6 +431,11 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                                         TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
                                         tareaUpdateClient.execute(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa, editCalificacion_AlertaMCliente.getText().toString());
 
+                                        if(!M_DatosCobro.fechaPendiente.getText().toString().equalsIgnoreCase(""))
+                                        {
+                                            guardarFechaPendiente();
+                                        }
+
                                         AlertaCargando();
                                     }
                                 }
@@ -432,6 +450,11 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                                     {
                                         TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
                                         tareaUpdateClient.execute(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa, editCalificacion_AlertaMCliente.getText().toString());
+
+                                        if(!M_DatosCobro.fechaPendiente.getText().toString().equalsIgnoreCase(""))
+                                        {
+                                            guardarFechaPendiente();
+                                        }
 
                                         AlertaCargando();
                                     }
@@ -471,6 +494,25 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
             alerta.setCancelable(false);
             alerta.show();
         }
+    }
+
+    public void guardarFechaPendiente()
+    {
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("nombre", Constantes.nombreCliente);
+        contentValues.put("idCliente", Constantes.idClienteCliente);
+        contentValues.put("cedula", Constantes.cedulaCliente);
+        contentValues.put("direccion", Constantes.direccionCliente);
+        contentValues.put("telefono", Constantes.telefonoCliente);
+        contentValues.put("correo", Constantes.correoCliente);
+        contentValues.put("nombreEmpresa", Constantes.nombreEmpresaCliente);
+        contentValues.put("direccionEmpresa", Constantes.direccionEmpresaCliente);
+        contentValues.put("estado", Constantes.estadoCliente);
+        contentValues.put("calificacion", Constantes.calificacionCliente);
+        contentValues.put("fechaPendiente", M_DatosCobro.fechaPendiente.getText().toString());
+
+        db.insert("Pendientes", null, contentValues);
     }
 
     private void setDateTimeField()

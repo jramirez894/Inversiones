@@ -87,6 +87,8 @@ public class AdapterListaPersonalizada extends ArrayAdapter
     String correo = "";
     String nombreEmpresa = "";
     String direccionEmpresa = "";
+    String estado = "";
+    String calificacion = "";
 
     //Tabla Factura
     public static String idFactura;
@@ -139,6 +141,8 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                         correo = posicionItems.getCorreo();
                         nombreEmpresa = posicionItems.getNombreEmpresa();
                         direccionEmpresa = posicionItems.getDireccionEmpresa();
+                        estado = posicionItems.getEstado();
+                        calificacion = posicionItems.getCalificacion();
 
                         AlertaCargando();
 
@@ -618,6 +622,8 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                 Constantes.nombreEmpresaCliente = nombreEmpresa;
                 Constantes.direccionEmpresaCliente = direccionEmpresa;
                 Constantes.idClienteCliente = idClienteCliente;
+                Constantes.estadoCliente = estado;
+                Constantes.calificacionCliente = calificacion;
                 Constantes.idFactura = idFactura;
                 Constantes.fechaFactura = fechaFactura;
                 Constantes.totalFactura = totalFactura;

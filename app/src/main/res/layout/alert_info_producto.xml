@@ -115,8 +115,33 @@
             android:layout_weight="1"
             android:inputType="number"
             android:gravity="center"
-            android:enabled="false"
-            android:layout_marginTop="5dp"/>
+            android:enabled="false"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/layoutDevolucion">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:text="Devolución: "
+            android:textSize="20sp"
+            android:textColor="@android:color/background_dark"/>
+
+        <EditText
+            android:id="@+id/editDevolucion_AlertInfo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:inputType="number"
+            android:gravity="center"
+            android:enabled="false"/>
 
     </LinearLayout>
 

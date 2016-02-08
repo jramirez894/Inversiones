@@ -46,11 +46,11 @@ public class Adapter_Devolucion extends ArrayAdapter
         TextView descripcion = (TextView)convertView.findViewById(R.id.textViewDescripcion_ItemsDevolucion);
         ImageView eliminar = (ImageView)convertView.findViewById(R.id.imageEliminar_ItemsDevolucion);
 
-        nombre.setText(items.getNombre());
-        nomProducto.setText(items.getNomProducto());
+        //nombre.setText(items.getNombre());
+        //nomProducto.setText(items.getNomProducto());
         fecha.setText(items.getFecha());
         descripcion.setText(items.getDescripcion());
-        eliminar.setImageResource(items.getEliminar());
+        //eliminar.setImageResource(items.getEliminar());
 
         eliminar.setOnClickListener(new View.OnClickListener()
         {

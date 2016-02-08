@@ -242,7 +242,6 @@ public class PrincipalMenu extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
             {
-
                 ItemListaPersonalizada cliente = items.get(position);
 
                 cedulaCliente = cliente.getCedula();
