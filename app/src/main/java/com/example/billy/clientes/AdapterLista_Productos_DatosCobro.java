@@ -151,18 +151,21 @@ public class AdapterLista_Productos_DatosCobro extends ArrayAdapter
         final EditText disponibles = (EditText)dialoglayout.findViewById(R.id.editDisponibles_AlertInfo);
         final EditText cantidad = (EditText)dialoglayout.findViewById(R.id.editCantidad_AlertInfo);
         final EditText tiempoGarantia = (EditText)dialoglayout.findViewById(R.id.editGarantias_AlertInfo);
+        final EditText tiempoDevolucion = (EditText)dialoglayout.findViewById(R.id.editDevolucion_AlertInfo);
 
         descripcion.setText(descri);
         precioVenta.setText(precio);
         disponibles.setText(dispo);
         cantidad.setText(can);
         tiempoGarantia.setText(tiempoG);
+        tiempoDevolucion.setText(tiempoG);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setIcon(R.mipmap.productos);
         builder.setTitle(nom);
         builder.setView(dialoglayout);
-        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
+        {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String capVenta = precioVenta.getText().toString();

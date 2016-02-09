@@ -1,0 +1,160 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    style="@style/fondo"
+    tools:context="com.example.billy.garantias_product.VisualizarGarantia">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Información Devolución"
+            android:textSize="25sp"
+            android:gravity="center"
+            android:textColor="@android:color/background_dark"
+            android:textStyle="bold"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre Cliente:"
+                    android:textSize="17sp"
+                    android:gravity="left"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@android:color/background_dark" />
+
+                <EditText
+                    android:id="@+id/editTextNombreCliente_VDevolucion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:enabled="false"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Telefono Cliente:"
+                    android:textSize="17sp"
+                    android:gravity="left"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@android:color/background_dark" />
+
+                <EditText
+                    android:id="@+id/editTextTelefonoCliente_VDevolucion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:enabled="false"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre Producto:"
+                    android:textSize="17sp"
+                    android:gravity="left"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@android:color/background_dark" />
+
+                <EditText
+                    android:id="@+id/editTextNombreProducto_VDevolucion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:enabled="false"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cantidad Producto:"
+                    android:textSize="17sp"
+                    android:gravity="left"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@android:color/background_dark" />
+
+                <EditText
+                    android:id="@+id/editTextCantidadProducto_VDevolucion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:enabled="false"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Fecha Devolución:"
+                    android:textSize="17sp"
+                    android:gravity="left"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@android:color/background_dark" />
+
+                <EditText
+                    android:id="@+id/editTextFecha_VDevolucion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:inputType="textPersonName"
+                    android:enabled="false"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Descripción:"
+                    android:textSize="17sp"
+                    android:gravity="left"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@android:color/background_dark" />
+
+                <EditText
+                    android:id="@+id/editTextDescripcion_VDevolucion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:enabled="false"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Estado Devolución:"
+                        android:layout_gravity="center"
+                        android:textSize="17sp"
+                        android:gravity="center"
+                        android:textColor="@android:color/background_dark" />
+
+                    <Spinner
+                        android:id="@+id/spinEstado_VDevolucion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"></Spinner>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</LinearLayout>

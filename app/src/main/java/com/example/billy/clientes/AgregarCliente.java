@@ -874,8 +874,7 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
         }
     }
 
-    //Clases Asyntask para traer los clientes
-
+    //Clases Asyntask para traer las facturas
     private class TareaListadoBill extends AsyncTask<String,Integer,Boolean>
     {
         private String respStr;

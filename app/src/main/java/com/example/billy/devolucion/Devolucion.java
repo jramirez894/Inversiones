@@ -1,20 +1,81 @@
 package com.example.billy.devolucion;
 
+import android.annotation.TargetApi;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
+import com.example.billy.empleado.ItemListaEmpleado;
+import com.example.billy.garantias_product.Adapter_Garantia;
+import com.example.billy.garantias_product.Items_Garantia_Visualizar;
+import com.example.billy.garantias_product.VisualizarGarantia;
 import com.example.billy.inversiones.R;
+import com.example.billy.menu_principal.PrincipalMenu;
+import com.example.billy.productos.ItemsListaProductos_Productos;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Devolucion extends AppCompatActivity
 {
-    public static ListView  listaDevolucion;
-    public static ArrayList<Items_Devolucion>arrayList = new ArrayList<Items_Devolucion>();
+    public static ListView listaDevolucion;
+    public static ArrayList<Items_Devolucion> arrayList = new ArrayList<Items_Devolucion>();
+
+    public static ArrayList<ItemsListaProductos_Productos> arrayListProductos = new ArrayList<ItemsListaProductos_Productos>();
+
+    public static ArrayList<ItemListaEmpleado> arrayListVendedores = new ArrayList<ItemListaEmpleado>();
+    public static ArrayList<String> arrayListNombresVendedores = new ArrayList<String>();
+
+
+    AutoCompleteTextView autoCompleteTextViewBuscar;
+    RadioGroup radioGroup;
+    RadioButton rbVerTodos_Devolucion;
+    RadioButton rbVendedor_Devolucion;
+
+    boolean existe = false;
+    String respuesta = "";
+
+    String idVendedor = "";
+
+    //Array que sirve para filtrar por vendedor
+    public static ArrayList<Items_Devolucion> arrayListFiltroVendedor = new ArrayList<Items_Devolucion>();
+
+    boolean verificar;
+
+    //Para sacar los datos de la garantia que sea seleccionada
+    String idDevolucion = "";
+
+    //Alerta Cargando
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -26,17 +87,131 @@ public class Devolucion extends AppCompatActivity
         actionBar.setTitle("Volver");
         actionBar.show();
 
-        listaDevolucion =(ListView)findViewById(R.id.listView_Devolucion);
+        listaDevolucion = (ListView)findViewById(R.id.listView_Devolucion);
         ActualizarLista();
+
+        autoCompleteTextViewBuscar = (AutoCompleteTextView)findViewById(R.id.complete_Devolucion);
+        radioGroup = (RadioGroup)findViewById(R.id.radioButton_Devolucion);
+
+        autoCompleteTextViewBuscar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String nombre = autoCompleteTextViewBuscar.getText().toString();
+                int posicion = 0;
+
+                for (int i = 0; i < arrayListVendedores.size(); i++) {
+                    if (nombre.equalsIgnoreCase(arrayListVendedores.get(i).getNombre())) {
+                        posicion = i;
+                        break;
+                    }
+                }
+
+                ItemListaEmpleado empleado = arrayListVendedores.get(posicion);
+                idVendedor = empleado.getIdUsuario();
+
+                arrayListFiltroVendedor.clear();
+
+                for (int j = 0; j < arrayList.size(); j++)
+                {
+                    if (idVendedor.equalsIgnoreCase(arrayList.get(j).getIdVendedor()))
+                    {
+                        arrayListFiltroVendedor.add(new Items_Devolucion(arrayList.get(j).getIdDevolucion(), arrayList.get(j).getNombre(), arrayList.get(j).getTelefono(), arrayList.get(j).getNombreProducto(), arrayList.get(j).getCantidad(), arrayList.get(j).getFecha(), arrayList.get(j).getDescripcion(), arrayList.get(j).getEstado(), arrayList.get(j).getIdVendedor(), arrayList.get(j).getIdCliente(), arrayList.get(j).getIdProducto()));
+                    }
+                }
+
+                listaDevolucion.setAdapter(new Adapter_Devolucion(Devolucion.this, arrayListFiltroVendedor));
+            }
+        });
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+                if (checkedId == R.id.rbVerTodos_Devolucion)
+                {
+                    listaDevolucion.setAdapter(new Adapter_Devolucion(Devolucion.this, arrayList));
+                    autoCompleteTextViewBuscar.setEnabled(false);
+                    autoCompleteTextViewBuscar.setText("");
+                }
+                else
+                {
+                    if (checkedId == R.id.rbVendedor_Devolucion)
+                    {
+                        autoCompleteTextViewBuscar.setEnabled(true);
+                    }
+                }
+            }
+        });
+
+        //para buscar la garantia que haya sido seleccionada
+
+        rbVendedor_Devolucion = (RadioButton) findViewById(R.id.rbVendedor_Devolucion);
+        rbVerTodos_Devolucion = (RadioButton) findViewById(R.id.rbVerTodos_Devolucion);
+
+        listaDevolucion.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                if(rbVendedor_Devolucion.isChecked())
+                {
+                    idDevolucion = arrayListFiltroVendedor.get(position).getIdDevolucion();
+
+                    Intent intent = new Intent(Devolucion.this, VisualizarDevolucion.class);
+                    intent.putExtra("idDevolucion", idDevolucion);
+                    intent.putExtra("estado", arrayListFiltroVendedor.get(position).getEstado());
+                    intent.putExtra("descripcion", arrayListFiltroVendedor.get(position).getDescripcion());
+                    intent.putExtra("fecha", arrayListFiltroVendedor.get(position).getFecha());
+                    intent.putExtra("cantidad", arrayListFiltroVendedor.get(position).getCantidad());
+                    intent.putExtra("idVendedor", arrayListFiltroVendedor.get(position).getIdVendedor());
+                    intent.putExtra("idCliente", arrayListFiltroVendedor.get(position).getIdCliente());
+                    intent.putExtra("idProducto", arrayListFiltroVendedor.get(position).getIdProducto());
+                    intent.putExtra("tipo", "Vendedor");
+                    startActivity(intent);
+                }
+                else
+                {
+                    if (rbVerTodos_Devolucion.isChecked())
+                    {
+                        idDevolucion = arrayList.get(position).getIdDevolucion();
+
+                        Intent intent = new Intent(Devolucion.this, VisualizarDevolucion.class);
+                        intent.putExtra("idDevolucion", idDevolucion);
+                        intent.putExtra("estado", arrayList.get(position).getEstado());
+                        intent.putExtra("descripcion", arrayList.get(position).getDescripcion());
+                        intent.putExtra("fecha", arrayList.get(position).getFecha());
+                        intent.putExtra("cantidad", arrayList.get(position).getCantidad());
+                        intent.putExtra("idVendedor", arrayList.get(position).getIdVendedor());
+                        intent.putExtra("idCliente", arrayList.get(position).getIdCliente());
+                        intent.putExtra("idProducto", arrayList.get(position).getIdProducto());
+                        intent.putExtra("tipo", "Todos");
+                        startActivity(intent);
+                    }
+                }
+            }
+        });
+    }
+
+    public void AlertaCargando()
+    {
+        //Alerta que carga mientras se cargan los Clientes
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.setCancelable(false);
     }
 
     public void ActualizarLista()
     {
+        AlertaCargando();
+
+        arrayListProductos.clear();
         arrayList.clear();
 
-        //arrayList.add(new Items_Devolucion("Cliente: Miguel", "Producto: Sabanas", "Fecha: 20-10-2015", "Descripcion: Que pereza", R.mipmap.eliminar));
-
-        listaDevolucion.setAdapter(new Adapter_Devolucion(this,arrayList));
+        TareaProductos tareaProductos = new TareaProductos();
+        tareaProductos.execute();
     }
 
     @Override
@@ -56,5 +231,269 @@ public class Devolucion extends AppCompatActivity
         int id = item.getItemId();
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //Clases Asyntask para traer los datos de la tabla productos
+    private class TareaProductos extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerProducto.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "getAllProduct"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+                //JSONObject obj = objItems.getJSONObject(0);
+
+                //String obj
+
+                for(int i=0; i<objVendedores.length(); i++)
+                {
+                    JSONObject obj = objVendedores.getJSONObject(i);
+                    arrayListProductos.add(new ItemsListaProductos_Productos(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, obj.getString("idProducto"), obj.getString("descripcion"), obj.getString("cantidad"), obj.getString("tiempoGarantia"), obj.getString("precioCompra"), obj.getString("precioVenta"), obj.getString("idCategoria")));
+
+                    resul = true;
+                }
+
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            TareaObtenerDevoluciones tareaObtenerDevoluciones = new TareaObtenerDevoluciones();
+            tareaObtenerDevoluciones.execute();
+        }
+    }
+
+    //Clases Asyntask para traer los datos de la tabla productos
+
+    private class TareaObtenerDevoluciones extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerDevolucion.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "getAllReturn"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objDevoluciones = objItems.getJSONArray(0);
+
+                for(int i=0; i < objDevoluciones.length(); i++)
+                {
+                    JSONObject obj = objDevoluciones.getJSONObject(i);
+
+                    if(obj.getString("estado").equalsIgnoreCase("En espera") || obj.getString("estado").equalsIgnoreCase("Pendiente"))
+                    {
+                        //Para sacar el nombre y el telefono de cada cliente
+                        String idCliente = obj.getString("idCliente");
+                        String nom = "";
+                        String tel = "";
+
+                        for(int j = 0; j < PrincipalMenu.items.size(); j++)
+                        {
+                            if(idCliente.equalsIgnoreCase(PrincipalMenu.items.get(j).getIdCliente()))
+                            {
+                                nom = PrincipalMenu.items.get(j).getNombreLista();
+                                tel = PrincipalMenu.items.get(j).getTelefono();
+                            }
+                        }
+
+                        //Para sacar el nombre del producto
+                        String idProducto = obj.getString("idProducto");
+                        String nomPr = "";
+
+                        for(int k = 0; k < arrayListProductos.size(); k++)
+                        {
+                            if(idProducto.equalsIgnoreCase(arrayListProductos.get(k).getIdProducto()))
+                            {
+                                nomPr = arrayListProductos.get(k).getNombre();
+                            }
+                        }
+
+                        arrayList.add(new Items_Devolucion(obj.getString("idDevolucion"), nom, tel, nomPr, obj.getString("cantidad"), obj.getString("fecha"), obj.getString("descripcion"), obj.getString("estado"),obj.getString("idVendedor"), obj.getString("idCliente"), obj.getString("idProducto")));
+                    }
+
+                    resul = true;
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            listaDevolucion.setAdapter(new Adapter_Devolucion(Devolucion.this, arrayList));
+
+            TareaListado tareaListado = new TareaListado();
+            tareaListado.execute();
+        }
+    }
+
+    //Clases Asyntask para listar los empleados que hay actualmente en el servidor
+    private class TareaListado extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerLogin.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "listUssers"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+                //JSONObject obj = objItems.getJSONObject(0);
+
+                //String obj
+                respuesta= String.valueOf(objVendedores);
+
+                if(respuesta.equalsIgnoreCase("No Existe"))
+                {
+                    existe = false;
+                }
+                else
+                {
+                    arrayListVendedores.clear();
+                    arrayListNombresVendedores.clear();
+
+                    for(int i=0; i<objVendedores.length(); i++)
+                    {
+                        JSONObject obj = objVendedores.getJSONObject(i);
+                        arrayListVendedores.add(new ItemListaEmpleado(obj.getString("nombre"), R.mipmap.editar, R.mipmap.eliminar, obj.getString("idUsuario"), obj.getString("cedula"), obj.getString("nombre"), obj.getString("direccion"), obj.getString("telefono"), obj.getString("correo"), obj.getString("password")));
+                        arrayListNombresVendedores.add(obj.getString("nombre"));
+                        existe = true;
+                    }
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(Empleados.this, respuesta, Toast.LENGTH_SHORT).show();
+            autoCompleteTextViewBuscar.setAdapter(new ArrayAdapter<String>(Devolucion.this, android.R.layout.simple_dropdown_item_1line, arrayListNombresVendedores));
+
+            progressDialog.dismiss();
+        }
     }
 }

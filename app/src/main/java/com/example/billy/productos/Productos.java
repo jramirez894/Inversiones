@@ -344,7 +344,6 @@ public class Productos extends AppCompatActivity
     }
 
     //Clases Asyntask para traer los datos de la tabla productos
-
     private class TareaProductos extends AsyncTask<String,Integer,Boolean>
     {
         private String respStr;

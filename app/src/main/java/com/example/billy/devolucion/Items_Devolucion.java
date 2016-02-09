@@ -6,10 +6,13 @@ package com.example.billy.devolucion;
 public class Items_Devolucion
 {
     String idDevolucion;
-    String estado;
-    String descripcion;
-    String fecha;
+    String nombre;
+    String telefono;
+    String nombreProducto;
     String cantidad;
+    String fecha;
+    String descripcion;
+    String estado;
     String idVendedor;
     String idCliente;
     String idProducto;
@@ -23,6 +26,44 @@ public class Items_Devolucion
         this.idVendedor = idVendedor;
         this.idCliente = idCliente;
         this.idProducto = idProducto;
+    }
+
+    public Items_Devolucion(String idDevolucion, String nombre, String telefono, String nombreProducto, String cantidad, String fecha, String descripcion, String estado, String idVendedor, String idCliente, String idProducto) {
+        this.idDevolucion = idDevolucion;
+        this.nombre = nombre;
+        this.telefono = telefono;
+        this.nombreProducto = nombreProducto;
+        this.cantidad = cantidad;
+        this.fecha = fecha;
+        this.descripcion = descripcion;
+        this.estado = estado;
+        this.idVendedor = idVendedor;
+        this.idCliente = idCliente;
+        this.idProducto = idProducto;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getNombreProducto() {
+        return nombreProducto;
+    }
+
+    public void setNombreProducto(String nombreProducto) {
+        this.nombreProducto = nombreProducto;
     }
 
     public String getIdDevolucion() {

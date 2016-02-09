@@ -81,8 +81,6 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
     public static ArrayList<ItemsListaProductos_Productos> arrayListP = new ArrayList<ItemsListaProductos_Productos>();
     public static ArrayList<String> arrayListNombresProductos = new ArrayList<String>();
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -320,7 +318,7 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                 //Para saber si tiene garantias
                 for(int i = 0; i < Constantes.itemsGarantias.size(); i++)
                 {
-                    if(idProducto.equalsIgnoreCase(Constantes.itemsGarantias.get(i).getIdProducto()))
+                    if(idProducto.equalsIgnoreCase(Constantes.itemsGarantias.get(i).getIdProducto()) && Constantes.idClienteCliente.equalsIgnoreCase(Constantes.itemsGarantias.get(i).getIdCliente()))
                     {
                         garantias = Constantes.itemsGarantias.get(i).getCantidad();
                     }
@@ -329,7 +327,7 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
                 //Para saber si tiene devoluciones
                 for(int i = 0; i < Constantes.itemsDevoluciones.size(); i++)
                 {
-                    if(idProducto.equalsIgnoreCase(Constantes.itemsDevoluciones.get(i).getIdProducto()))
+                    if(idProducto.equalsIgnoreCase(Constantes.itemsDevoluciones.get(i).getIdProducto()) && Constantes.idClienteCliente.equalsIgnoreCase(Constantes.itemsDevoluciones.get(i).getIdCliente()))
                     {
                         devoluciones = Constantes.itemsDevoluciones.get(i).getCantidad();
                     }

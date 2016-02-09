@@ -3,6 +3,7 @@ package com.example.billy.devolucion;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,54 +41,22 @@ public class Adapter_Devolucion extends ArrayAdapter
 
         Items_Devolucion items = (Items_Devolucion)getItem(position);
 
-        TextView nombre = (TextView)convertView.findViewById(R.id.textViewNombre_ItemsDevolucion);
         TextView nomProducto = (TextView)convertView.findViewById(R.id.textViewNombreProducto_ItemsDevolucion);
         TextView fecha = (TextView)convertView.findViewById(R.id.textViewFecha_ItemsDevolucion);
-        TextView descripcion = (TextView)convertView.findViewById(R.id.textViewDescripcion_ItemsDevolucion);
-        ImageView eliminar = (ImageView)convertView.findViewById(R.id.imageEliminar_ItemsDevolucion);
+        TextView estado = (TextView)convertView.findViewById(R.id.textViewEstado_ItemsDevolucion);
 
-        //nombre.setText(items.getNombre());
-        //nomProducto.setText(items.getNomProducto());
-        fecha.setText(items.getFecha());
-        descripcion.setText(items.getDescripcion());
-        //eliminar.setImageResource(items.getEliminar());
 
-        eliminar.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                posicionItems = (Items_Devolucion) getItem(position);
-                EliminarDevolucion();
-            }
-        });
+        View layout = (View)convertView.findViewById(R.id.layout);
+
+        nomProducto.setText("Producto: " + items.getNombreProducto());
+        fecha.setText("Fecha: " + items.getFecha());
+        estado.setText(items.getEstado());
+
+        //Para cambiar el color de fondo segun el estado de la garantia
+        layout.setBackgroundColor(Color.parseColor("#8fff2109"));
 
         return convertView;
     }
 
-    //Alerta de Confirmacion
-    public void EliminarDevolucion()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setIcon(R.mipmap.borrar);
-        builder.setTitle("Eliminar");
-        builder.setMessage("¿Eliminar Devolucion?");
-        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //Captura la Posicion del item de la lista
 
-                //Borrar un item de la lista
-                ArrayAdapter adapter = new Adapter_Devolucion(getContext(), Devolucion.arrayList);
-                adapter.remove(posicionItems);
-                //Se carga de nuevo la vista
-                Devolucion.listaDevolucion.setAdapter(adapter);
-                Toast.makeText(getContext(), "Se Elimino Devolucion Correctamente", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        builder.setNegativeButton("Cancelar", null);
-        builder.setCancelable(false);
-        builder.show();
-    }
 }

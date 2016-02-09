@@ -72,7 +72,7 @@ public class VisualizarGarantia extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualizar_garantia);
 
-        ActionBar actionBar =getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Volver");
         actionBar.show();
 

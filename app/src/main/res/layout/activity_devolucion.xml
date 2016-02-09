@@ -15,6 +15,52 @@
         android:textColor="@android:color/background_dark"
         android:textStyle="bold"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+        <RadioGroup
+            android:id="@+id/radioButton_Devolucion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbVerTodos_Devolucion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Ver Todos"
+                android:textSize="15sp"
+                android:checked="true"
+                android:textColor="@android:color/background_dark"/>
+
+            <RadioButton
+                android:id="@+id/rbVendedor_Devolucion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Buscar por Vendedor"
+                android:textSize="15sp"
+                android:textColor="@android:color/background_dark"/>
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <AutoCompleteTextView
+        android:id="@+id/complete_Devolucion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Buscar por vendedor"
+        android:layout_marginTop="5dp"
+        android:completionThreshold="1"
+        android:inputType="textPersonName"
+        android:drawableRight="@android:drawable/ic_menu_search"
+        android:enabled="false"/>
+
     <ListView
         android:id="@+id/listView_Devolucion"
         android:layout_width="match_parent"
@@ -22,4 +68,5 @@
         android:layout_marginTop="15dp">
 
     </ListView>
+
 </LinearLayout>

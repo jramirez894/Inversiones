@@ -24,20 +24,22 @@
         android:layout_marginTop="15dp"/>
 
     <EditText
-        android:id="@+id/editDescripcion_Devolucion_MDatosCobro"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Descripcion"
-        android:layout_marginTop="20dp"
-        android:inputType="text"/>
-
-    <EditText
         android:id="@+id/editFecha_Devolucion_MDatosCobro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Fecha"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:inputType="date"/>
+
+
+    <EditText
+        android:id="@+id/editDescripcion_Devolucion_MDatosCobro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Descripcion"
+        android:layout_marginTop="10dp"
+        android:inputType="text"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"

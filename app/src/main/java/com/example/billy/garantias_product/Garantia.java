@@ -190,8 +190,6 @@ public class Garantia extends AppCompatActivity
                 }
             }
         });
-
-
     }
 
     public void AlertaCargando()
@@ -364,11 +362,11 @@ public class Garantia extends AppCompatActivity
                         String idProducto = obj.getString("idProducto");
                         String nomPr = "";
 
-                        for(int k = 0; k < Garantia.arrayListProductos.size(); k++)
+                        for(int k = 0; k < arrayListProductos.size(); k++)
                         {
-                            if(idProducto.equalsIgnoreCase(Garantia.arrayListProductos.get(k).getIdProducto()))
+                            if(idProducto.equalsIgnoreCase(arrayListProductos.get(k).getIdProducto()))
                             {
-                                nomPr = Garantia.arrayListProductos.get(k).getNombre();
+                                nomPr = arrayListProductos.get(k).getNombre();
                             }
                         }
 

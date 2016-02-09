@@ -22,9 +22,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.billy.base_datos.BaseDatos;
-import com.example.billy.base_datos.ConexionBD;
 import com.example.billy.interfaces_empleado.PrincipalEmpleado;
 import com.example.billy.menu_principal.PrincipalMenu;
 
@@ -69,9 +66,6 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //Base de datos para fechas pendientes
-        ConexionBD conexionBD = new ConexionBD(this);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();

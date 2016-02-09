@@ -3,9 +3,11 @@ package com.example.billy.clientes;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.text.InputType;
@@ -82,6 +84,8 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
 
     int sumaCantidad = 0;
 
+    //Alerta Cargando
+    ProgressDialog progressDialog;
 
     public AdapterLista_Productos_MDatosCobro(Context context, List objects)
     {
@@ -134,7 +138,8 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
             }
         }
 
-        garantia.setOnClickListener(new View.OnClickListener() {
+        garantia.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View view) {
                 posicionItems = (ItemListaroductos_MDatosCobro) getItem(position);
@@ -161,6 +166,16 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
 
 
         return convertView;
+    }
+
+    public void AlertaCargando()
+    {
+        //Alerta que carga mientras se cargan los Clientes
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.show();
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.setCancelable(false);
     }
 
     public void EliminarProducto()
@@ -256,6 +271,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         String idVenta = posicionItems.getIdVenta();
         String cantidadProductos = "";
         String idP = "";
+        int cantidadDevoluciones = 0;
 
         //variables para definir las probabilidades del usuario
         boolean accionAceptar = false;
@@ -278,20 +294,30 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
             }
         }
 
+        //Para verificar si el producto que se selecciono ya tiene alguna devolucion
+        for(int l = 0; l < Constantes.itemsDevoluciones.size(); l++)
+        {
+            if (idP.equalsIgnoreCase(Constantes.itemsDevoluciones.get(l).getIdProducto()) && Constantes.idClienteCliente.equalsIgnoreCase(Constantes.itemsDevoluciones.get(l).getIdCliente()))
+            {
+                cantidadDevoluciones = Integer.valueOf(Constantes.itemsDevoluciones.get(l).getCantidad());
+            }
+        }
+
         //Para saber si todas las garantias ya estan registradas
         for(int l = 0; l < Constantes.itemsGarantias.size(); l++)
         {
             if(idP.equalsIgnoreCase(Constantes.itemsGarantias.get(l).getIdProducto()) && Constantes.idClienteCliente.equalsIgnoreCase(Constantes.itemsGarantias.get(l).getIdCliente()))
             {
-                //Aqui iria la suma de garantias y devoluciones
+                //sumarle devoluciones a las garantias en caso de que haya una devolucion del mismo producto que se selecciono
+                int sumaDevoGara = cantidadDevoluciones + Integer.valueOf(Constantes.itemsGarantias.get(l).getCantidad());
 
-                if(cantidadProductos.equalsIgnoreCase(Constantes.itemsGarantias.get(l).getCantidad()))
+                if(cantidadProductos.equalsIgnoreCase(String.valueOf(sumaDevoGara)))
                 {
                     editDescripcionGarantia.setVisibility(View.GONE);
                     editFechaGarantia.setVisibility(View.GONE);
                     layoutGarantia.setVisibility(View.GONE);
 
-                    txtTextoDescripcion.setText("Los productos ya se encuentran registrados por garantia");
+                    txtTextoDescripcion.setText("Los productos ya se encuentran registrados por garantia y/o devolución");
 
                     accionAceptar = true;
                 }
@@ -304,7 +330,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                     editFechaGarantia.setText(Constantes.itemsGarantias.get(l).getFecha());
 
                     //resta para la cantidad de los productos que estan registrados por garanatia
-                    int canP = Integer.valueOf(cantidadProductos) - Integer.valueOf(Constantes.itemsGarantias.get(l).getCantidad());
+                    int canP = Integer.valueOf(cantidadProductos) - sumaDevoGara;
                     cantidadProductos = String.valueOf(canP);
 
                     verificarGarantia = true;
@@ -331,6 +357,26 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         //Para llenar el spinner con los productos que puede enviar por garantia
         ArrayList<String> arrayListSpin = new ArrayList<String>();
         arrayListSpin.clear();
+
+        //verificar si hay el producto seleccionado tambien tiene devoluciones
+        if(cantidadDevoluciones > 0 && !verificarGarantia)
+        {
+            if(cantidadDevoluciones == Integer.valueOf(cantidadProductos))
+            {
+                editDescripcionGarantia.setVisibility(View.GONE);
+                editFechaGarantia.setVisibility(View.GONE);
+                layoutGarantia.setVisibility(View.GONE);
+
+                txtTextoDescripcion.setText("Los productos ya se encuentran registrados por garantia y/o devolución");
+
+                accionAceptar = true;
+            }
+            else
+            {
+                int resta = Integer.valueOf(cantidadProductos) - cantidadDevoluciones;
+                cantidadProductos = String.valueOf(resta);
+            }
+        }
 
         for(int m = 1; m <= Integer.valueOf(cantidadProductos); m++)
         {
@@ -377,6 +423,8 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
 
                         TareaUpdadteGarantia updadteGarantia = new TareaUpdadteGarantia();
                         updadteGarantia.execute(Constantes.itemsGarantias.get(posicionLista).getIdGarantia(),"En espera", capDescripcion, capFecha,cantidadP, Constantes.itemsGarantias.get(posicionLista).getIdVendedor(),Constantes.itemsGarantias.get(posicionLista).getIdCliente(), Constantes.itemsGarantias.get(posicionLista).getIdProducto());
+
+                        AlertaCargando();
                     }
                     else
                     {
@@ -415,6 +463,8 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
 
                             TareaCreateWarranty tareaCreateWarranty = new TareaCreateWarranty();
                             tareaCreateWarranty.execute("En espera", capDescripcion, capFecha, cantidadP, idVendedor, Constantes.idClienteCliente, idProducto);
+
+                            AlertaCargando();
                         }
                     }
                 }
@@ -449,6 +499,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         String idVenta = posicionItems.getIdVenta();
         String cantidadProductos = "";
         String idP = "";
+        int cantidadGarantias = 0;
 
         //variables para definir las probabilidades del usuario
         boolean accionAceptar = false;
@@ -471,21 +522,30 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
             }
         }
 
-        //Para saber si todas las devoluciones ya estan registradas
+        //Para verificar si el producto que se selecciono ya tiene alguna garantia
+        for(int l = 0; l < Constantes.itemsGarantias.size(); l++)
+        {
+            if (idP.equalsIgnoreCase(Constantes.itemsGarantias.get(l).getIdProducto()) && Constantes.idClienteCliente.equalsIgnoreCase(Constantes.itemsGarantias.get(l).getIdCliente()))
+            {
+                cantidadGarantias = Integer.valueOf(Constantes.itemsGarantias.get(l).getCantidad());
+            }
+        }
 
+        //Para saber si todas las devoluciones ya estan registradas
         for(int l = 0; l < Constantes.itemsDevoluciones.size(); l++)
         {
             if(idP.equalsIgnoreCase(Constantes.itemsDevoluciones.get(l).getIdProducto()) && Constantes.idClienteCliente.equalsIgnoreCase(Constantes.itemsDevoluciones.get(l).getIdCliente()))
             {
-                //Aqui va la suma de garantias y devoluciones
+                //sumarle garantias a las devoluciones en caso de que haya una garantia del mismo producto que se selecciono
+                int sumaDevoGara = cantidadGarantias + Integer.valueOf(Constantes.itemsDevoluciones.get(l).getCantidad());
 
-                if(cantidadProductos.equalsIgnoreCase(Constantes.itemsDevoluciones.get(l).getCantidad()))
+                if(cantidadProductos.equalsIgnoreCase(String.valueOf(sumaDevoGara)))
                 {
                     editDescripcionDevolucion.setVisibility(View.GONE);
                     editFechaDevolucion.setVisibility(View.GONE);
                     layoutDevolucion.setVisibility(View.GONE);
 
-                    txtTextoDescripcion.setText("Los productos ya se encuentran registrados por devolución");
+                    txtTextoDescripcion.setText("Los productos ya se encuentran registrados por garantia y/o devolución");
 
                     accionAceptar = true;
                 }
@@ -498,7 +558,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                     editFechaDevolucion.setText(Constantes.itemsDevoluciones.get(l).getFecha());
 
                     //resta para la cantidad de los productos que estan registrados por devolucion
-                    int canP = Integer.valueOf(cantidadProductos) - Integer.valueOf(Constantes.itemsDevoluciones.get(l).getCantidad());
+                    int canP = Integer.valueOf(cantidadProductos) - sumaDevoGara;
                     cantidadProductos = String.valueOf(canP);
 
                     verificarDevolucion = true;
@@ -525,6 +585,26 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         //Para llenar el spinner con los productos que puede enviar por devolucion
         ArrayList<String> arrayListSpin = new ArrayList<String>();
         arrayListSpin.clear();
+
+        //verificar si hay el producto seleccionado tambien tiene devoluciones
+        if(cantidadGarantias > 0  && !verificarDevolucion)
+        {
+            if(cantidadGarantias == Integer.valueOf(cantidadProductos))
+            {
+                editDescripcionDevolucion.setVisibility(View.GONE);
+                editFechaDevolucion.setVisibility(View.GONE);
+                layoutDevolucion.setVisibility(View.GONE);
+
+                txtTextoDescripcion.setText("Los productos ya se encuentran registrados por garantia y/o devolución");
+
+                accionAceptar = true;
+            }
+            else
+            {
+                int resta = Integer.valueOf(cantidadProductos) - cantidadGarantias;
+                cantidadProductos = String.valueOf(resta);
+            }
+        }
 
         for(int m = 1; m <= Integer.valueOf(cantidadProductos); m++)
         {
@@ -571,6 +651,8 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
 
                         TareaUpdadteDevolucion updadteDevolucion= new TareaUpdadteDevolucion();
                         updadteDevolucion.execute(Constantes.itemsDevoluciones.get(posicionLista).getIdDevolucion(),"En espera", capDescripcion, capFecha,cantidadP, Constantes.itemsDevoluciones.get(posicionLista).getIdVendedor(),Constantes.itemsDevoluciones.get(posicionLista).getIdCliente(), Constantes.itemsDevoluciones.get(posicionLista).getIdProducto());
+
+                        AlertaCargando();
                     }
                     else
                     {
@@ -609,6 +691,8 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
 
                             TareaCreateReturn tareaCreateReturn = new TareaCreateReturn();
                             tareaCreateReturn.execute("En espera", capDescripcion, capFecha, cantidadP, idVendedor, Constantes.idClienteCliente, idProducto);
+
+                            AlertaCargando();
                         }
                     }
                 }
@@ -745,11 +829,11 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 Constantes.itemsGarantias.clear();
                 TareaObtenerGarantias tareaObtenerGarantias = new TareaObtenerGarantias();
                 tareaObtenerGarantias.execute();
-
-                Toast.makeText(getContext(), "Producto Registrado por Garantia", Toast.LENGTH_LONG).show();
             }
-            else {
-                Toast.makeText(getContext(), "Error de servidor \n" + respuesta, Toast.LENGTH_SHORT).show();
+            else
+            {
+                Toast.makeText(getContext(), "Error al crear la garantia ", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         }
     }
@@ -839,12 +923,11 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 Constantes.itemsGarantias.clear();
                 TareaObtenerGarantias tareaObtenerGarantias = new TareaObtenerGarantias();
                 tareaObtenerGarantias.execute();
-
-                Toast.makeText(getContext(), "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
             }
             else
             {
-                Toast.makeText(getContext(), "Error al Modificar Usuario", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error al modificar la garantia", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         }
     }
@@ -921,7 +1004,8 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
 
         protected void onPostExecute(Boolean result)
         {
-            //Toast.makeText(getActivity(), respStr, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Los cambios fueron exitosos", Toast.LENGTH_LONG).show();
+            progressDialog.dismiss();
         }
     }
 
@@ -996,16 +1080,15 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         {
             if (resul)
             {
-                //Obtener las garantias si las hay
+                //Obtener las devoluciones si las hay
                 Constantes.itemsDevoluciones.clear();
                 TareaObtenerDevoluciones tareaObtenerDevoluciones = new TareaObtenerDevoluciones();
                 tareaObtenerDevoluciones.execute();
-
-                Toast.makeText(getContext(), "Producto Registrado por Devolución", Toast.LENGTH_LONG).show();
             }
             else
             {
-                Toast.makeText(getContext(), "Error de servidor", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error al crear la devolución", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         }
     }
@@ -1095,12 +1178,11 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 Constantes.itemsDevoluciones.clear();
                 TareaObtenerDevoluciones tareaObtenerDevoluciones = new TareaObtenerDevoluciones();
                 tareaObtenerDevoluciones.execute();
-
-                Toast.makeText(getContext(), "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
             }
             else
             {
-                Toast.makeText(getContext(), "Error al Modificar Usuario", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error al Modificar la devolción", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         }
     }
@@ -1177,7 +1259,8 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
 
         protected void onPostExecute(Boolean result)
         {
-            //Toast.makeText(getActivity(), respStr, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Los cambios fueron exitosos", Toast.LENGTH_LONG).show();
+            progressDialog.dismiss();
         }
     }
 }
