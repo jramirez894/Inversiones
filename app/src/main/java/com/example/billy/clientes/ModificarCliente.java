@@ -165,7 +165,7 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modificar_cliente);
 
-        ActionBar actionBar =getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Volver");
         actionBar.show();
 
@@ -222,10 +222,10 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         ModificarCliente.AddTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab2").setIndicator("", getResources().getDrawable(R.mipmap.capital)), (tabInfo = new TabInfo("Tab2", V_DatosCobro.class, args)));
         this.mapTabInfo.put(tabInfo.tag, tabInfo);
 
-        ModificarCliente.AddTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab3").setIndicator("", getResources().getDrawable(R.mipmap.productos)), (tabInfo = new TabInfo("Tab2", V_DetalleCobro.class, args)));
+        ModificarCliente.AddTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab3").setIndicator("", getResources().getDrawable(R.mipmap.productos)), (tabInfo = new TabInfo("Tab3", V_DetalleCobro.class, args)));
         this.mapTabInfo.put(tabInfo.tag, tabInfo);
 
-        ModificarCliente.AddTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab3").setIndicator("", getResources().getDrawable(R.mipmap.informacion)), (tabInfo = new TabInfo("Tab2", ClientesHistorial.class, args)));
+        ModificarCliente.AddTab(this, this.mTabHost, this.mTabHost.newTabSpec("Tab4").setIndicator("", getResources().getDrawable(R.mipmap.informacion)), (tabInfo = new TabInfo("Tab4", ClientesHistorial.class, args)));
         this.mapTabInfo.put(tabInfo.tag, tabInfo);
         // Default to first tab
         //this.onTabChanged("Tab1");

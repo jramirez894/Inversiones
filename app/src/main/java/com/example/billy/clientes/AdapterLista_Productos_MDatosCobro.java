@@ -377,6 +377,10 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 cantidadProductos = String.valueOf(resta);
             }
         }
+        else
+        {
+
+        }
 
         for(int m = 1; m <= Integer.valueOf(cantidadProductos); m++)
         {

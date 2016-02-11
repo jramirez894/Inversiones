@@ -148,7 +148,7 @@
 
     <string-array name="estado_devolucion">
         <item>Aceptado</item>
-        <item>Sin Garantia</item>
+        <item>Sin Devolucion</item>
     </string-array>
     <string name="title_activity_visualizar_devolucion">VisualizarDevolucion</string>
 </resources>

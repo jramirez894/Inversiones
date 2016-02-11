@@ -35,8 +35,10 @@ import com.example.billy.clientes.ItemsVenta_AgregarCliente;
 import com.example.billy.clientes.VisualizarCliente;
 import com.example.billy.constantes.Constantes;
 import com.example.billy.devolucion.Devolucion;
+import com.example.billy.devolucion.Items_Devolucion;
 import com.example.billy.empleado.Empleados;
 import com.example.billy.garantias_product.Garantia;
+import com.example.billy.garantias_product.Items_Garantia;
 import com.example.billy.gastos.Reg_Gasto;
 import com.example.billy.inversiones.MainActivity;
 import com.example.billy.perfil.Perfil;
@@ -866,6 +868,196 @@ public class PrincipalMenu extends AppCompatActivity
             //Toast.makeText(Empleados.this, respuesta, Toast.LENGTH_SHORT).show();
             if(existe)
             {
+                //Obtener las garantias y devoluciones si las hay
+                Constantes.itemsGarantias.clear();
+                TareaObtenerGarantias tareaObtenerGarantias = new TareaObtenerGarantias();
+                tareaObtenerGarantias.execute();
+            }
+            else
+            {
+                progressDialog.dismiss();
+                Toast.makeText(PrincipalMenu.this, "Error al cargar el cliente", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event)
+    {
+        switch (keyCode)
+        {
+            case KeyEvent.KEYCODE_BACK:
+
+                return true;
+        }
+
+        return super.onKeyUp(keyCode, event);
+    }
+
+    //Clases Asyntask para traer los datos de la tabla garantias
+    private class TareaObtenerGarantias extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerGarantia.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "getAllWarranty"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+                //JSONObject obj = objItems.getJSONObject(0);
+
+                //String obj
+
+                for(int i=0; i<objVendedores.length(); i++)
+                {
+                    JSONObject obj = objVendedores.getJSONObject(i);
+
+                    if(obj.getString("estado").equalsIgnoreCase("En espera") || obj.getString("estado").equalsIgnoreCase("Pendiente"))
+                    {
+                        Constantes.itemsGarantias.add(new Items_Garantia(obj.getString("idGarantia"), obj.getString("estado"), obj.getString("descripcion"), obj.getString("fecha"), obj.getString("cantidad"), obj.getString("idVendedor"), obj.getString("idCliente"), obj.getString("idProducto")));
+                    }
+
+                    resul = true;
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            if(result)
+            {
+                Constantes.itemsDevoluciones.clear();
+                TareaObtenerDevoluciones tareaObtenerDevoluciones = new TareaObtenerDevoluciones();
+                tareaObtenerDevoluciones.execute();
+            }
+            else
+            {
+                progressDialog.dismiss();
+                Toast.makeText(PrincipalMenu.this, "Error al cargar el cliente", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    //Clases Asyntask para traer los datos de la tabla devoluciones
+    private class TareaObtenerDevoluciones extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerDevolucion.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "getAllReturn"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+                //JSONObject obj = objItems.getJSONObject(0);
+
+                //String obj
+
+                for(int i=0; i<objVendedores.length(); i++)
+                {
+                    JSONObject obj = objVendedores.getJSONObject(i);
+
+                    if(obj.getString("estado").equalsIgnoreCase("En espera"))
+                    {
+                        Constantes.itemsDevoluciones.add(new Items_Devolucion(obj.getString("idDevolucion"), obj.getString("estado"), obj.getString("descripcion"), obj.getString("fecha"), obj.getString("cantidad"), obj.getString("idVendedor"), obj.getString("idCliente"), obj.getString("idProducto")));
+                    }
+
+                    resul = true;
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e)
+            {
+               e.printStackTrace();
+                resul = false;
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            if (result)
+            {
                 progressDialog.dismiss();
 
                 Intent intent = new Intent(PrincipalMenu.this, VisualizarCliente.class);
@@ -897,18 +1089,5 @@ public class PrincipalMenu extends AppCompatActivity
                 Toast.makeText(PrincipalMenu.this, "Error al cargar el cliente", Toast.LENGTH_LONG).show();
             }
         }
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event)
-    {
-        switch (keyCode)
-        {
-            case KeyEvent.KEYCODE_BACK:
-
-                return true;
-        }
-
-        return super.onKeyUp(keyCode, event);
     }
 }

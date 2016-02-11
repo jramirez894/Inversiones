@@ -214,7 +214,8 @@
         <activity
             android:name="com.example.billy.devolucion.VisualizarDevolucion"
             android:label="@string/title_activity_visualizar_devolucion"
-            android:parentActivityName="com.example.billy.devolucion.Devolucion">
+            android:parentActivityName="com.example.billy.devolucion.Devolucion"
+            android:windowSoftInputMode="stateHidden">
         </activity>
     </application>
 

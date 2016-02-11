@@ -88,6 +88,10 @@ public class VisualizarDevolucion extends AppCompatActivity
     //variable valor de la venta de un producto
     int valorProducto = 0;
 
+    //variable para mirar si la devolucion no es aceptada
+    boolean devolucionNoAceptada = false;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -195,13 +199,32 @@ public class VisualizarDevolucion extends AppCompatActivity
 
                 String estadoSpin = spinEstado_VDevolucion.getSelectedItem().toString();
 
-                TareaUpdateDevolucion tareaUpdateDevolucion = new TareaUpdateDevolucion();
-                tareaUpdateDevolucion.execute(idDevolucion, estadoSpin, descripcion, fecha, cantidad,
-                        idVendedor, idCliente, idProducto);
+                TareaUpdateDevolucion tareaUpdateDevolucion;
 
-                AlertaCargando();
+                switch (estadoSpin)
+                {
+                    case "Aceptado":
 
-                break;
+                        tareaUpdateDevolucion = new TareaUpdateDevolucion();
+                        tareaUpdateDevolucion.execute(idDevolucion, estadoSpin, descripcion, fecha, cantidad,
+                                idVendedor, idCliente, idProducto);
+
+                        AlertaCargando();
+
+                        break;
+
+                    case "Sin Devolucion":
+
+                        tareaUpdateDevolucion = new TareaUpdateDevolucion();
+                        tareaUpdateDevolucion.execute(idDevolucion, estadoSpin, descripcion, fecha, cantidad,
+                                idVendedor, idCliente, idProducto);
+
+                        AlertaCargando();
+
+                        devolucionNoAceptada = true;
+
+                        break;
+                }
         }
 
         return super.onOptionsItemSelected(item);
@@ -289,8 +312,21 @@ public class VisualizarDevolucion extends AppCompatActivity
         {
             if(existe)
             {
-               TareaListadoBill tareaListadoBill = new TareaListadoBill();
-                tareaListadoBill.execute();
+                if (devolucionNoAceptada)
+                {
+                    Toast.makeText(VisualizarDevolucion.this, "La Devolución se modifico correctamente", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+
+                    Intent intent = new Intent(VisualizarDevolucion.this, Devolucion.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else
+                {
+                    TareaListadoBill tareaListadoBill = new TareaListadoBill();
+                    tareaListadoBill.execute();
+                }
+
             }
             else
             {
@@ -419,7 +455,7 @@ public class VisualizarDevolucion extends AppCompatActivity
                 JSONArray objVendedores = objItems.getJSONArray(0);
                 //JSONObject obj = objItems.getJSONObject(0);
 
-                //String obj
+                arrayListProductos.clear();
 
                 for(int i=0; i<objVendedores.length(); i++)
                 {
@@ -461,14 +497,14 @@ public class VisualizarDevolucion extends AppCompatActivity
             String totalFactura = "";
             String valorRestanteFactura = "";
 
-            for (int i = 0; i <arrayListFactura.size(); i++ )
+            for (int i = 0; i < arrayListFactura.size(); i++ )
             {
                 if (arrayListFactura.get(i).getIdCliente().equalsIgnoreCase(idCliente))
                 {
                     totalFactura = arrayListFactura.get(i).getTotal();
                     valorRestanteFactura = arrayListFactura.get(i).getValorRestante();
 
-                    for (int j = 0; j <arrayListProductos.size(); j++ )
+                    for (int j = 0; j < arrayListProductos.size(); j++ )
                     {
                         if (arrayListProductos.get(j).getIdProducto().equalsIgnoreCase(idProducto))
                         {
@@ -481,13 +517,16 @@ public class VisualizarDevolucion extends AppCompatActivity
                             valorRestanteFactura = String.valueOf(restaValorRestante);
 
                             TareaUpdateBill tareaUpdateBill = new TareaUpdateBill();
-                            tareaUpdateBill.execute(arrayListFactura.get(i).idFactura,
-                                    totalFactura, valorRestanteFactura,
+                            tareaUpdateBill.execute(arrayListFactura.get(i).getIdFactura(),
+                                    arrayListFactura.get(i).getFecha(),
+                                    totalFactura,
+                                    valorRestanteFactura,
                                     arrayListFactura.get(i).getEstado(),
                                     arrayListFactura.get(i).getFechaCobro(),
                                     arrayListFactura.get(i).getDiaCobro(),
                                     arrayListFactura.get(i).getHoraCobro(),
-                                    arrayListFactura.get(i).getIdVendedor());
+                                    arrayListFactura.get(i).getIdVendedor(),
+                                    arrayListFactura.get(i).getIdCliente());
                         }
                     }
                 }
@@ -568,7 +607,7 @@ public class VisualizarDevolucion extends AppCompatActivity
 
         protected void onPostExecute(Boolean result)
         {
-
+            //Hacer la alerta que pregunte si quiere ingresar el producto de nuevo a la cantidad total
 
             Toast.makeText(VisualizarDevolucion.this, "La Devolución se modifico correctamente", Toast.LENGTH_SHORT).show();
 
