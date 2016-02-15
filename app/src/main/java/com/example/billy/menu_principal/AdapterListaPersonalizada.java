@@ -708,7 +708,9 @@ public class AdapterListaPersonalizada extends ArrayAdapter
             else
             {
                 progressDialog.dismiss();
-                Toast.makeText(getContext(), "Error al cargar el cliente", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "Error al cargar el cliente", Toast.LENGTH_LONG).show();
+                TareaObtenerDevoluciones tareaObtenerDevoluciones = new TareaObtenerDevoluciones();
+                tareaObtenerDevoluciones.execute();
             }
         }
     }
@@ -820,7 +822,33 @@ public class AdapterListaPersonalizada extends ArrayAdapter
             else
             {
                 progressDialog.dismiss();
-                Toast.makeText(getContext(), "Error al cargar el cliente", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "Error al cargar el cliente", Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(getContext(), ModificarCliente.class);
+
+                Constantes.cedulaCliente = cedula;
+                Constantes.nombreCliente = nombre;
+                Constantes.direccionCliente = direccion;
+                Constantes.telefonoCliente = telefono;
+                Constantes.correoCliente = correo;
+                Constantes.nombreEmpresaCliente = nombreEmpresa;
+                Constantes.direccionEmpresaCliente = direccionEmpresa;
+                Constantes.idClienteCliente = idClienteCliente;
+                Constantes.estadoCliente = estado;
+                Constantes.calificacionCliente = calificacion;
+                Constantes.idFactura = idFactura;
+                Constantes.fechaFactura = fechaFactura;
+                Constantes.totalFactura = totalFactura;
+                Constantes.valorRestante = valorRestante;
+                Constantes.fechaCobroFactura = fechaCobroFactura;
+                Constantes.diaCobroFactura = diaCobroFactura;
+                Constantes.horaCobroFactura = horaCobroFactura;
+                Constantes.idVendedorFactura = idVendedorFactura;
+                Constantes.idClienteFactura = idClienteFactura;
+                Constantes.nombreVendedorUsuarios = nombreVendedorUsuarios;
+                Constantes.telefonoVendedorUsuarios = telefonoVendedorUsuarios;
+                Constantes.interfaz = "Administrador";
+                getContext().startActivity(intent);
             }
         }
     }

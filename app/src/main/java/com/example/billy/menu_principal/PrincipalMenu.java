@@ -977,7 +977,8 @@ public class PrincipalMenu extends AppCompatActivity
             else
             {
                 progressDialog.dismiss();
-                Toast.makeText(PrincipalMenu.this, "Error al cargar el cliente", Toast.LENGTH_LONG).show();
+                TareaObtenerDevoluciones tareaObtenerDevoluciones = new TareaObtenerDevoluciones();
+                tareaObtenerDevoluciones.execute();
             }
         }
     }
@@ -1086,7 +1087,29 @@ public class PrincipalMenu extends AppCompatActivity
             else
             {
                 progressDialog.dismiss();
-                Toast.makeText(PrincipalMenu.this, "Error al cargar el cliente", Toast.LENGTH_LONG).show();
+                //Toast.makeText(PrincipalMenu.this, "Error al cargar el cliente", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(PrincipalMenu.this, VisualizarCliente.class);
+
+                intent.putExtra("cedulaCliente", cedulaCliente);
+                intent.putExtra("nombreCliente", nombreCliente);
+                intent.putExtra("direccionCliente", direccionCliente);
+                intent.putExtra("telefonoCliente", telefonoCliente);
+                intent.putExtra("correoCliente", correoCliente);
+                intent.putExtra("nombreEmpresaCliente", nombreEmpresaCliente);
+                intent.putExtra("direccionEmpresaCliente", direccionEmpresaCliente);
+                intent.putExtra("idClienteCliente", idClienteCliente);
+                intent.putExtra("idFactura", idFactura);
+                intent.putExtra("fechaFactura", fechaFactura);
+                intent.putExtra("totalFactura", totalFactura);
+                intent.putExtra("valorRestante", valorRestante);
+                intent.putExtra("fechaCobroFactura", fechaCobroFactura);
+                intent.putExtra("diaCobroFactura", diaCobroFactura);
+                intent.putExtra("horaCobroFactura", horaCobroFactura);
+                intent.putExtra("idVendedorFactura", idVendedorFactura);
+                intent.putExtra("idClienteFactura", idClienteFactura);
+                intent.putExtra("nombreVendedorUsuarios", nombreVendedorUsuarios);
+
+                startActivity(intent);
             }
         }
     }
