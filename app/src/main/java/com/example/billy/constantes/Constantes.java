@@ -4,7 +4,9 @@ import android.widget.EditText;
 
 import com.example.billy.clientes.ItemFactura_AgregarCliente;
 import com.example.billy.clientes.ItemsVenta_AgregarCliente;
+import com.example.billy.devolucion.ItemsEstadoDevolucion;
 import com.example.billy.devolucion.Items_Devolucion;
+import com.example.billy.garantias_product.ItemsEstadoGarantia;
 import com.example.billy.garantias_product.Items_Garantia;
 import com.example.billy.productos.ItemsListaProductos_Productos;
 
@@ -71,6 +73,12 @@ public class Constantes
     //Tabla Garantia
     public static ArrayList<Items_Garantia> itemsGarantias = new ArrayList<Items_Garantia>();
 
+    //Tabla Estado Garantia
+    public static ArrayList<ItemsEstadoGarantia> itemsEstadoGarantia = new ArrayList<ItemsEstadoGarantia>();
+
     //Tabla Devoluciones
     public static ArrayList<Items_Devolucion> itemsDevoluciones = new ArrayList<Items_Devolucion>();
+
+    //Tabla Estado Garantia
+    public static ArrayList<ItemsEstadoDevolucion> itemsEstadoDevolucion= new ArrayList<ItemsEstadoDevolucion>();
 }

@@ -741,21 +741,21 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
 
                         //Para descontar de la cantidad total de productos en caso de que añada nuevos.
 
-                        for(int k = 0; k < Constantes.itemsProductos.size(); k++)
+                        for(int k = 0; k < M_DatosCobro.arrayListP.size(); k++)
                         {
-                            if(idProducto.equalsIgnoreCase(Constantes.itemsProductos.get(k).getIdProducto()))
+                            if(idProducto.equalsIgnoreCase(M_DatosCobro.arrayListP.get(k).getIdProducto()))
                             {
-                                int restaProductos = Integer.valueOf(Constantes.itemsProductos.get(k).getCantidad()) - Integer.valueOf(cantidad);
+                                int restaProductos = Integer.valueOf(M_DatosCobro.arrayListP.get(k).getCantidad()) - Integer.valueOf(cantidad);
 
                                 TareaUpdadteProducto tareaUpdadteProducto = new TareaUpdadteProducto();
-                                tareaUpdadteProducto.execute(Constantes.itemsProductos.get(k).getIdProducto(),
-                                        Constantes.itemsProductos.get(k).getNombre(),
-                                        Constantes.itemsProductos.get(k).getDescripcion(),
+                                tareaUpdadteProducto.execute(M_DatosCobro.arrayListP.get(k).getIdProducto(),
+                                        M_DatosCobro.arrayListP.get(k).getNombre(),
+                                        M_DatosCobro.arrayListP.get(k).getDescripcion(),
                                         String.valueOf(restaProductos),
-                                        Constantes.itemsProductos.get(k).getGarantia(),
-                                        Constantes.itemsProductos.get(k).getPrecioCompra(),
-                                        Constantes.itemsProductos.get(k).getPrecioVenta(),
-                                        Constantes.itemsProductos.get(k).getIdCategoria());
+                                        M_DatosCobro.arrayListP.get(k).getGarantia(),
+                                        M_DatosCobro.arrayListP.get(k).getPrecioCompra(),
+                                        M_DatosCobro.arrayListP.get(k).getPrecioVenta(),
+                                        M_DatosCobro.arrayListP.get(k).getIdCategoria());
                             }
                         }
 
