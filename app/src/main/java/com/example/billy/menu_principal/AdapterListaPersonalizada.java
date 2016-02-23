@@ -25,7 +25,9 @@ import com.example.billy.clientes.ItemsVenta_AgregarCliente;
 import com.example.billy.clientes.ModificarCliente;
 import com.example.billy.clientes.VisualizarCliente;
 import com.example.billy.constantes.Constantes;
+import com.example.billy.devolucion.ItemsEstadoDevolucion;
 import com.example.billy.devolucion.Items_Devolucion;
+import com.example.billy.garantias_product.ItemsEstadoGarantia;
 import com.example.billy.garantias_product.Items_Garantia;
 import com.example.billy.inversiones.R;
 import com.example.billy.productos.ItemsListaProductos_Productos;
@@ -701,6 +703,90 @@ public class AdapterListaPersonalizada extends ArrayAdapter
         {
             if(result)
             {
+                TareaObtenerState tareaObtenerState = new TareaObtenerState();
+                tareaObtenerState.execute();
+            }
+            else
+            {
+                progressDialog.dismiss();
+                //Toast.makeText(getContext(), "Error al cargar el cliente", Toast.LENGTH_LONG).show();
+                TareaObtenerState tareaObtenerState = new TareaObtenerState();
+                tareaObtenerState.execute();
+            }
+        }
+    }
+
+    //Clases Asyntask para traer los datos de la tabla garantias
+    private class TareaObtenerState extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerEstadoGarantia.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "getAllState"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+                //JSONObject obj = objItems.getJSONObject(0);
+
+                Constantes.itemsEstadoGarantia.clear();
+
+                for(int i=0; i<objVendedores.length(); i++)
+                {
+                    JSONObject obj = objVendedores.getJSONObject(i);
+
+                    Constantes.itemsEstadoGarantia.add(new ItemsEstadoGarantia(obj.getString("idEstadoGarantia"), obj.getString("nombre"), obj.getString("cantidad"), obj.getString("idGarantia")));
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            if(result)
+            {
                 Constantes.itemsDevoluciones.clear();
                 TareaObtenerDevoluciones tareaObtenerDevoluciones = new TareaObtenerDevoluciones();
                 tareaObtenerDevoluciones.execute();
@@ -708,7 +794,6 @@ public class AdapterListaPersonalizada extends ArrayAdapter
             else
             {
                 progressDialog.dismiss();
-                //Toast.makeText(getContext(), "Error al cargar el cliente", Toast.LENGTH_LONG).show();
                 TareaObtenerDevoluciones tareaObtenerDevoluciones = new TareaObtenerDevoluciones();
                 tareaObtenerDevoluciones.execute();
             }
@@ -782,6 +867,89 @@ public class AdapterListaPersonalizada extends ArrayAdapter
             {
                 e.printStackTrace();
                 resul = false;
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            if (result)
+            {
+                TareaObtenerStateReturn tareaObtenerStateReturn = new TareaObtenerStateReturn();
+                tareaObtenerStateReturn.execute();
+            }
+            else
+            {
+                progressDialog.dismiss();
+                TareaObtenerStateReturn tareaObtenerStateReturn = new TareaObtenerStateReturn();
+                tareaObtenerStateReturn.execute();
+            }
+        }
+    }
+
+    //Clases Asyntask para traer los datos de la tabla garantias
+    private class TareaObtenerStateReturn extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerEstadoDevolucion.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "getAllReturn"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+                //JSONObject obj = objItems.getJSONObject(0);
+
+                Constantes.itemsEstadoDevolucion.clear();
+
+                for(int i=0; i<objVendedores.length(); i++)
+                {
+                    JSONObject obj = objVendedores.getJSONObject(i);
+
+                    Constantes.itemsEstadoDevolucion.add(new ItemsEstadoDevolucion(obj.getString("idEstadoDevolucion"), obj.getString("nombre"), obj.getString("cantidad"), obj.getString("idDevolucion")));
+
+                    resul = true;
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
             return resul;

@@ -93,6 +93,9 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
     String idGarantia = "";
     String idDevolucion = "";
 
+    int contadorEstadosGarantia = 0;
+    int contadorEstadosDevolucion = 0;
+
     public AdapterLista_Productos_MDatosCobro(Context context, List objects)
     {
         super(context, 0, objects);
@@ -277,7 +280,12 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         String idVenta = posicionItems.getIdVenta();
         String cantidadProductos = "";
         String idP = "";
+
         int cantidadDevoluciones = 0;
+        int cantidadGarantias = 0;
+
+        String idDevoluciones = "";
+        String idGarantias = "";
 
         //variables para definir las probabilidades del usuario
         boolean accionAceptar = false;
@@ -305,7 +313,22 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         {
             if (idP.equalsIgnoreCase(Constantes.itemsDevoluciones.get(l).getIdProducto()) && Constantes.idClienteCliente.equalsIgnoreCase(Constantes.itemsDevoluciones.get(l).getIdCliente()))
             {
-                cantidadDevoluciones = Integer.valueOf(Constantes.itemsDevoluciones.get(l).getCantidad());
+                idDevoluciones = Constantes.itemsDevoluciones.get(l).getIdDevolucion();
+
+                for(int i = 0; i < Constantes.itemsEstadoDevolucion.size(); i++)
+                {
+                    if(idDevoluciones.equalsIgnoreCase(Constantes.itemsEstadoDevolucion.get(i).getIdDevolucion())
+                            && Constantes.itemsEstadoDevolucion.get(i).getNombre().equalsIgnoreCase("En espera"))
+                    {
+                        cantidadDevoluciones = cantidadDevoluciones + 1;
+                    }
+
+                    if(idDevoluciones.equalsIgnoreCase(Constantes.itemsEstadoDevolucion.get(i).getIdDevolucion())
+                            && Constantes.itemsEstadoDevolucion.get(i).getNombre().equalsIgnoreCase("Sin garantia"))
+                    {
+                        cantidadProductos = String.valueOf(Integer.valueOf(cantidadProductos) - 1);
+                    }
+                }
             }
         }
 
@@ -314,8 +337,27 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         {
             if(idP.equalsIgnoreCase(Constantes.itemsGarantias.get(l).getIdProducto()) && Constantes.idClienteCliente.equalsIgnoreCase(Constantes.itemsGarantias.get(l).getIdCliente()))
             {
+                //Para obtener las garantias que estan disponibles
+                idGarantias = Constantes.itemsGarantias.get(l).getIdGarantia();
+
+                for(int i = 0; i < Constantes.itemsEstadoGarantia.size(); i++)
+                {
+                    if(idGarantias.equalsIgnoreCase(Constantes.itemsEstadoGarantia.get(i).getIdGarantia())
+                            && Constantes.itemsEstadoGarantia.get(i).getNombre().equalsIgnoreCase("En espera"))
+                    {
+                        cantidadGarantias = cantidadGarantias + 1;
+                    }
+
+                    if(idGarantias.equalsIgnoreCase(Constantes.itemsEstadoGarantia.get(i).getIdGarantia())
+                            && Constantes.itemsEstadoGarantia.get(i).getNombre().equalsIgnoreCase("Sin garantia"))
+                    {
+                        cantidadProductos = String.valueOf(Integer.valueOf(cantidadProductos) - 1);
+                    }
+                }
+
                 //sumarle devoluciones a las garantias en caso de que haya una devolucion del mismo producto que se selecciono
-                int sumaDevoGara = cantidadDevoluciones + Integer.valueOf(Constantes.itemsGarantias.get(l).getCantidad());
+                int sumaDevoGara = 0;
+                sumaDevoGara = cantidadDevoluciones + cantidadGarantias;
 
                 if(cantidadProductos.equalsIgnoreCase(String.valueOf(sumaDevoGara)))
                 {
@@ -336,6 +378,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                     editFechaGarantia.setText(Constantes.itemsGarantias.get(l).getFecha());
 
                     //resta para la cantidad de los productos que estan registrados por garanatia
+
                     int canP = Integer.valueOf(cantidadProductos) - sumaDevoGara;
                     cantidadProductos = String.valueOf(canP);
 
@@ -382,10 +425,6 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 int resta = Integer.valueOf(cantidadProductos) - cantidadDevoluciones;
                 cantidadProductos = String.valueOf(resta);
             }
-        }
-        else
-        {
-
         }
 
         for(int m = 1; m <= Integer.valueOf(cantidadProductos); m++)
@@ -518,7 +557,14 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         String idVenta = posicionItems.getIdVenta();
         String cantidadProductos = "";
         String idP = "";
+
         int cantidadGarantias = 0;
+
+        int cantidadDevoluciones = 0;
+        //int cantidadGarantias = 0;
+
+        String idDevoluciones = "";
+        String idGarantias = "";
 
         //variables para definir las probabilidades del usuario
         boolean accionAceptar = false;
@@ -546,7 +592,22 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         {
             if (idP.equalsIgnoreCase(Constantes.itemsGarantias.get(l).getIdProducto()) && Constantes.idClienteCliente.equalsIgnoreCase(Constantes.itemsGarantias.get(l).getIdCliente()))
             {
-                cantidadGarantias = Integer.valueOf(Constantes.itemsGarantias.get(l).getCantidad());
+                idGarantias = Constantes.itemsGarantias.get(l).getIdGarantia();
+
+                for(int i = 0; i < Constantes.itemsEstadoGarantia.size(); i++)
+                {
+                    if(idGarantias.equalsIgnoreCase(Constantes.itemsEstadoGarantia.get(i).getIdGarantia())
+                            && Constantes.itemsEstadoGarantia.get(i).getNombre().equalsIgnoreCase("En espera"))
+                    {
+                        cantidadGarantias = cantidadGarantias + 1;
+                    }
+
+                    if(idGarantias.equalsIgnoreCase(Constantes.itemsEstadoGarantia.get(i).getIdGarantia())
+                            && Constantes.itemsEstadoGarantia.get(i).getNombre().equalsIgnoreCase("Sin garantia"))
+                    {
+                        cantidadProductos = String.valueOf(Integer.valueOf(cantidadProductos) - 1);
+                    }
+                }
             }
         }
 
@@ -555,8 +616,26 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         {
             if(idP.equalsIgnoreCase(Constantes.itemsDevoluciones.get(l).getIdProducto()) && Constantes.idClienteCliente.equalsIgnoreCase(Constantes.itemsDevoluciones.get(l).getIdCliente()))
             {
+                idDevoluciones = Constantes.itemsDevoluciones.get(l).getIdDevolucion();
+
+                for(int i = 0; i < Constantes.itemsEstadoDevolucion.size(); i++)
+                {
+                    if(idDevoluciones.equalsIgnoreCase(Constantes.itemsEstadoDevolucion.get(i).getIdDevolucion())
+                            && Constantes.itemsEstadoDevolucion.get(i).getNombre().equalsIgnoreCase("En espera"))
+                    {
+                        cantidadDevoluciones = cantidadDevoluciones + 1;
+                    }
+
+                    if(idDevoluciones.equalsIgnoreCase(Constantes.itemsEstadoDevolucion.get(i).getIdDevolucion())
+                            && Constantes.itemsEstadoDevolucion.get(i).getNombre().equalsIgnoreCase("Sin devolucion"))
+                    {
+                        cantidadProductos = String.valueOf(Integer.valueOf(cantidadProductos) - 1);
+                    }
+                }
+
                 //sumarle garantias a las devoluciones en caso de que haya una garantia del mismo producto que se selecciono
-                int sumaDevoGara = cantidadGarantias + Integer.valueOf(Constantes.itemsDevoluciones.get(l).getCantidad());
+                int sumaDevoGara = 0;
+                sumaDevoGara = cantidadDevoluciones + cantidadGarantias;
 
                 if(cantidadProductos.equalsIgnoreCase(String.valueOf(sumaDevoGara)))
                 {
@@ -723,7 +802,6 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                         }
                     }
                 }
-
             }
         });
         builder.setNegativeButton("Cancelar", null);
@@ -843,6 +921,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
             catch (JSONException e)
             {
                 e.printStackTrace();
+                resul = false;
             }
 
             return resul;
@@ -850,7 +929,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
 
         protected void onPostExecute(Boolean result)
         {
-            if (resul)
+            if (result)
             {
                 //Obtener las garantias si las hay
                 Constantes.itemsGarantias.clear();
@@ -907,14 +986,12 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
 
                 if(respuestaGarantia.equalsIgnoreCase("No Existe"))
                 {
-                    existe = false;
+                    resul = false;
                 }
                 else
                 {
-                    existe = true;
+                    resul = true;
                 }
-
-                resul = true;
             }
             catch(UnsupportedEncodingException e)
             {
@@ -935,6 +1012,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
             }
             catch (JSONException e) {
                 e.printStackTrace();
+                resul = false;
             }
 
             return resul;
@@ -944,7 +1022,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         {
             //Toast.makeText(Perfil.this, respStr, Toast.LENGTH_SHORT).show();
 
-            if(existe)
+            if(result)
             {
                 //Obtener las garantias si las hay
                 Constantes.itemsGarantias.clear();
@@ -1024,6 +1102,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 resul = false;
             } catch (JSONException e) {
                 e.printStackTrace();
+                resul = false;
             }
 
             return resul;
@@ -1127,6 +1206,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
             catch (JSONException e)
             {
                 e.printStackTrace();
+                resul = false;
             }
 
             return resul;
@@ -1134,12 +1214,40 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
 
         protected void onPostExecute(Boolean result)
         {
-            if (resul)
+            if (result)
             {
-                //Obtener las garantias si las hay
-                Constantes.itemsEstadoGarantia.clear();
-                TareaObtenerState tareaObtenerState = new TareaObtenerState();
-                tareaObtenerState.execute();
+                switch (estado)
+                {
+                    case "update":
+
+                        contadorEstadosGarantia = contadorEstadosGarantia + 1;
+
+                        if(contadorEstadosGarantia == Integer.valueOf(cantidadPUpdate))
+                        {
+                            //Obtener las garantias si las hay
+                            TareaObtenerState tareaObtenerState = new TareaObtenerState();
+                            tareaObtenerState.execute();
+
+                            contadorEstadosGarantia = 0;
+                        }
+
+                        break;
+
+                    case "create":
+
+                        contadorEstadosGarantia = contadorEstadosGarantia + 1;
+
+                        if(contadorEstadosGarantia == Integer.valueOf(cantidadP))
+                        {
+                            //Obtener las garantias si las hay
+                            TareaObtenerState tareaObtenerState = new TareaObtenerState();
+                            tareaObtenerState.execute();
+
+                            contadorEstadosGarantia = 0;
+                        }
+
+                        break;
+                }
             }
             else
             {
@@ -1180,7 +1288,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 JSONArray objVendedores = objItems.getJSONArray(0);
                 //JSONObject obj = objItems.getJSONObject(0);
 
-                //String obj
+                Constantes.itemsEstadoGarantia.clear();
 
                 for(int i=0; i<objVendedores.length(); i++)
                 {
@@ -1211,6 +1319,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 resul = false;
             } catch (JSONException e) {
                 e.printStackTrace();
+                resul = false;
             }
 
             return resul;
@@ -1285,6 +1394,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
             catch (JSONException e)
             {
                 e.printStackTrace();
+                resul = false;
             }
 
             return resul;
@@ -1292,7 +1402,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
 
         protected void onPostExecute(Boolean result)
         {
-            if (resul)
+            if (result)
             {
                 //Obtener las devoluciones si las hay
                 Constantes.itemsDevoluciones.clear();
@@ -1349,14 +1459,12 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
 
                 if(respuestaGarantia.equalsIgnoreCase("No Existe"))
                 {
-                    existe = false;
+                    resul = false;
                 }
                 else
                 {
-                    existe = true;
+                    resul = true;
                 }
-
-                resul = true;
             }
             catch(UnsupportedEncodingException e)
             {
@@ -1377,6 +1485,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
             }
             catch (JSONException e) {
                 e.printStackTrace();
+                resul = false;
             }
 
             return resul;
@@ -1386,7 +1495,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         {
             //Toast.makeText(Perfil.this, respStr, Toast.LENGTH_SHORT).show();
 
-            if(existe)
+            if(result)
             {
                 //Obtener las garantias si las hay
                 Constantes.itemsDevoluciones.clear();
@@ -1466,6 +1575,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 resul = false;
             } catch (JSONException e) {
                 e.printStackTrace();
+                resul = false;
             }
 
             return resul;
@@ -1564,6 +1674,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
             catch (JSONException e)
             {
                 e.printStackTrace();
+                resul = false;
             }
 
             return resul;
@@ -1571,12 +1682,40 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
 
         protected void onPostExecute(Boolean result)
         {
-            if (resul)
+            if (result)
             {
-                //Obtener las devoluciones si las hay
-                Constantes.itemsEstadoDevolucion.clear();
-                TareaObtenerStateReturn tareaObtenerStateReturn = new TareaObtenerStateReturn();
-                tareaObtenerStateReturn.execute();
+                switch (estado)
+                {
+                    case "update":
+
+                        contadorEstadosDevolucion = contadorEstadosDevolucion + 1;
+
+                        if(contadorEstadosDevolucion == Integer.valueOf(cantidadPUpdate))
+                        {
+                            //Obtener las devoluciones si las hay
+                            TareaObtenerStateReturn tareaObtenerStateReturn = new TareaObtenerStateReturn();
+                            tareaObtenerStateReturn.execute();
+
+                            contadorEstadosDevolucion = 0;
+                        }
+
+                        break;
+
+                    case "create":
+
+                        contadorEstadosDevolucion = contadorEstadosDevolucion + 1;
+
+                        if(contadorEstadosDevolucion == Integer.valueOf(cantidadP))
+                        {
+                            //Obtener las devoluciones si las hay
+                            TareaObtenerStateReturn tareaObtenerStateReturn = new TareaObtenerStateReturn();
+                            tareaObtenerStateReturn.execute();
+
+                            contadorEstadosDevolucion = 0;
+                        }
+
+                        break;
+                }
             }
             else
             {
@@ -1617,7 +1756,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 JSONArray objVendedores = objItems.getJSONArray(0);
                 //JSONObject obj = objItems.getJSONObject(0);
 
-                //String obj
+                Constantes.itemsEstadoDevolucion.clear();
 
                 for(int i=0; i<objVendedores.length(); i++)
                 {
@@ -1648,6 +1787,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 resul = false;
             } catch (JSONException e) {
                 e.printStackTrace();
+                resul = false;
             }
 
             return resul;
