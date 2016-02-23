@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.billy.constantes.Constantes;
 import com.example.billy.empleado.Empleados;
 import com.example.billy.inversiones.R;
 import com.example.billy.menu_principal.PrincipalMenu;
@@ -46,22 +47,25 @@ public class VisualizarGarantia extends AppCompatActivity
     EditText editTextNombreCliente_VGarantia;
     EditText editTextTelefonoCliente_VGarantia;
     EditText editTextNombreProducto_VGarantia;
-    EditText editTextCantidadProducto_VGarantia;
     EditText editTextFecha_VGarantia;
     EditText editTextDescripcion_VGarantia;
 
     Spinner spinEstado_VGarantia;
+    Spinner spinCantidadProducto_VGarantia;
 
-    String estado = "";
     String descripcion = "";
     String fecha = "";
     String cantidad = "";
     String idVendedor = "";
     String idCliente = "";
     String idProducto = "";
-
     String respuesta = "";
+
     boolean existe = false;
+    int cantidadEstadoGarantia = 0;
+
+    int cantidadTotal = 0;
+    String estado = "";
 
     //Alerta Cargando
     ProgressDialog progressDialog;
@@ -72,6 +76,10 @@ public class VisualizarGarantia extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualizar_garantia);
 
+        TareaObtenerState tareaObtenerState = new TareaObtenerState();
+        tareaObtenerState.execute();
+        AlertaCargando();
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Volver");
         actionBar.show();
@@ -79,22 +87,21 @@ public class VisualizarGarantia extends AppCompatActivity
         editTextNombreCliente_VGarantia = (EditText) findViewById(R.id.editTextNombreCliente_VGarantia);
         editTextTelefonoCliente_VGarantia = (EditText) findViewById(R.id.editTextTelefonoCliente_VGarantia);
         editTextNombreProducto_VGarantia = (EditText) findViewById(R.id.editTextNombreProducto_VGarantia);
-        editTextCantidadProducto_VGarantia = (EditText) findViewById(R.id.editTextCantidadProducto_VGarantia);
         editTextFecha_VGarantia = (EditText) findViewById(R.id.editTextFecha_VGarantia);
         editTextDescripcion_VGarantia = (EditText) findViewById(R.id.editTextDescripcion_VGarantia);
 
         spinEstado_VGarantia = (Spinner) findViewById(R.id.spinEstado_VGarantia);
+        spinCantidadProducto_VGarantia = (Spinner) findViewById(R.id.spinCantidadProducto_VGarantia);
 
         Bundle extra = getIntent().getExtras();
         idGarantia = extra.getString("idGarantia");
-        estado = extra.getString("estado");
+        tipo = extra.getString("tipo");
         descripcion = extra.getString("descripcion");
         fecha = extra.getString("fecha");
         cantidad = extra.getString("cantidad");
         idVendedor = extra.getString("idVendedor");
         idCliente = extra.getString("idCliente");
         idProducto = extra.getString("idProducto");
-        tipo = extra.getString("tipo");
 
         switch (tipo)
         {
@@ -107,7 +114,6 @@ public class VisualizarGarantia extends AppCompatActivity
                         editTextNombreCliente_VGarantia.setText(Garantia.arrayListFiltroVendedor.get(i).getNombre());
                         editTextTelefonoCliente_VGarantia.setText(Garantia.arrayListFiltroVendedor.get(i).getTelefono());
                         editTextNombreProducto_VGarantia.setText(Garantia.arrayListFiltroVendedor.get(i).getNombreProducto());
-                        editTextCantidadProducto_VGarantia.setText(Garantia.arrayListFiltroVendedor.get(i).getCantidad());
                         editTextFecha_VGarantia.setText(Garantia.arrayListFiltroVendedor.get(i).getFecha());
                         editTextDescripcion_VGarantia.setText(Garantia.arrayListFiltroVendedor.get(i).getDescripcion());
                     }
@@ -124,7 +130,17 @@ public class VisualizarGarantia extends AppCompatActivity
                         editTextNombreCliente_VGarantia.setText(Garantia.arrayList.get(i).getNombre());
                         editTextTelefonoCliente_VGarantia.setText(Garantia.arrayList.get(i).getTelefono());
                         editTextNombreProducto_VGarantia.setText(Garantia.arrayList.get(i).getNombreProducto());
-                        editTextCantidadProducto_VGarantia.setText(Garantia.arrayList.get(i).getCantidad());
+
+                        ArrayList<String> arrayListSpin = new ArrayList<String>();
+                        arrayListSpin.clear();
+
+                        for(int m = 1; m <= Integer.valueOf(cantidad); m++)
+                        {
+                            arrayListSpin.add(String.valueOf(m));
+                        }
+
+                        spinCantidadProducto_VGarantia.setAdapter(new ArrayAdapter<String>(VisualizarGarantia.this, android.R.layout.simple_spinner_dropdown_item, arrayListSpin));
+
                         editTextFecha_VGarantia.setText(Garantia.arrayList.get(i).getFecha());
                         editTextDescripcion_VGarantia.setText(Garantia.arrayList.get(i).getDescripcion());
                     }
@@ -136,26 +152,7 @@ public class VisualizarGarantia extends AppCompatActivity
         //Para decidir que va a contener el spinner del estado
 
         String [] arrayEstado = getResources().getStringArray(R.array.estado_garantia);
-
-        switch (estado)
-        {
-            case "En espera":
-
-                spinEstado_VGarantia.setAdapter(new ArrayAdapter<String>(VisualizarGarantia.this, android.R.layout.simple_spinner_dropdown_item, arrayEstado));
-
-                break;
-
-            case "Pendiente":
-
-                ArrayList<String> arrayEstado2 =  new ArrayList<String>();
-                arrayEstado2.clear();
-                arrayEstado2.add(arrayEstado[1]);
-                arrayEstado2.add(arrayEstado[2]);
-
-                spinEstado_VGarantia.setAdapter(new ArrayAdapter<String>(VisualizarGarantia.this, android.R.layout.simple_spinner_dropdown_item, arrayEstado2));
-
-                break;
-        }
+        spinEstado_VGarantia.setAdapter(new ArrayAdapter<String>(VisualizarGarantia.this, android.R.layout.simple_spinner_dropdown_item, arrayEstado));
     }
 
     public void AlertaCargando()
@@ -186,11 +183,19 @@ public class VisualizarGarantia extends AppCompatActivity
         {
             case R.id.guardarGarantia_VisualizarGarantia:
 
-                String estadoSpin = spinEstado_VGarantia.getSelectedItem().toString();
+                String cantidadSpin = spinCantidadProducto_VGarantia.getSelectedItem().toString();
 
-                TareaUpdateGarantia tareaUpdateGarantia = new TareaUpdateGarantia();
-                tareaUpdateGarantia.execute(idGarantia, estadoSpin, descripcion, fecha, cantidad,
-                        idVendedor, idCliente, idProducto);
+                if(cantidad.equalsIgnoreCase(String.valueOf(Integer.valueOf(cantidadTotal + cantidadSpin))))
+                {
+                    TareaUpdateGarantia tareaUpdateGarantia = new TareaUpdateGarantia();
+                    tareaUpdateGarantia.execute(idGarantia, "Terminado", descripcion, fecha, cantidad,
+                            idVendedor, idCliente, idProducto);
+
+                    estado = "Terminado";
+                }
+
+
+
 
                 AlertaCargando();
 
@@ -241,11 +246,126 @@ public class VisualizarGarantia extends AppCompatActivity
 
                 if(respuesta.equalsIgnoreCase("No Existe"))
                 {
-                    existe = false;
+                    resul = false;
                 }
                 else
                 {
-                    existe = true;
+                    resul = true;
+                }
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            if(result)
+            {
+                String cantidadSpiner = spinCantidadProducto_VGarantia.getSelectedItem().toString();
+                String estadoSpin = spinEstado_VGarantia.getSelectedItem().toString();
+                int contador = 0;
+
+                switch (estado)
+                {
+                    case "Terminado":
+
+                        for(int j = 0; j < Constantes.itemsEstadoGarantia.size(); j++)
+                        {
+                            if(contador <= Integer.valueOf(cantidadSpiner))
+                            {
+                                if(idGarantia.equalsIgnoreCase(Constantes.itemsEstadoGarantia.get(j).getIdGarantia())
+                                        && Constantes.itemsEstadoGarantia.get(j).getNombre().equalsIgnoreCase("En espera"))
+                                {
+                                    TareaUpdateEstadoGarantia tareaUpdateEstadoGarantia = new TareaUpdateEstadoGarantia();
+                                    tareaUpdateEstadoGarantia.execute(Constantes.itemsEstadoGarantia.get(j).getIdEstadoGarantia(),
+                                            estadoSpin, "1", idGarantia);
+
+                                    contador = contador + 1;
+                                }
+                            }
+                        }
+
+                        break;
+                }
+
+                Toast.makeText(VisualizarGarantia.this, "La Garantia se modifico correctamente", Toast.LENGTH_SHORT).show();
+
+                progressDialog.dismiss();
+
+                Intent intent = new Intent(VisualizarGarantia.this, Garantia.class);
+                startActivity(intent);
+                finish();
+            }
+            else
+            {
+                Toast.makeText(VisualizarGarantia.this, "Error al Modificar la Garantia", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+        }
+    }
+
+    //Clases Asyntask para traer los datos de la tabla garantias
+    private class TareaObtenerState extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerEstadoGarantia.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "getAllState"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+                //JSONObject obj = objItems.getJSONObject(0);
+
+                Constantes.itemsEstadoGarantia.clear();
+
+                for(int i=0; i<objVendedores.length(); i++)
+                {
+                    JSONObject obj = objVendedores.getJSONObject(i);
+
+                    Constantes.itemsEstadoGarantia.add(new ItemsEstadoGarantia(obj.getString("idEstadoGarantia"), obj.getString("nombre"), obj.getString("cantidad"), obj.getString("idGarantia")));
+
+                    resul = true;
                 }
 
                 resul = true;
@@ -254,26 +374,21 @@ public class VisualizarGarantia extends AppCompatActivity
             {
                 e.printStackTrace();
                 resul = false;
-                existe = false;
             }
 
             catch(ClientProtocolException e)
             {
                 e.printStackTrace();
                 resul = false;
-                existe = false;
             }
 
             catch (IOException e)
             {
                 e.printStackTrace();
                 resul = false;
-                existe = false;
-            }
-            catch (JSONException e)
-            {
+            } catch (JSONException e) {
                 e.printStackTrace();
-                existe = false;
+                resul = false;
             }
 
             return resul;
@@ -281,15 +396,124 @@ public class VisualizarGarantia extends AppCompatActivity
 
         protected void onPostExecute(Boolean result)
         {
-            if(existe)
+            if(result)
             {
-                Toast.makeText(VisualizarGarantia.this, "La Garantia se modifico correctamente", Toast.LENGTH_SHORT).show();
+                for(int i = 0; i < Constantes.itemsEstadoGarantia.size(); i++)
+                {
+                    if(idGarantia.equalsIgnoreCase(Constantes.itemsEstadoGarantia.get(i).getIdGarantia())
+                            && Constantes.itemsEstadoGarantia.get(i).getNombre().equalsIgnoreCase("En espera"))
+                    {
+                        cantidadEstadoGarantia = cantidadEstadoGarantia + 1;
+                    }
+
+                    if(idGarantia.equalsIgnoreCase(Constantes.itemsEstadoGarantia.get(i).getIdGarantia())
+                            && Constantes.itemsEstadoGarantia.get(i).getNombre().equalsIgnoreCase("Sin garantia"))
+                    {
+                        cantidadTotal = cantidadTotal + 1;
+                    }
+
+                    if(idGarantia.equalsIgnoreCase(Constantes.itemsEstadoGarantia.get(i).getIdGarantia())
+                            && Constantes.itemsEstadoGarantia.get(i).getNombre().equalsIgnoreCase("Aceptado"))
+                    {
+                        cantidadTotal = cantidadTotal + 1;
+                    }
+                }
+
+                ArrayList<String> arrayListSpin = new ArrayList<String>();
+                arrayListSpin.clear();
+
+                for(int m = 1; m <= Integer.valueOf(cantidadEstadoGarantia); m++)
+                {
+                    arrayListSpin.add(String.valueOf(m));
+                }
+
+                spinCantidadProducto_VGarantia.setAdapter(new ArrayAdapter<String>(VisualizarGarantia.this, android.R.layout.simple_spinner_dropdown_item, arrayListSpin));
 
                 progressDialog.dismiss();
+            }
+            else
+            {
+                Toast.makeText(VisualizarGarantia.this, "Error al cargar las garantias", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
+            }
+        }
+    }
 
-                Intent intent = new Intent(VisualizarGarantia.this, Garantia.class);
-                startActivity(intent);
-                finish();
+    private class TareaUpdateEstadoGarantia extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerEstadoGarantia.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("idEstadoGarantia", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("nombre", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("cantidad", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("idGarantia", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("option", "updateState"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                respuesta= String.valueOf(objItems);
+
+                if(respuesta.equalsIgnoreCase("No Existe"))
+                {
+                    resul = false;
+                }
+                else
+                {
+                    resul = true;
+                }
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            if(result)
+            {
+
             }
             else
             {

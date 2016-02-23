@@ -322,12 +322,6 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                     {
                         cantidadDevoluciones = cantidadDevoluciones + 1;
                     }
-
-                    if(idDevoluciones.equalsIgnoreCase(Constantes.itemsEstadoDevolucion.get(i).getIdDevolucion())
-                            && Constantes.itemsEstadoDevolucion.get(i).getNombre().equalsIgnoreCase("Sin garantia"))
-                    {
-                        cantidadProductos = String.valueOf(Integer.valueOf(cantidadProductos) - 1);
-                    }
                 }
             }
         }
@@ -346,12 +340,6 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                             && Constantes.itemsEstadoGarantia.get(i).getNombre().equalsIgnoreCase("En espera"))
                     {
                         cantidadGarantias = cantidadGarantias + 1;
-                    }
-
-                    if(idGarantias.equalsIgnoreCase(Constantes.itemsEstadoGarantia.get(i).getIdGarantia())
-                            && Constantes.itemsEstadoGarantia.get(i).getNombre().equalsIgnoreCase("Sin garantia"))
-                    {
-                        cantidadProductos = String.valueOf(Integer.valueOf(cantidadProductos) - 1);
                     }
                 }
 
@@ -601,12 +589,6 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                     {
                         cantidadGarantias = cantidadGarantias + 1;
                     }
-
-                    if(idGarantias.equalsIgnoreCase(Constantes.itemsEstadoGarantia.get(i).getIdGarantia())
-                            && Constantes.itemsEstadoGarantia.get(i).getNombre().equalsIgnoreCase("Sin garantia"))
-                    {
-                        cantidadProductos = String.valueOf(Integer.valueOf(cantidadProductos) - 1);
-                    }
                 }
             }
         }
@@ -624,12 +606,6 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                             && Constantes.itemsEstadoDevolucion.get(i).getNombre().equalsIgnoreCase("En espera"))
                     {
                         cantidadDevoluciones = cantidadDevoluciones + 1;
-                    }
-
-                    if(idDevoluciones.equalsIgnoreCase(Constantes.itemsEstadoDevolucion.get(i).getIdDevolucion())
-                            && Constantes.itemsEstadoDevolucion.get(i).getNombre().equalsIgnoreCase("Sin devolucion"))
-                    {
-                        cantidadProductos = String.valueOf(Integer.valueOf(cantidadProductos) - 1);
                     }
                 }
 
