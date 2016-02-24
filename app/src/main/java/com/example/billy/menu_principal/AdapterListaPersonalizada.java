@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -389,7 +390,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
 
                         if(idFactura.equalsIgnoreCase(obj.getString("idFactura")) && obj.getString("estado").equalsIgnoreCase("En Venta"))
                         {
-                            Constantes.itemsVenta.add(new ItemsVenta_AgregarCliente(obj.getString("idVenta"),obj.getString("total"),obj.getString("cantidad"),obj.getString("estado"),obj.getString("idFactura"),obj.getString("idProducto"), "0"));
+                            Constantes.itemsVenta.add(new ItemsVenta_AgregarCliente(obj.getString("idVenta"),obj.getString("total"),obj.getString("cantidad"), obj.getString("cantidadGarantia"), obj.getString("cantidadDevolucion"), obj.getString("estado"),obj.getString("idFactura"),obj.getString("idProducto"), "0"));
                         }
 
                         existe = true;

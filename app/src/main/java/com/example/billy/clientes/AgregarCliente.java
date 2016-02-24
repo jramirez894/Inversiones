@@ -1051,6 +1051,8 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
             nameValuePairs = new ArrayList<NameValuePair>();
             nameValuePairs.add(new BasicNameValuePair("total", params[0]));
             nameValuePairs.add(new BasicNameValuePair("cantidad", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("cantidadGarantia", "0"));
+            nameValuePairs.add(new BasicNameValuePair("cantidadDevolucion", "0"));
             nameValuePairs.add(new BasicNameValuePair("estado", params[2]));
             nameValuePairs.add(new BasicNameValuePair("idFactura", params[3]));
             nameValuePairs.add(new BasicNameValuePair("idProducto", params[4]));

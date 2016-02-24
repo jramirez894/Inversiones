@@ -630,6 +630,8 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
             String idVenta = "";
             String total = "";
             String cantidad = "";
+            String cantidadGarantia = "";
+            String cantidadDevolucion = "";
             String estado = "";
 
             String idProducto = "";
@@ -656,6 +658,9 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                                 estado = Constantes.itemsVenta.get(j).getEstado();
                                 idFactura = Constantes.itemsVenta.get(j).getIdFactura();
                                 idProducto = Constantes.itemsVenta.get(j).getIdProducto();
+
+                                cantidadGarantia = Constantes.itemsVenta.get(j).getCantidadGarantia();
+                                cantidadDevolucion = Constantes.itemsVenta.get(j).getCantidadDevolucion();
 
                                 for(int k = 0; k < M_DatosCobro.arrayListP.size(); k++)
                                 {
@@ -685,7 +690,7 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                         }
 
                         TareaUpdateSale tareaUpdateSale = new TareaUpdateSale();
-                        tareaUpdateSale.execute(idVenta, total, cantidad, estado, idFactura, idProducto);
+                        tareaUpdateSale.execute(idVenta, total, cantidad, cantidadGarantia,  cantidadDevolucion, estado, idFactura, idProducto);
 
                         //Para descontar de la cantidad total de productos en caso de que añada nuevos.
 
@@ -863,9 +868,11 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
             nameValuePairs.add(new BasicNameValuePair("idVenta", params[0]));
             nameValuePairs.add(new BasicNameValuePair("total", params[1]));
             nameValuePairs.add(new BasicNameValuePair("cantidad", params[2]));
-            nameValuePairs.add(new BasicNameValuePair("estado", params[3]));
-            nameValuePairs.add(new BasicNameValuePair("idFactura", params[4]));
-            nameValuePairs.add(new BasicNameValuePair("idProducto", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("cantidadGarantia", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("cantidadDevolucion", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("estado", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("idFactura", params[6]));
+            nameValuePairs.add(new BasicNameValuePair("idProducto", params[7]));
             nameValuePairs.add(new BasicNameValuePair("option",  "updateSale"));
 
             try

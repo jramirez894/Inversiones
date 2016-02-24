@@ -564,6 +564,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
             {
                 if(Constantes.itemsVenta.get(j).getNuevaCantidad().equalsIgnoreCase("0"))
                 {
+                    //cambiar aqui
                     cantidadProductos = Constantes.itemsVenta.get(j).getCantidad();
                     idP = Constantes.itemsVenta.get(j).getIdProducto();
                 }
