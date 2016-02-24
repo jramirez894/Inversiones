@@ -307,6 +307,8 @@ public class VisualizarGarantia extends AppCompatActivity
                             }
                         }
 
+
+
                         break;
                 }
 
@@ -411,12 +413,6 @@ public class VisualizarGarantia extends AppCompatActivity
                     {
                         cantidadTotal = cantidadTotal + 1;
                     }
-
-                    if(idGarantia.equalsIgnoreCase(Constantes.itemsEstadoGarantia.get(i).getIdGarantia())
-                            && Constantes.itemsEstadoGarantia.get(i).getNombre().equalsIgnoreCase("Aceptado"))
-                    {
-                        cantidadTotal = cantidadTotal + 1;
-                    }
                 }
 
                 ArrayList<String> arrayListSpin = new ArrayList<String>();
@@ -428,6 +424,8 @@ public class VisualizarGarantia extends AppCompatActivity
                 }
 
                 spinCantidadProducto_VGarantia.setAdapter(new ArrayAdapter<String>(VisualizarGarantia.this, android.R.layout.simple_spinner_dropdown_item, arrayListSpin));
+
+
 
                 progressDialog.dismiss();
             }
