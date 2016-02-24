@@ -73,6 +73,8 @@ public class VisualizarGarantia extends AppCompatActivity
     //Alerta Cargando
     ProgressDialog progressDialog;
 
+    boolean verificarGarantiaTerminada = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -194,11 +196,20 @@ public class VisualizarGarantia extends AppCompatActivity
 
                 if(cantidad.equalsIgnoreCase(String.valueOf(Integer.valueOf(cantidadTotal + cantidadSpin))))
                 {
+                    estado = "Terminado";
+
                     TareaUpdateGarantia tareaUpdateGarantia = new TareaUpdateGarantia();
-                    tareaUpdateGarantia.execute(idGarantia, "Terminado", descripcion, fecha, cantidad,
+                    tareaUpdateGarantia.execute(idGarantia, estado, descripcion, fecha, cantidad,
                             idVendedor, idCliente, idProducto);
 
-                    estado = "Terminado";
+                }
+                else
+                {
+                    estado = "En proceso";
+
+                    TareaUpdateGarantia tareaUpdateGarantia = new TareaUpdateGarantia();
+                    tareaUpdateGarantia.execute(idGarantia, estado, descripcion, fecha, cantidad,
+                            idVendedor, idCliente, idProducto);
                 }
 
                 AlertaCargando();
@@ -287,61 +298,121 @@ public class VisualizarGarantia extends AppCompatActivity
         {
             if(result)
             {
-                String cantidadSpiner = spinCantidadProducto_VGarantia.getSelectedItem().toString();
-                String estadoSpin = spinEstado_VGarantia.getSelectedItem().toString();
-                int contador = 0;
-
-                boolean verificar = false;
-
-                switch (estado)
+                if (!verificarGarantiaTerminada)
                 {
-                    case "Terminado":
+                    String cantidadSpiner = spinCantidadProducto_VGarantia.getSelectedItem().toString();
+                    String estadoSpin = spinEstado_VGarantia.getSelectedItem().toString();
+                    int contador = 0;
 
-                        for(int j = 0; j < Constantes.itemsEstadoGarantia.size(); j++)
-                        {
-                            if(contador <= Integer.valueOf(cantidadSpiner))
+                    boolean verificar = false;
+
+                    switch (estado)
+                    {
+                        case "Terminado":
+
+                            for(int j = 0; j < Constantes.itemsEstadoGarantia.size(); j++)
                             {
-                                if(idGarantia.equalsIgnoreCase(Constantes.itemsEstadoGarantia.get(j).getIdGarantia())
-                                        && Constantes.itemsEstadoGarantia.get(j).getNombre().equalsIgnoreCase("En espera"))
+                                if(contador <= Integer.valueOf(cantidadSpiner))
                                 {
-                                    TareaUpdateEstadoGarantia tareaUpdateEstadoGarantia = new TareaUpdateEstadoGarantia();
-                                    tareaUpdateEstadoGarantia.execute(Constantes.itemsEstadoGarantia.get(j).getIdEstadoGarantia(),
-                                            estadoSpin, "1", idGarantia);
+                                    if(idGarantia.equalsIgnoreCase(Constantes.itemsEstadoGarantia.get(j).getIdGarantia())
+                                            && Constantes.itemsEstadoGarantia.get(j).getNombre().equalsIgnoreCase("En espera"))
+                                    {
+                                        TareaUpdateEstadoGarantia tareaUpdateEstadoGarantia = new TareaUpdateEstadoGarantia();
+                                        tareaUpdateEstadoGarantia.execute(Constantes.itemsEstadoGarantia.get(j).getIdEstadoGarantia(),
+                                                estadoSpin, "1", idGarantia);
 
-                                    contador = contador + 1;
+                                        contador = contador + 1;
+                                    }
                                 }
                             }
-                        }
 
-                        if (estadoSpin.equalsIgnoreCase("Sin garantia"))
-                        {
-                            TareaUpdateSale tareaUpdateSale = new TareaUpdateSale();
-                            tareaUpdateSale.execute(Constantes.itemsVenta.get(0).getIdVenta(),
-                                    Constantes.itemsVenta.get(0).getTotal(),
-                                    Constantes.itemsVenta.get(0).getCantidad(),
-                                    cantidadSpiner,
-                                    Constantes.itemsVenta.get(0).getCantidadDevolucion(),
-                                    Constantes.itemsVenta.get(0).getEstado(),
-                                    Constantes.itemsVenta.get(0).getIdFactura(),
-                                    Constantes.itemsVenta.get(0).getIdProducto());
+                            if (estadoSpin.equalsIgnoreCase("Sin garantia"))
+                            {
+                                TareaUpdateSale tareaUpdateSale = new TareaUpdateSale();
+                                tareaUpdateSale.execute(Constantes.itemsVenta.get(0).getIdVenta(),
+                                        Constantes.itemsVenta.get(0).getTotal(),
+                                        Constantes.itemsVenta.get(0).getCantidad(),
+                                        cantidadSpiner,
+                                        Constantes.itemsVenta.get(0).getCantidadDevolucion(),
+                                        Constantes.itemsVenta.get(0).getEstado(),
+                                        Constantes.itemsVenta.get(0).getIdFactura(),
+                                        Constantes.itemsVenta.get(0).getIdProducto());
 
-                            verificar = true;
-                        }
+                                verificar = true;
+                            }
 
-                        break;
+                            break;
+
+                        case "En proceso":
+
+                            for(int i = 0; i < Constantes.itemsEstadoGarantia.size(); i++)
+                            {
+                                if(idGarantia.equalsIgnoreCase(Constantes.itemsEstadoGarantia.get(i).getIdGarantia())
+                                        && Constantes.itemsEstadoGarantia.get(i).getNombre().equalsIgnoreCase("Aceptado"))
+                                {
+                                    cantidadTotal = cantidadTotal + 1;
+                                }
+                            }
+
+                            for(int j = 0; j < Constantes.itemsEstadoGarantia.size(); j++)
+                            {
+                                if(contador < Integer.valueOf(cantidadSpiner))
+                                {
+                                    if(idGarantia.equalsIgnoreCase(Constantes.itemsEstadoGarantia.get(j).getIdGarantia())
+                                            && Constantes.itemsEstadoGarantia.get(j).getNombre().equalsIgnoreCase("En espera"))
+                                    {
+                                        TareaUpdateEstadoGarantia tareaUpdateEstadoGarantia = new TareaUpdateEstadoGarantia();
+                                        tareaUpdateEstadoGarantia.execute(Constantes.itemsEstadoGarantia.get(j).getIdEstadoGarantia(),
+                                                estadoSpin, "1", idGarantia);
+
+                                        contador = contador + 1;
+                                    }
+                                }
+                            }
+
+                            if (estadoSpin.equalsIgnoreCase("Sin garantia"))
+                            {
+                                int suma = 0;
+                                suma = Integer.valueOf(Constantes.itemsVenta.get(0).getCantidadGarantia()) + Integer.valueOf(cantidadSpiner);
+
+                                TareaUpdateSale tareaUpdateSale = new TareaUpdateSale();
+                                tareaUpdateSale.execute(Constantes.itemsVenta.get(0).getIdVenta(),
+                                        Constantes.itemsVenta.get(0).getTotal(),
+                                        Constantes.itemsVenta.get(0).getCantidad(),
+                                        String.valueOf(suma),
+                                        Constantes.itemsVenta.get(0).getCantidadDevolucion(),
+                                        Constantes.itemsVenta.get(0).getEstado(),
+                                        Constantes.itemsVenta.get(0).getIdFactura(),
+                                        Constantes.itemsVenta.get(0).getIdProducto());
+
+                                verificar = true;
+                            }
+
+                            int cantidadFinal = cantidadTotal + Integer.valueOf(cantidadSpiner);
+
+                            if(cantidad.equalsIgnoreCase(String.valueOf(cantidadFinal)))
+                            {
+                                verificarGarantiaTerminada  = true;
+
+                                TareaUpdateGarantia tareaUpdateGarantia = new TareaUpdateGarantia();
+                                tareaUpdateGarantia.execute(idGarantia, "Terminado", descripcion, fecha, cantidad,
+                                        idVendedor, idCliente, idProducto);
+                            }
+
+                            break;
+                    }
+
+                    if (!verificar)
+                    {
+                        Toast.makeText(VisualizarGarantia.this, "La Garantia se modifico correctamente", Toast.LENGTH_SHORT).show();
+
+                        progressDialog.dismiss();
+
+                        Intent intent = new Intent(VisualizarGarantia.this, Garantia.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
-
-                if (!verificar)
-                {
-                    Toast.makeText(VisualizarGarantia.this, "La Garantia se modifico correctamente", Toast.LENGTH_SHORT).show();
-
-                    progressDialog.dismiss();
-
-                    Intent intent = new Intent(VisualizarGarantia.this, Garantia.class);
-                    startActivity(intent);
-                    finish();
-                }
-
             }
             else
             {

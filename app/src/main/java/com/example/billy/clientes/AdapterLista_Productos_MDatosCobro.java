@@ -367,6 +367,8 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                     {
                         cantidadGarantias = cantidadGarantias + 1;
                     }
+
+
                 }
 
                 //sumarle devoluciones a las garantias en caso de que haya una devolucion del mismo producto que se selecciono
@@ -1129,7 +1131,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 {
                     JSONObject obj = objVendedores.getJSONObject(i);
 
-                    if(obj.getString("estado").equalsIgnoreCase("En espera") || obj.getString("estado").equalsIgnoreCase("Pendiente"))
+                    if(obj.getString("estado").equalsIgnoreCase("En espera") || obj.getString("estado").equalsIgnoreCase("En proceso"))
                     {
                         Constantes.itemsGarantias.add(new Items_Garantia(obj.getString("idGarantia"), obj.getString("estado"), obj.getString("descripcion"), obj.getString("fecha"), obj.getString("cantidad"), obj.getString("idVendedor"), obj.getString("idCliente"), obj.getString("idProducto")));
                     }
