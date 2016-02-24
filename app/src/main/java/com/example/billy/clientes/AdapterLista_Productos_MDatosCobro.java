@@ -299,11 +299,37 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                 {
                     cantidadProductos = Constantes.itemsVenta.get(j).getCantidad();
                     idP = Constantes.itemsVenta.get(j).getIdProducto();
+
+                    int cantidadG = Integer.valueOf(Constantes.itemsVenta.get(j).getCantidadGarantia());
+                    int cantidadD = Integer.valueOf(Constantes.itemsVenta.get(j).getCantidadDevolucion());
+
+                    if (cantidadG > 0 || cantidadD > 0)
+                    {
+                        int suma = 0;
+                        suma = cantidadG + cantidadD;
+
+                        int operacion = Integer.valueOf(cantidadProductos) - suma;
+
+                        cantidadProductos = String.valueOf(operacion);
+                    }
                 }
                 else
                 {
                     cantidadProductos = Constantes.itemsVenta.get(j).getNuevaCantidad();
                     idP = Constantes.itemsVenta.get(j).getIdProducto();
+
+                    int cantidadG = Integer.valueOf(Constantes.itemsVenta.get(j).getCantidadGarantia());
+                    int cantidadD = Integer.valueOf(Constantes.itemsVenta.get(j).getCantidadDevolucion());
+
+                    if (cantidadG > 0 || cantidadD > 0)
+                    {
+                        int suma = 0;
+                        suma = cantidadG + cantidadD;
+
+                        int operacion = Integer.valueOf(cantidadProductos) - suma;
+
+                        cantidadProductos = String.valueOf(operacion);
+                    }
                 }
             }
         }
@@ -396,24 +422,38 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
         arrayListSpin.clear();
 
         //verificar si hay el producto seleccionado tambien tiene devoluciones
-        if(cantidadDevoluciones > 0 && !verificarGarantia)
+        if ( cantidadProductos.equalsIgnoreCase("0"))
         {
-            if(cantidadDevoluciones == Integer.valueOf(cantidadProductos))
-            {
-                editDescripcionGarantia.setVisibility(View.GONE);
-                editFechaGarantia.setVisibility(View.GONE);
-                layoutGarantia.setVisibility(View.GONE);
+            editDescripcionGarantia.setVisibility(View.GONE);
+            editFechaGarantia.setVisibility(View.GONE);
+            layoutGarantia.setVisibility(View.GONE);
 
-                txtTextoDescripcion.setText("Los productos ya se encuentran registrados por garantia y/o devolución");
+            txtTextoDescripcion.setText("Los productos ya se encuentran registrados por garantia y/o devolución");
 
-                accionAceptar = true;
-            }
-            else
+            accionAceptar = true;
+        }
+        else
+        {
+            if(cantidadDevoluciones > 0 && !verificarGarantia)
             {
-                int resta = Integer.valueOf(cantidadProductos) - cantidadDevoluciones;
-                cantidadProductos = String.valueOf(resta);
+                if(cantidadDevoluciones == Integer.valueOf(cantidadProductos))
+                {
+                    editDescripcionGarantia.setVisibility(View.GONE);
+                    editFechaGarantia.setVisibility(View.GONE);
+                    layoutGarantia.setVisibility(View.GONE);
+
+                    txtTextoDescripcion.setText("Los productos ya se encuentran registrados por garantia y/o devolución");
+
+                    accionAceptar = true;
+                }
+                else
+                {
+                    int resta = Integer.valueOf(cantidadProductos) - cantidadDevoluciones;
+                    cantidadProductos = String.valueOf(resta);
+                }
             }
         }
+
 
         for(int m = 1; m <= Integer.valueOf(cantidadProductos); m++)
         {

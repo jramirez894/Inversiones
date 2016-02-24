@@ -345,97 +345,96 @@ public class AdapterListaPersonalizada extends ArrayAdapter
     }
 
     //Clases Asyntask para traer las ventas
-
-    private class TareaGetSale extends AsyncTask<String,Integer,Boolean>
-    {
-        private String respStr;
-        private JSONObject msg;
-
-        @TargetApi(Build.VERSION_CODES.KITKAT)
-        protected Boolean doInBackground(String... params)
+        private class TareaGetSale extends AsyncTask<String,Integer,Boolean>
         {
-            HttpClient httpClient;
-            List<NameValuePair> nameValuePairs;
-            HttpPost httpPost;
-            httpClient= new DefaultHttpClient();
-            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerVenta.php");
+            private String respStr;
+            private JSONObject msg;
 
-            nameValuePairs = new ArrayList<NameValuePair>();
-            nameValuePairs.add(new BasicNameValuePair("option",  "getAllSale"));
-
-            try
+            @TargetApi(Build.VERSION_CODES.KITKAT)
+            protected Boolean doInBackground(String... params)
             {
-                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                HttpResponse resp= httpClient.execute(httpPost);
+                HttpClient httpClient;
+                List<NameValuePair> nameValuePairs;
+                HttpPost httpPost;
+                httpClient= new DefaultHttpClient();
+                httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerVenta.php");
 
-                respStr = EntityUtils.toString(resp.getEntity());
+                nameValuePairs = new ArrayList<NameValuePair>();
+                nameValuePairs.add(new BasicNameValuePair("option",  "getAllSale"));
 
-                JSONObject respJSON = new JSONObject(respStr);
-                JSONArray objItems = respJSON.getJSONArray("items");
-                JSONArray objFacturas = objItems.getJSONArray(0);
-
-                //String obj
-                String respuesta= String.valueOf(objFacturas);
-
-                if(respuesta.equalsIgnoreCase("No Existen Ventas"))
+                try
                 {
+                    httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                    HttpResponse resp= httpClient.execute(httpPost);
+
+                    respStr = EntityUtils.toString(resp.getEntity());
+
+                    JSONObject respJSON = new JSONObject(respStr);
+                    JSONArray objItems = respJSON.getJSONArray("items");
+                    JSONArray objFacturas = objItems.getJSONArray(0);
+
+                    //String obj
+                    String respuesta= String.valueOf(objFacturas);
+
+                    if(respuesta.equalsIgnoreCase("No Existen Ventas"))
+                    {
+                        existe = false;
+                    }
+                    else
+                    {
+                        Constantes.itemsVenta.clear();
+                        for(int i=0; i<objFacturas.length(); i++)
+                        {
+                            JSONObject obj = objFacturas.getJSONObject(i);
+
+                            if(idFactura.equalsIgnoreCase(obj.getString("idFactura")) && obj.getString("estado").equalsIgnoreCase("En Venta"))
+                            {
+                                Constantes.itemsVenta.add(new ItemsVenta_AgregarCliente(obj.getString("idVenta"),obj.getString("total"),obj.getString("cantidad"), obj.getString("cantidadGarantia"), obj.getString("cantidadDevolucion"), obj.getString("estado"),obj.getString("idFactura"),obj.getString("idProducto"), "0"));
+                            }
+
+                            existe = true;
+                        }
+                    }
+                }
+                catch(UnsupportedEncodingException e)
+                {
+                    e.printStackTrace();
                     existe = false;
+                }
+
+                catch(ClientProtocolException e)
+                {
+                    e.printStackTrace();
+                    existe = false;
+                }
+
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                    existe = false;
+                }
+                catch (JSONException e)
+                {
+                    e.printStackTrace();
+                    existe = false;
+                }
+
+                return existe;
+            }
+
+            protected void onPostExecute(Boolean result)
+            {
+                if (existe)
+                {
+                    TareaProductos tarea = new TareaProductos();
+                    tarea.execute();
                 }
                 else
                 {
-                    Constantes.itemsVenta.clear();
-                    for(int i=0; i<objFacturas.length(); i++)
-                    {
-                        JSONObject obj = objFacturas.getJSONObject(i);
-
-                        if(idFactura.equalsIgnoreCase(obj.getString("idFactura")) && obj.getString("estado").equalsIgnoreCase("En Venta"))
-                        {
-                            Constantes.itemsVenta.add(new ItemsVenta_AgregarCliente(obj.getString("idVenta"),obj.getString("total"),obj.getString("cantidad"), obj.getString("cantidadGarantia"), obj.getString("cantidadDevolucion"), obj.getString("estado"),obj.getString("idFactura"),obj.getString("idProducto"), "0"));
-                        }
-
-                        existe = true;
-                    }
+                    progressDialog.dismiss();
+                    Toast.makeText(getContext(), "Error al cargar el cliente", Toast.LENGTH_LONG).show();
                 }
             }
-            catch(UnsupportedEncodingException e)
-            {
-                e.printStackTrace();
-                existe = false;
-            }
-
-            catch(ClientProtocolException e)
-            {
-                e.printStackTrace();
-                existe = false;
-            }
-
-            catch (IOException e)
-            {
-                e.printStackTrace();
-                existe = false;
-            }
-            catch (JSONException e)
-            {
-                e.printStackTrace();
-                existe = false;
-            }
-
-            return existe;
-        }
-
-        protected void onPostExecute(Boolean result)
-        {
-            if (existe)
-            {
-                TareaProductos tarea = new TareaProductos();
-                tarea.execute();
-            }
-            else
-            {
-                progressDialog.dismiss();
-                Toast.makeText(getContext(), "Error al cargar el cliente", Toast.LENGTH_LONG).show();
-            }
-        }
     }
 
     //Clases Asyntask para traer los datos de la tabla productos
