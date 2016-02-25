@@ -1,7 +1,10 @@
 package com.example.billy.devolucion;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -10,8 +13,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -21,11 +26,14 @@ import com.example.billy.clientes.DatosCobro;
 import com.example.billy.clientes.DetalleCobro;
 import com.example.billy.clientes.ItemFactura_AgregarCliente;
 import com.example.billy.clientes.M_DatosCobro;
+import com.example.billy.clientes.M_DetalleCobro;
+import com.example.billy.constantes.Constantes;
 import com.example.billy.garantias_product.Garantia;
 import com.example.billy.inversiones.R;
 import com.example.billy.menu_principal.PrincipalMenu;
 import com.example.billy.productos.AdapterListaProductos_Productos;
 import com.example.billy.productos.ItemsListaProductos_Productos;
+import com.example.billy.productos.Productos;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -617,15 +625,163 @@ public class VisualizarDevolucion extends AppCompatActivity
 
         protected void onPostExecute(Boolean result)
         {
-            //Hacer la alerta que pregunte si quiere ingresar el producto de nuevo a la cantidad total
-
-            Toast.makeText(VisualizarDevolucion.this, "La Devolución se modifico correctamente", Toast.LENGTH_SHORT).show();
-
             progressDialog.dismiss();
 
-            Intent intent = new Intent(VisualizarDevolucion.this, Devolucion.class);
-            startActivity(intent);
-            finish();
+            LayoutInflater inflaterAlert = (LayoutInflater) VisualizarDevolucion.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View dialoglayout = inflaterAlert.inflate(R.layout.alerta_registro_producto, null);
+
+            final Spinner spinCantidad = (Spinner) dialoglayout.findViewById(R.id.spinCantidad);
+
+            //Llenar el spinner con los productos disponibles
+            ArrayList<String> arrayListSpin = new ArrayList<String>();
+            arrayListSpin.clear();
+
+            for(int m = 1; m <= Integer.valueOf(spinnerCantidadProducto_VDevolucion.getSelectedItem().toString()); m++)
+            {
+                arrayListSpin.add(String.valueOf(m));
+            }
+
+            spinCantidad.setAdapter(new ArrayAdapter<String>(VisualizarDevolucion.this, android.R.layout.simple_spinner_dropdown_item, arrayListSpin));
+
+            //Alerta personalizada
+            AlertDialog.Builder builder = new AlertDialog.Builder(VisualizarDevolucion.this);
+            builder.setIcon(R.mipmap.productos);
+            builder.setTitle("Producto");
+            builder.setView(dialoglayout);
+            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+                    for(int j = 0; j < arrayListProductos.size(); j++)
+                    {
+                        if(idProducto.equalsIgnoreCase(arrayListProductos.get(j).getIdProducto()))
+                        {
+                            String cantidadInventario = arrayListProductos.get(j).getCantidad();
+                            String cantidadSpin = spinnerCantidadProducto_VDevolucion.getSelectedItem().toString();
+
+                            int sumaCantidad = Integer.valueOf(cantidadInventario) + Integer.valueOf(cantidadSpin);
+
+                            TareaUpdadteProducto tareaUpdadteProducto = new TareaUpdadteProducto();
+                            tareaUpdadteProducto.execute(
+                                    arrayListProductos.get(j).getNombre(),
+                                    arrayListProductos.get(j).getDescripcion(),
+                                    String.valueOf(sumaCantidad),
+                                    arrayListProductos.get(j).getGarantia(),
+                                    arrayListProductos.get(j).getPrecioCompra(),
+                                    arrayListProductos.get(j).getPrecioVenta(),
+                                    arrayListProductos.get(j).getIdCategoria());
+                        }
+                    }
+                }
+            });
+            builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialog, int which)
+                {
+                    Toast.makeText(VisualizarDevolucion.this, "La Devolución se modifico correctamente", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(VisualizarDevolucion.this, Devolucion.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+            builder.setCancelable(false);
+            builder.show();
+        }
+    }
+
+    //Clases Asyntask para actualizar un producto
+    private class TareaUpdadteProducto extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerProducto.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("idProducto", idProducto));
+            nameValuePairs.add(new BasicNameValuePair("nombre", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("descripcion", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("cantidad", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("tiempoGarantia", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("precioCompra", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("precioVenta", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("idCategoria", params[6]));
+            nameValuePairs.add(new BasicNameValuePair("option", "updateProduct"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                respuesta= String.valueOf(objItems);
+
+                if(respuesta.equalsIgnoreCase("No Existe"))
+                {
+                    resul = false;
+                }
+                else
+                {
+                    resul = true;
+                }
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(Perfil.this, respStr, Toast.LENGTH_SHORT).show();
+
+            if(result)
+            {
+                Toast.makeText(VisualizarDevolucion.this, "La Devolución se modifico correctamente", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(VisualizarDevolucion.this, Devolucion.class);
+                startActivity(intent);
+                finish();
+            }
+            else
+            {
+
+            }
         }
     }
 
