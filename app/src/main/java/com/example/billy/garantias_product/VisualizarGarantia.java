@@ -2,11 +2,13 @@ package com.example.billy.garantias_product;
 
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -193,27 +195,40 @@ public class VisualizarGarantia extends AppCompatActivity
         {
             case R.id.guardarGarantia_VisualizarGarantia:
 
-                String cantidadSpin = spinCantidadProducto_VGarantia.getSelectedItem().toString();
+                final String cantidadSpin = spinCantidadProducto_VGarantia.getSelectedItem().toString();
 
-                if(cantidad.equalsIgnoreCase(String.valueOf(Integer.valueOf(cantidadTotal + cantidadSpin))))
-                {
-                    estado = "Terminado";
+                AlertDialog.Builder alerta = new AlertDialog.Builder(this);
+                alerta.setIcon(R.mipmap.garantia);
+                alerta.setTitle("Garantia");
+                alerta.setMessage("¿Enviar productos por garantia?");
+                alerta.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-                    TareaUpdateGarantia tareaUpdateGarantia = new TareaUpdateGarantia();
-                    tareaUpdateGarantia.execute(idGarantia, estado, descripcion, fecha, cantidad,
-                            idVendedor, idCliente, idProducto);
+                        if (cantidad.equalsIgnoreCase(String.valueOf(Integer.valueOf(cantidadTotal + cantidadSpin))))
+                        {
+                            estado = "Terminado";
 
-                }
-                else
-                {
-                    estado = "En proceso";
+                            TareaUpdateGarantia tareaUpdateGarantia = new TareaUpdateGarantia();
+                            tareaUpdateGarantia.execute(idGarantia, estado, descripcion, fecha, cantidad,
+                                    idVendedor, idCliente, idProducto);
 
-                    TareaUpdateGarantia tareaUpdateGarantia = new TareaUpdateGarantia();
-                    tareaUpdateGarantia.execute(idGarantia, estado, descripcion, fecha, cantidad,
-                            idVendedor, idCliente, idProducto);
-                }
+                        } else
+                        {
+                            estado = "En proceso";
 
-                AlertaCargando();
+                            TareaUpdateGarantia tareaUpdateGarantia = new TareaUpdateGarantia();
+                            tareaUpdateGarantia.execute(idGarantia, estado, descripcion, fecha, cantidad,
+                                    idVendedor, idCliente, idProducto);
+                        }
+
+                        AlertaCargando();
+                    }
+                });
+                alerta.setNegativeButton("Cancelar",null);
+                alerta.setCancelable(false);
+                alerta.show();
+
 
                 break;
         }
