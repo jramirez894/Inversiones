@@ -56,7 +56,7 @@ public class VisualizarDevolucion extends AppCompatActivity
     EditText editTextNombreCliente_VDevolucion;
     EditText editTextTelefonoCliente_VDevolucion;
     EditText editTextNombreProducto_VDevolucion;
-    EditText editTextCantidadProducto_VDevolucion;
+    Spinner  spinnerCantidadProducto_VDevolucion;
     EditText editTextFecha_VDevolucion;
     EditText editTextDescripcion_VDevolucion;
 
@@ -106,10 +106,10 @@ public class VisualizarDevolucion extends AppCompatActivity
         editTextNombreCliente_VDevolucion = (EditText) findViewById(R.id.editTextNombreCliente_VDevolucion);
         editTextTelefonoCliente_VDevolucion = (EditText) findViewById(R.id.editTextTelefonoCliente_VDevolucion);
         editTextNombreProducto_VDevolucion = (EditText) findViewById(R.id.editTextNombreProducto_VDevolucion);
-        editTextCantidadProducto_VDevolucion = (EditText) findViewById(R.id.editTextCantidadProducto_VDevolucion);
         editTextFecha_VDevolucion = (EditText) findViewById(R.id.editTextFecha_VDevolucion);
         editTextDescripcion_VDevolucion = (EditText) findViewById(R.id.editTextDescripcion_VDevolucion);
 
+        spinnerCantidadProducto_VDevolucion = (Spinner) findViewById(R.id.spinCantidadProducto_VDevolucion);
         spinEstado_VDevolucion = (Spinner) findViewById(R.id.spinEstado_VDevolucion);
 
         Bundle extra = getIntent().getExtras();
@@ -134,7 +134,6 @@ public class VisualizarDevolucion extends AppCompatActivity
                         editTextNombreCliente_VDevolucion.setText(Devolucion.arrayListFiltroVendedor.get(i).getNombre());
                         editTextTelefonoCliente_VDevolucion.setText(Devolucion.arrayListFiltroVendedor.get(i).getTelefono());
                         editTextNombreProducto_VDevolucion.setText(Devolucion.arrayListFiltroVendedor.get(i).getNombreProducto());
-                        editTextCantidadProducto_VDevolucion.setText(Devolucion.arrayListFiltroVendedor.get(i).getCantidad());
                         editTextFecha_VDevolucion.setText(Devolucion.arrayListFiltroVendedor.get(i).getFecha());
                         editTextDescripcion_VDevolucion.setText(Devolucion.arrayListFiltroVendedor.get(i).getDescripcion());
                     }
@@ -151,7 +150,17 @@ public class VisualizarDevolucion extends AppCompatActivity
                         editTextNombreCliente_VDevolucion.setText(Devolucion.arrayList.get(i).getNombre());
                         editTextTelefonoCliente_VDevolucion.setText(Devolucion.arrayList.get(i).getTelefono());
                         editTextNombreProducto_VDevolucion.setText(Devolucion.arrayList.get(i).getNombreProducto());
-                        editTextCantidadProducto_VDevolucion.setText(Devolucion.arrayList.get(i).getCantidad());
+
+                        ArrayList<String> arrayListSpin = new ArrayList<String>();
+                        arrayListSpin.clear();
+
+                        for(int m = 1; m <= Integer.valueOf(cantidad); m++)
+                        {
+                            arrayListSpin.add(String.valueOf(m));
+                        }
+
+                        spinnerCantidadProducto_VDevolucion.setAdapter(new ArrayAdapter<String>(VisualizarDevolucion.this, android.R.layout.simple_spinner_dropdown_item, arrayListSpin));
+
                         editTextFecha_VDevolucion.setText(Devolucion.arrayList.get(i).getFecha());
                         editTextDescripcion_VDevolucion.setText(Devolucion.arrayList.get(i).getDescripcion());
                     }
