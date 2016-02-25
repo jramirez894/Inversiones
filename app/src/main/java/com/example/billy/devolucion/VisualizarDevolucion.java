@@ -25,10 +25,12 @@ import android.widget.Toast;
 import com.example.billy.clientes.DatosCobro;
 import com.example.billy.clientes.DetalleCobro;
 import com.example.billy.clientes.ItemFactura_AgregarCliente;
+import com.example.billy.clientes.ItemsVenta_AgregarCliente;
 import com.example.billy.clientes.M_DatosCobro;
 import com.example.billy.clientes.M_DetalleCobro;
 import com.example.billy.constantes.Constantes;
 import com.example.billy.garantias_product.Garantia;
+import com.example.billy.garantias_product.ItemsEstadoGarantia;
 import com.example.billy.inversiones.R;
 import com.example.billy.menu_principal.PrincipalMenu;
 import com.example.billy.productos.AdapterListaProductos_Productos;
@@ -81,15 +83,12 @@ public class VisualizarDevolucion extends AppCompatActivity
     String respuesta = "";
     boolean existe = false;
 
+    String cantidadFactura = "";
 
     boolean resul;
     Object respuestaFactura = "";
     //Alerta Cargando
     ProgressDialog progressDialog;
-
-
-    //Array que guarda todos los items de la factura
-    ArrayList<ItemFactura_AgregarCliente> arrayListFactura = new ArrayList<ItemFactura_AgregarCliente>();
 
     //Array que guarda todos los items de los pruductos
     ArrayList<ItemsListaProductos_Productos> arrayListProductos = new ArrayList<ItemsListaProductos_Productos>();
@@ -98,14 +97,27 @@ public class VisualizarDevolucion extends AppCompatActivity
     int valorProducto = 0;
 
     //variable para mirar si la devolucion no es aceptada
-    boolean devolucionNoAceptada = false;
+    boolean verificarUpdate = false;
 
+    int cantidadEstadoDevolucion = 0;
+
+    int cantidadTotal = 0;
+
+    Object respuestaServidor;
+
+    boolean verificarDevolucionTerminada = false;
+
+    String cantidadSpin = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualizar_devolucion);
+
+        TareaObtenerReturn tareaObtenerReturn = new TareaObtenerReturn();
+        tareaObtenerReturn.execute();
+        AlertaCargando();
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Volver");
@@ -122,7 +134,6 @@ public class VisualizarDevolucion extends AppCompatActivity
 
         Bundle extra = getIntent().getExtras();
         idDevolucion = extra.getString("idDevolucion");
-        estado = extra.getString("estado");
         descripcion = extra.getString("descripcion");
         fecha = extra.getString("fecha");
         cantidad = extra.getString("cantidad");
@@ -168,6 +179,7 @@ public class VisualizarDevolucion extends AppCompatActivity
                         }
 
                         spinnerCantidadProducto_VDevolucion.setAdapter(new ArrayAdapter<String>(VisualizarDevolucion.this, android.R.layout.simple_spinner_dropdown_item, arrayListSpin));
+
 
                         editTextFecha_VDevolucion.setText(Devolucion.arrayList.get(i).getFecha());
                         editTextDescripcion_VDevolucion.setText(Devolucion.arrayList.get(i).getDescripcion());
@@ -215,33 +227,29 @@ public class VisualizarDevolucion extends AppCompatActivity
         {
             case R.id.guardarDevolucion_VisualizarDevolucion:
 
-                String estadoSpin = spinEstado_VDevolucion.getSelectedItem().toString();
+                String cantidadSpin = spinnerCantidadProducto_VDevolucion.getSelectedItem().toString();
 
                 TareaUpdateDevolucion tareaUpdateDevolucion;
 
-                switch (estadoSpin)
+                if(cantidad.equalsIgnoreCase(String.valueOf(Integer.valueOf(cantidadTotal + cantidadSpin))))
                 {
-                    case "Aceptado":
+                    estado = "Terminado";
 
-                        tareaUpdateDevolucion = new TareaUpdateDevolucion();
-                        tareaUpdateDevolucion.execute(idDevolucion, estadoSpin, descripcion, fecha, cantidad,
-                                idVendedor, idCliente, idProducto);
+                    tareaUpdateDevolucion = new TareaUpdateDevolucion();
+                    tareaUpdateDevolucion.execute(idDevolucion, estado, descripcion, fecha, cantidad,
+                            idVendedor, idCliente, idProducto);
 
-                        AlertaCargando();
+                    AlertaCargando();
+                }
+                else
+                {
+                    estado = "En proceso";
 
-                        break;
+                    tareaUpdateDevolucion = new TareaUpdateDevolucion();
+                    tareaUpdateDevolucion.execute(idDevolucion, estado, descripcion, fecha, cantidad,
+                            idVendedor, idCliente, idProducto);
 
-                    case "Sin Devolucion":
-
-                        tareaUpdateDevolucion = new TareaUpdateDevolucion();
-                        tareaUpdateDevolucion.execute(idDevolucion, estadoSpin, descripcion, fecha, cantidad,
-                                idVendedor, idCliente, idProducto);
-
-                        AlertaCargando();
-
-                        devolucionNoAceptada = true;
-
-                        break;
+                    AlertaCargando();
                 }
         }
 
@@ -328,27 +336,128 @@ public class VisualizarDevolucion extends AppCompatActivity
 
         protected void onPostExecute(Boolean result)
         {
-            if(existe)
+            if(result)
             {
-                if (devolucionNoAceptada)
+                if (!verificarDevolucionTerminada)
                 {
-                    Toast.makeText(VisualizarDevolucion.this, "La Devolución se modifico correctamente", Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+                    String cantidadSpiner = spinnerCantidadProducto_VDevolucion.getSelectedItem().toString();
+                    String estadoSpin = spinEstado_VDevolucion.getSelectedItem().toString();
+                    int contador = 0;
 
-                    Intent intent = new Intent(VisualizarDevolucion.this, Devolucion.class);
-                    startActivity(intent);
-                    finish();
-                }
-                else
-                {
-                    TareaListadoBill tareaListadoBill = new TareaListadoBill();
-                    tareaListadoBill.execute();
-                }
+                    boolean verificar = false;
 
+                    switch (estado)
+                    {
+                        case "Terminado":
+
+                            for(int j = 0; j < Constantes.itemsEstadoDevolucion.size(); j++)
+                            {
+                                if(contador <= Integer.valueOf(cantidadSpiner))
+                                {
+                                    if(idDevolucion.equalsIgnoreCase(Constantes.itemsEstadoDevolucion.get(j).getIdDevolucion())
+                                            && Constantes.itemsEstadoDevolucion.get(j).getNombre().equalsIgnoreCase("En espera"))
+                                    {
+                                        TareaUpdateEstadoDevolucion tareaUpdateEstadoDevolucion = new TareaUpdateEstadoDevolucion();
+                                        tareaUpdateEstadoDevolucion.execute(Constantes.itemsEstadoDevolucion.get(j).getIdEstadoDevolucion(),
+                                                estadoSpin, "1", idDevolucion);
+
+                                        contador = contador + 1;
+                                    }
+                                }
+                            }
+
+                            if (estadoSpin.equalsIgnoreCase("Sin devolucion"))
+                            {
+                                TareaUpdateSale tareaUpdateSale = new TareaUpdateSale();
+                                tareaUpdateSale.execute(Constantes.itemsVenta.get(0).getIdVenta(),
+                                        Constantes.itemsVenta.get(0).getTotal(),
+                                        Constantes.itemsVenta.get(0).getCantidad(),
+                                        Constantes.itemsVenta.get(0).getCantidadGarantia(),
+                                        cantidadSpiner,
+                                        Constantes.itemsVenta.get(0).getEstado(),
+                                        Constantes.itemsVenta.get(0).getIdFactura(),
+                                        Constantes.itemsVenta.get(0).getIdProducto());
+
+                                verificarUpdate = true;
+                            }
+                            else
+                            {
+                                verificarUpdate = true;
+                                TareaProductos tareaProductos = new TareaProductos();
+                                tareaProductos.execute();
+                            }
+
+                            break;
+
+                        case "En proceso":
+
+                            for(int i = 0; i < Constantes.itemsEstadoDevolucion.size(); i++)
+                            {
+                                if(idDevolucion.equalsIgnoreCase(Constantes.itemsEstadoDevolucion.get(i).getIdDevolucion())
+                                        && Constantes.itemsEstadoDevolucion.get(i).getNombre().equalsIgnoreCase("Aceptado"))
+                                {
+                                    cantidadTotal = cantidadTotal + 1;
+                                }
+                            }
+
+                            for(int j = 0; j < Constantes.itemsEstadoDevolucion.size(); j++)
+                            {
+                                if(contador < Integer.valueOf(cantidadSpiner))
+                                {
+                                    if(idDevolucion.equalsIgnoreCase(Constantes.itemsEstadoDevolucion.get(j).getIdDevolucion())
+                                            && Constantes.itemsEstadoDevolucion.get(j).getNombre().equalsIgnoreCase("En espera"))
+                                    {
+                                        TareaUpdateEstadoDevolucion tareaUpdateEstadoDevolucion = new TareaUpdateEstadoDevolucion();
+                                        tareaUpdateEstadoDevolucion.execute(Constantes.itemsEstadoDevolucion.get(j).getIdEstadoDevolucion(),
+                                                estadoSpin, "1", idDevolucion);
+
+                                        contador = contador + 1;
+                                    }
+                                }
+                            }
+
+                            if (estadoSpin.equalsIgnoreCase("Sin devolucion"))
+                            {
+                                int suma = 0;
+                                suma = Integer.valueOf(Constantes.itemsVenta.get(0).getCantidadDevolucion()) + Integer.valueOf(cantidadSpiner);
+
+                                TareaUpdateSale tareaUpdateSale = new TareaUpdateSale();
+                                tareaUpdateSale.execute(Constantes.itemsVenta.get(0).getIdVenta(),
+                                        Constantes.itemsVenta.get(0).getTotal(),
+                                        Constantes.itemsVenta.get(0).getCantidad(),
+                                        Constantes.itemsVenta.get(0).getCantidadGarantia(),
+                                        String.valueOf(suma),
+                                        Constantes.itemsVenta.get(0).getEstado(),
+                                        Constantes.itemsVenta.get(0).getIdFactura(),
+                                        Constantes.itemsVenta.get(0).getIdProducto());
+
+                                verificarUpdate = true;
+                            }
+                            else
+                            {
+                                verificarUpdate = true;
+                                TareaProductos tareaProductos = new TareaProductos();
+                                tareaProductos.execute();
+                            }
+
+                            int cantidadFinal = cantidadTotal + Integer.valueOf(cantidadSpiner);
+
+                            if(cantidad.equalsIgnoreCase(String.valueOf(cantidadFinal)))
+                            {
+                                verificarDevolucionTerminada  = true;
+
+                                TareaUpdateDevolucion tareaUpdateDevolucion = new TareaUpdateDevolucion();
+                                tareaUpdateDevolucion.execute(idDevolucion, "Terminado", descripcion, fecha, cantidad,
+                                        idVendedor, idCliente, idProducto);
+                            }
+
+                            break;
+                    }
+                }
             }
             else
             {
-                Toast.makeText(VisualizarDevolucion.this, "Error al Modificar la Devolución", Toast.LENGTH_SHORT).show();
+                Toast.makeText(VisualizarDevolucion.this, "Error al Modificar la Garantia", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
         }
@@ -392,17 +501,15 @@ public class VisualizarDevolucion extends AppCompatActivity
                 }
                 else
                 {
-                    arrayListFactura.clear();
-
-                    for (int i = 0; i < objFacturas.length(); i++)
+                    Constantes.itemsFactura.clear();
+                    for(int i=0; i<objFacturas.length(); i++)
                     {
                         JSONObject obj = objFacturas.getJSONObject(i);
-                        if (obj.getString("estado").equalsIgnoreCase("Activo"))
+                        if (idCliente.equalsIgnoreCase(obj.getString("idCliente")) && obj.getString("estado").equalsIgnoreCase("Activo"))
                         {
-                            arrayListFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("valorRestante"),obj.getString("estado"),obj.getString("fechaCobro"), obj.getString("diaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
+                            Constantes.itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("valorRestante"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("diaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
+                            resul = true;
                         }
-
-                        existe = true;
                     }
                 }
 
@@ -437,8 +544,16 @@ public class VisualizarDevolucion extends AppCompatActivity
 
         protected void onPostExecute(Boolean result)
         {
-            TareaProductos tareaProductos = new TareaProductos();
-            tareaProductos.execute();
+            if (result)
+            {
+                TareaGetSale tareaGetSale = new TareaGetSale();
+                tareaGetSale.execute();
+            }
+            else
+            {
+                Toast.makeText(VisualizarDevolucion.this,"Error al cargar la factura",Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
         }
     }
 
@@ -515,38 +630,32 @@ public class VisualizarDevolucion extends AppCompatActivity
             String totalFactura = "";
             String valorRestanteFactura = "";
 
-            for (int i = 0; i < arrayListFactura.size(); i++ )
+            totalFactura = Constantes.itemsFactura.get(0).getTotal();
+            valorRestanteFactura = Constantes.itemsFactura.get(0).getValorRestante();
+
+            for (int j = 0; j < arrayListProductos.size(); j++ )
             {
-                if (arrayListFactura.get(i).getIdCliente().equalsIgnoreCase(idCliente))
+                if (arrayListProductos.get(j).getIdProducto().equalsIgnoreCase(idProducto))
                 {
-                    totalFactura = arrayListFactura.get(i).getTotal();
-                    valorRestanteFactura = arrayListFactura.get(i).getValorRestante();
+                    valorProducto = Integer.valueOf(arrayListProductos.get(j).getPrecioVenta()) * Integer.valueOf(spinnerCantidadProducto_VDevolucion.getSelectedItem().toString());
 
-                    for (int j = 0; j < arrayListProductos.size(); j++ )
-                    {
-                        if (arrayListProductos.get(j).getIdProducto().equalsIgnoreCase(idProducto))
-                        {
-                            valorProducto = Integer.valueOf(arrayListProductos.get(i).getPrecioVenta()) * Integer.valueOf(cantidad);
+                    int restaFactura = Integer.valueOf(totalFactura) - valorProducto;
+                    totalFactura = String.valueOf(restaFactura);
 
-                            int restaFactura = Integer.valueOf(totalFactura) - valorProducto;
-                            totalFactura = String.valueOf(restaFactura);
+                    int restaValorRestante = Integer.valueOf(valorRestanteFactura) - valorProducto;
+                    valorRestanteFactura = String.valueOf(restaValorRestante);
 
-                            int restaValorRestante = Integer.valueOf(valorRestanteFactura) - valorProducto;
-                            valorRestanteFactura = String.valueOf(restaValorRestante);
-
-                            TareaUpdateBill tareaUpdateBill = new TareaUpdateBill();
-                            tareaUpdateBill.execute(arrayListFactura.get(i).getIdFactura(),
-                                    arrayListFactura.get(i).getFecha(),
-                                    totalFactura,
-                                    valorRestanteFactura,
-                                    arrayListFactura.get(i).getEstado(),
-                                    arrayListFactura.get(i).getFechaCobro(),
-                                    arrayListFactura.get(i).getDiaCobro(),
-                                    arrayListFactura.get(i).getHoraCobro(),
-                                    arrayListFactura.get(i).getIdVendedor(),
-                                    arrayListFactura.get(i).getIdCliente());
-                        }
-                    }
+                    TareaUpdateBill tareaUpdateBill = new TareaUpdateBill();
+                    tareaUpdateBill.execute(Constantes.itemsFactura.get(0).getIdFactura(),
+                            Constantes.itemsFactura.get(0).getFecha(),
+                            totalFactura,
+                            valorRestanteFactura,
+                            Constantes.itemsFactura.get(0).getEstado(),
+                            Constantes.itemsFactura.get(0).getFechaCobro(),
+                            Constantes.itemsFactura.get(0).getDiaCobro(),
+                            Constantes.itemsFactura.get(0).getHoraCobro(),
+                            Constantes.itemsFactura.get(0).getIdVendedor(),
+                            Constantes.itemsFactura.get(0).getIdCliente());
                 }
             }
         }
@@ -658,7 +767,7 @@ public class VisualizarDevolucion extends AppCompatActivity
                         if(idProducto.equalsIgnoreCase(arrayListProductos.get(j).getIdProducto()))
                         {
                             String cantidadInventario = arrayListProductos.get(j).getCantidad();
-                            String cantidadSpin = spinnerCantidadProducto_VDevolucion.getSelectedItem().toString();
+                            cantidadSpin = spinCantidad.getSelectedItem().toString();
 
                             int sumaCantidad = Integer.valueOf(cantidadInventario) + Integer.valueOf(cantidadSpin);
 
@@ -671,6 +780,8 @@ public class VisualizarDevolucion extends AppCompatActivity
                                     arrayListProductos.get(j).getPrecioCompra(),
                                     arrayListProductos.get(j).getPrecioVenta(),
                                     arrayListProductos.get(j).getIdCategoria());
+
+                            AlertaCargando();
                         }
                     }
                 }
@@ -768,15 +879,19 @@ public class VisualizarDevolucion extends AppCompatActivity
 
         protected void onPostExecute(Boolean result)
         {
-            //Toast.makeText(Perfil.this, respStr, Toast.LENGTH_SHORT).show();
-
             if(result)
             {
-                Toast.makeText(VisualizarDevolucion.this, "La Devolución se modifico correctamente", Toast.LENGTH_SHORT).show();
+                int resta = Integer.valueOf(Constantes.itemsVenta.get(0).getCantidad()) - Integer.valueOf(spinnerCantidadProducto_VDevolucion.getSelectedItem().toString());
 
-                Intent intent = new Intent(VisualizarDevolucion.this, Devolucion.class);
-                startActivity(intent);
-                finish();
+                TareaUpdateSale tareaUpdateSale = new TareaUpdateSale();
+                tareaUpdateSale.execute(Constantes.itemsVenta.get(0).getIdVenta(),
+                        Constantes.itemsVenta.get(0).getTotal(),
+                        String.valueOf(resta),
+                        Constantes.itemsVenta.get(0).getCantidadGarantia(),
+                        Constantes.itemsVenta.get(0).getCantidadDevolucion(),
+                        Constantes.itemsVenta.get(0).getEstado(),
+                        Constantes.itemsVenta.get(0).getIdFactura(),
+                        Constantes.itemsVenta.get(0).getIdProducto());
             }
             else
             {
@@ -797,5 +912,382 @@ public class VisualizarDevolucion extends AppCompatActivity
         }
 
         return super.onKeyUp(keyCode, event);
+    }
+
+    //Clases Asyntask para traer los datos de la tabla garantias
+    private class TareaObtenerReturn extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerEstadoDevolucion.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option", "getAllReturn"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objVendedores = objItems.getJSONArray(0);
+                //JSONObject obj = objItems.getJSONObject(0);
+
+                Constantes.itemsEstadoDevolucion.clear();
+
+                for(int i=0; i<objVendedores.length(); i++)
+                {
+                    JSONObject obj = objVendedores.getJSONObject(i);
+
+                    Constantes.itemsEstadoDevolucion.add(new ItemsEstadoDevolucion(obj.getString("idEstadoDevolucion"), obj.getString("nombre"), obj.getString("cantidad"), obj.getString("idDevolucion")));
+
+                    resul = true;
+                }
+
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            if(result)
+            {
+                for(int i = 0; i < Constantes.itemsEstadoDevolucion.size(); i++)
+                {
+                    if(idDevolucion.equalsIgnoreCase(Constantes.itemsEstadoDevolucion.get(i).getIdDevolucion())
+                            && Constantes.itemsEstadoDevolucion.get(i).getNombre().equalsIgnoreCase("En espera"))
+                    {
+                        cantidadEstadoDevolucion = cantidadEstadoDevolucion + 1;
+                    }
+
+                    if(idDevolucion.equalsIgnoreCase(Constantes.itemsEstadoDevolucion.get(i).getIdDevolucion())
+                            && Constantes.itemsEstadoDevolucion.get(i).getNombre().equalsIgnoreCase("Sin devolucion"))
+                    {
+                        cantidadTotal = cantidadTotal + 1;
+                    }
+                }
+
+                ArrayList<String> arrayListSpin = new ArrayList<String>();
+                arrayListSpin.clear();
+
+                for(int m = 1; m <= Integer.valueOf(cantidadEstadoDevolucion); m++)
+                {
+                    arrayListSpin.add(String.valueOf(m));
+                }
+
+                spinnerCantidadProducto_VDevolucion.setAdapter(new ArrayAdapter<String>(VisualizarDevolucion.this, android.R.layout.simple_spinner_dropdown_item, arrayListSpin));
+
+                //Obtener todas las ventas
+                TareaListadoBill tareaListadoBill = new TareaListadoBill();
+                tareaListadoBill.execute();
+            }
+            else
+            {
+                Toast.makeText(VisualizarDevolucion.this, "Error al cargar las devoluciones", Toast.LENGTH_LONG).show();
+                progressDialog.dismiss();
+            }
+        }
+    }
+
+    //Clases Asyntask para traer las ventas
+    private class TareaGetSale extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = false;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerVenta.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option",  "getAllSale"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objFacturas = objItems.getJSONArray(0);
+
+                //String obj
+                String respuesta= String.valueOf(objFacturas);
+
+                if(respuesta.equalsIgnoreCase("No Existen Ventas"))
+                {
+                    resul = false;
+                }
+                else
+                {
+                    Constantes.itemsVenta.clear();
+                    for(int i=0; i<objFacturas.length(); i++)
+                    {
+                        JSONObject obj = objFacturas.getJSONObject(i);
+
+                        if(Constantes.itemsFactura.get(0).getIdFactura().equalsIgnoreCase(obj.getString("idFactura")) && idProducto.equalsIgnoreCase(obj.getString("idProducto")))
+                        {
+                            Constantes.itemsVenta.add(new ItemsVenta_AgregarCliente(obj.getString("idVenta"),obj.getString("total"),obj.getString("cantidad"), obj.getString("cantidadGarantia"), obj.getString("cantidadDevolucion"), obj.getString("estado"),obj.getString("idFactura"),obj.getString("idProducto"), "0"));
+                        }
+
+                        resul = true;
+                    }
+                }
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            if (result)
+            {
+                progressDialog.dismiss();
+
+                if(verificarUpdate)
+                {
+                    Toast.makeText(VisualizarDevolucion.this, "La Devolucion se modifico correctamente", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(VisualizarDevolucion.this, Devolucion.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+            else
+            {
+                progressDialog.dismiss();
+            }
+        }
+    }
+
+    private class TareaUpdateEstadoDevolucion extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerEstadoDevolucion.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("idEstadoDevolucion", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("nombre", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("cantidad", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("idDevolucion", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("option", "updateReturn"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                respuesta= String.valueOf(objItems);
+
+                if(respuesta.equalsIgnoreCase("No Existe"))
+                {
+                    resul = false;
+                }
+                else
+                {
+                    resul = true;
+                }
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            if(result)
+            {
+                //nadita
+            }
+            else
+            {
+                Toast.makeText(VisualizarDevolucion.this, "Error al Modificar la Devolucion", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+        }
+    }
+
+    //Clases Asyntask para actualizar una venta
+    private class TareaUpdateSale extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        JSONObject respJSON;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = false;
+
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerVenta.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("idVenta", params[0]));
+            nameValuePairs.add(new BasicNameValuePair("total", params[1]));
+            nameValuePairs.add(new BasicNameValuePair("cantidad", params[2]));
+            nameValuePairs.add(new BasicNameValuePair("cantidadGarantia", params[3]));
+            nameValuePairs.add(new BasicNameValuePair("cantidadDevolucion", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("estado", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("idFactura", params[6]));
+            nameValuePairs.add(new BasicNameValuePair("idProducto", params[7]));
+            nameValuePairs.add(new BasicNameValuePair("option",  "updateSale"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                respJSON = new JSONObject(respStr);
+                //JSONArray objItems = respJSON.getJSONArray("items");
+
+                //String obj
+                respuestaServidor = respJSON.get("items");
+                resul = true;
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                resul = false;
+            }
+
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+
+            return resul;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            if (result)
+            {
+                TareaGetSale tareaGetSale = new TareaGetSale();
+                tareaGetSale.execute();
+            }
+            else
+            {
+                Toast.makeText(VisualizarDevolucion.this, "Error al modificar la venta", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+            }
+        }
     }
 }

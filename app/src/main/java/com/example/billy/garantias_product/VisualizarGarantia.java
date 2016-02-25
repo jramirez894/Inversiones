@@ -520,8 +520,6 @@ public class VisualizarGarantia extends AppCompatActivity
 
                 spinCantidadProducto_VGarantia.setAdapter(new ArrayAdapter<String>(VisualizarGarantia.this, android.R.layout.simple_spinner_dropdown_item, arrayListSpin));
 
-
-
                 progressDialog.dismiss();
             }
             else
@@ -800,7 +798,7 @@ public class VisualizarGarantia extends AppCompatActivity
         }
     }
 
-    //Clases Asyntask para agregar una factura
+    //Clases Asyntask para actualizar una venta
     private class TareaUpdateSale extends AsyncTask<String,Integer,Boolean>
     {
         private String respStr;

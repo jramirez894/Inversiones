@@ -343,7 +343,7 @@ public class Devolucion extends AppCompatActivity
                 {
                     JSONObject obj = objDevoluciones.getJSONObject(i);
 
-                    if(obj.getString("estado").equalsIgnoreCase("En espera"))
+                    if(obj.getString("estado").equalsIgnoreCase("En espera") || obj.getString("estado").equalsIgnoreCase("En proceso"))
                     {
                         //Para sacar el nombre y el telefono de cada cliente
                         String idCliente = obj.getString("idCliente");
