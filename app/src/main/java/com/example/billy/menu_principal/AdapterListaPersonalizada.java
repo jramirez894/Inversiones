@@ -101,7 +101,6 @@ public class AdapterListaPersonalizada extends ArrayAdapter
     String totalFactura;
     String valorRestante;
     String fechaCobroFactura;
-    String diaCobroFactura;
     String horaCobroFactura;
     String idVendedorFactura;
     String idClienteFactura;
@@ -283,7 +282,7 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                     for(int i=0; i<objFacturas.length(); i++)
                     {
                         JSONObject obj = objFacturas.getJSONObject(i);
-                        Constantes.itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("valorRestante"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("diaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
+                        Constantes.itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("valorRestante"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
                         existe = true;
                     }
                 }
@@ -326,7 +325,6 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                         totalFactura= Constantes.itemsFactura.get(i).getTotal();
                         valorRestante= Constantes.itemsFactura.get(i).getValorRestante();
                         fechaCobroFactura= Constantes.itemsFactura.get(i).getFechaCobro();
-                        diaCobroFactura= Constantes.itemsFactura.get(i).getDiaCobro();
                         horaCobroFactura= Constantes.itemsFactura.get(i).getHoraCobro();
                         idVendedorFactura= Constantes.itemsFactura.get(i).getIdVendedor();
                         idClienteFactura= Constantes.itemsFactura.get(i).getIdCliente();
@@ -978,7 +976,6 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                 Constantes.totalFactura = totalFactura;
                 Constantes.valorRestante = valorRestante;
                 Constantes.fechaCobroFactura = fechaCobroFactura;
-                Constantes.diaCobroFactura = diaCobroFactura;
                 Constantes.horaCobroFactura = horaCobroFactura;
                 Constantes.idVendedorFactura = idVendedorFactura;
                 Constantes.idClienteFactura = idClienteFactura;
@@ -1009,7 +1006,6 @@ public class AdapterListaPersonalizada extends ArrayAdapter
                 Constantes.totalFactura = totalFactura;
                 Constantes.valorRestante = valorRestante;
                 Constantes.fechaCobroFactura = fechaCobroFactura;
-                Constantes.diaCobroFactura = diaCobroFactura;
                 Constantes.horaCobroFactura = horaCobroFactura;
                 Constantes.idVendedorFactura = idVendedorFactura;
                 Constantes.idClienteFactura = idClienteFactura;

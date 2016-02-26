@@ -298,18 +298,15 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
 
         //Variables DetalleCobro
         String fechaCobro;
-        String diaCobro;
         String horaCobro;
         try
         {
             fechaCobro = M_DetalleCobro.fechaDeCobro.getSelectedItem().toString();
-            diaCobro = M_DetalleCobro.diaCobro.getSelectedItem().toString();
             horaCobro = M_DetalleCobro.horaCobro.getSelectedItem().toString();
         }
         catch (Exception ex)
         {
             fechaCobro = Constantes.fechaCobroFactura;
-            diaCobro = Constantes.diaCobroFactura;
             horaCobro = Constantes.horaCobroFactura;
         }
 
@@ -321,7 +318,6 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                 nomEmpresa.equals("")||
                 dirEmpresa.equals("")||
                 fechaCobro.equalsIgnoreCase("Fecha de Cobro")||
-                diaCobro.equalsIgnoreCase("Dia de Cobro")||
                 horaCobro.equalsIgnoreCase("Hora de Cobro"))
         {
             Toast.makeText(ModificarCliente.this, "Faltan campos por llenar", Toast.LENGTH_LONG).show();
@@ -773,13 +769,11 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
             //Variables spinner clase detalle cobro
             String fecha = "";
             String fechaCobro = "";
-            String diaCobro = "";
             String horaCobro = "";
 
             try
             {
                 fechaCobro = M_DetalleCobro.fechaDeCobro.getSelectedItem().toString();
-                diaCobro = M_DetalleCobro.diaCobro.getSelectedItem().toString();
                 horaCobro = M_DetalleCobro.horaCobro.getSelectedItem().toString();
 
                 for(int i = 0; i < Constantes.itemsFactura.size(); i++)
@@ -800,7 +794,6 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                     if(Constantes.idClienteFactura.equalsIgnoreCase(Constantes.itemsFactura.get(i).getIdCliente()))
                     {
                         fechaCobro = Constantes.itemsFactura.get(i).getFechaCobro();
-                        diaCobro = Constantes.itemsFactura.get(i).getDiaCobro();
                         horaCobro = Constantes.itemsFactura.get(i).getHoraCobro();
                         fecha = Constantes.itemsFactura.get(i).getFecha();
                     }
@@ -825,7 +818,6 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                         M_DatosCobro.saldoRestante.getText().toString(),
                         estadoFactura,
                         fechaCobro,
-                        diaCobro,
                         horaCobro,
                         idVendedor,
                         Constantes.idClienteFactura);
@@ -839,7 +831,6 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                         M_DatosCobro.valorRestante.getText().toString(),
                         estadoFactura,
                         fechaCobro,
-                        diaCobro,
                         horaCobro,
                         idVendedor,
                         Constantes.idClienteFactura);
@@ -1018,10 +1009,9 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
             nameValuePairs.add(new BasicNameValuePair("valorRestante", params[3]));
             nameValuePairs.add(new BasicNameValuePair("estado", params[4]));
             nameValuePairs.add(new BasicNameValuePair("fechaCobro", params[5]));
-            nameValuePairs.add(new BasicNameValuePair("diaCobro", params[6]));
-            nameValuePairs.add(new BasicNameValuePair("horaCobro", params[7]));
-            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[8]));
-            nameValuePairs.add(new BasicNameValuePair("idCliente", params[9]));
+            nameValuePairs.add(new BasicNameValuePair("horaCobro", params[6]));
+            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[7]));
+            nameValuePairs.add(new BasicNameValuePair("idCliente", params[8]));
             nameValuePairs.add(new BasicNameValuePair("option", "updateBill"));
 
             try

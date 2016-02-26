@@ -46,7 +46,6 @@ public class DetalleCobro extends Fragment
     public static TextView tel;
 
     public static Spinner fechaDeCobro;
-    public static Spinner diaCobro;
     public static Spinner horaCobro;
 
     boolean existe = false;
@@ -70,15 +69,12 @@ public class DetalleCobro extends Fragment
         dir=(TextView)view.findViewById(R.id.textViewdirEmpleado_DetalleCobro);
         tel=(TextView)view.findViewById(R.id.textViewtelEmpleado_DetalleCobro);
         fechaDeCobro=(Spinner)view.findViewById(R.id.spinnerFechaCobro_DetalleCobro);
-        diaCobro=(Spinner)view.findViewById(R.id.spinnerDiaCobro_DetalleCobro);
         horaCobro=(Spinner)view.findViewById(R.id.spinnerHoraCobro_DetalleCobro);
 
 
         ArrayAdapter adapter = ArrayAdapter.createFromResource(getActivity(), R.array.fechadeCobro, android.R.layout.simple_spinner_item);
         fechaDeCobro.setAdapter(adapter);
 
-        ArrayAdapter adapter1 = ArrayAdapter.createFromResource(getActivity(), R.array.diadeCobro, android.R.layout.simple_spinner_item);
-        diaCobro.setAdapter(adapter1);
 
         ArrayAdapter adapter2 = ArrayAdapter.createFromResource(getActivity(), R.array.horadeCobro, android.R.layout.simple_spinner_item);
         horaCobro.setAdapter(adapter2);

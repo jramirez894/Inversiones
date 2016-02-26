@@ -675,7 +675,7 @@ public class VisualizarGarantia extends AppCompatActivity
                         JSONObject obj = objFacturas.getJSONObject(i);
                         if (idCliente.equalsIgnoreCase(obj.getString("idCliente")) && obj.getString("estado").equalsIgnoreCase("Activo"))
                         {
-                            Constantes.itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("valorRestante"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("diaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
+                            Constantes.itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("valorRestante"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
                             resul = true;
                         }
                     }

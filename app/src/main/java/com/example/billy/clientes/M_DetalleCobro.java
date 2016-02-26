@@ -43,7 +43,6 @@ public class M_DetalleCobro extends Fragment
     public static TextView tel;
 
     public static Spinner fechaDeCobro;
-    public static Spinner diaCobro;
     public static Spinner horaCobro;
 
     boolean existe = false;
@@ -68,15 +67,12 @@ public class M_DetalleCobro extends Fragment
         tel=(TextView)view.findViewById(R.id.textViewtelEmpleado_DetalleCobro_Mcliente);
 
         fechaDeCobro=(Spinner)view.findViewById(R.id.spinnerFechaCobro_DetalleCobro_Mcliente);
-        diaCobro=(Spinner)view.findViewById(R.id.spinnerDiaCobro_DetalleCobro_Mcliente);
         horaCobro=(Spinner)view.findViewById(R.id.spinnerHoraCobro_DetalleCobro_Mcliente);
 
 
         ArrayAdapter adapter = ArrayAdapter.createFromResource(getActivity(), R.array.fechadeCobro, android.R.layout.simple_spinner_item);
         fechaDeCobro.setAdapter(adapter);
 
-        ArrayAdapter adapter1 = ArrayAdapter.createFromResource(getActivity(), R.array.diadeCobro, android.R.layout.simple_spinner_item);
-        diaCobro.setAdapter(adapter1);
 
         ArrayAdapter adapter2 = ArrayAdapter.createFromResource(getActivity(), R.array.horadeCobro, android.R.layout.simple_spinner_item);
         horaCobro.setAdapter(adapter2);
@@ -88,8 +84,6 @@ public class M_DetalleCobro extends Fragment
         int posfechaDeCobro = adapter.getPosition(Constantes.fechaCobroFactura);
         fechaDeCobro.setSelection(posfechaDeCobro);
 
-        int posdiaCobro = adapter1.getPosition(Constantes.diaCobroFactura);
-        diaCobro.setSelection(posdiaCobro);
 
         int poshoraCobro = adapter2.getPosition(Constantes.horaCobroFactura);
         horaCobro.setSelection(poshoraCobro);

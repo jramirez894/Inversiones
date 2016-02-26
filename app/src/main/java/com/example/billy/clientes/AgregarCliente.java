@@ -86,7 +86,6 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
     //Variables del tab DetalleCobro
     String nomEmpleado="";
     String fechaCobro="";
-    String diaCobro="";
     String horaCobro="";
 
     //Varibales createClient
@@ -236,7 +235,6 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
                     //Variables Asociadas tab DetalleCobro
                     nomEmpleado =DetalleCobro.buscarEmpleado.getText().toString();
                     fechaCobro = DetalleCobro.fechaDeCobro.getSelectedItem().toString();
-                    diaCobro = DetalleCobro.diaCobro.getSelectedItem().toString();
                     horaCobro = DetalleCobro.horaCobro.getSelectedItem().toString();
 
                     if (cedula.equals("")||
@@ -250,7 +248,6 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
                             totalPagar.equals("")||
                             nomEmpleado.equals("")||
                             fechaCobro.equalsIgnoreCase("Fecha de Cobro")||
-                            diaCobro.equalsIgnoreCase("Dia de Cobro")||
                             horaCobro.equalsIgnoreCase("Hora de Cobro"))
                     {
                         Toast.makeText(AgregarCliente.this,"Faltan Datos Por Llenar",Toast.LENGTH_SHORT).show();
@@ -750,13 +747,13 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
                     if(DatosPersonales.updateCliente)
                     {
                         TareaCreateBill createBill = new TareaCreateBill();
-                        createBill.execute(fechaVentaModificada, totalPagar, totalPagar, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idClienteUpdate);
+                        createBill.execute(fechaVentaModificada, totalPagar, totalPagar, fechaCobro, horaCobro, DetalleCobro.idVendedor, idClienteUpdate);
                         insertarAbono = false;
                     }
                     else
                     {
                         TareaCreateBill createBill = new TareaCreateBill();
-                        createBill.execute(fechaVentaModificada, totalPagar, totalPagar, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idCliente);
+                        createBill.execute(fechaVentaModificada, totalPagar, totalPagar, fechaCobro, horaCobro, DetalleCobro.idVendedor, idCliente);
                         insertarAbono = false;
                     }
                 }
@@ -765,13 +762,13 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
                     if(DatosPersonales.updateCliente)
                     {
                         TareaCreateBill createBill = new TareaCreateBill();
-                        createBill.execute(fechaVentaModificada, totalPagar, valorRestante, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idClienteUpdate);
+                        createBill.execute(fechaVentaModificada, totalPagar, valorRestante, fechaCobro, horaCobro, DetalleCobro.idVendedor, idClienteUpdate);
                         insertarAbono = true;
                     }
                     else
                     {
                         TareaCreateBill createBill = new TareaCreateBill();
-                        createBill.execute(fechaVentaModificada, totalPagar, valorRestante, fechaCobro, diaCobro, horaCobro, DetalleCobro.idVendedor, idCliente);
+                        createBill.execute(fechaVentaModificada, totalPagar, valorRestante, fechaCobro, horaCobro, DetalleCobro.idVendedor, idCliente);
                         insertarAbono = true;
                     }
                 }
@@ -807,10 +804,9 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
             nameValuePairs.add(new BasicNameValuePair("valorRestante", params[2]));
             nameValuePairs.add(new BasicNameValuePair("estado", "Activo"));
             nameValuePairs.add(new BasicNameValuePair("fechaCobro", params[3]));
-            nameValuePairs.add(new BasicNameValuePair("diaCobro", params[4]));
-            nameValuePairs.add(new BasicNameValuePair("horaCobro", params[5]));
-            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[6]));
-            nameValuePairs.add(new BasicNameValuePair("idCliente", params[7]));
+            nameValuePairs.add(new BasicNameValuePair("horaCobro", params[4]));
+            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[5]));
+            nameValuePairs.add(new BasicNameValuePair("idCliente", params[6]));
             nameValuePairs.add(new BasicNameValuePair("option", "createBill"));
 
             try

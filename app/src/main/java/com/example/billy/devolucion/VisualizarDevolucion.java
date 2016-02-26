@@ -507,7 +507,7 @@ public class VisualizarDevolucion extends AppCompatActivity
                         JSONObject obj = objFacturas.getJSONObject(i);
                         if (idCliente.equalsIgnoreCase(obj.getString("idCliente")) && obj.getString("estado").equalsIgnoreCase("Activo"))
                         {
-                            Constantes.itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("valorRestante"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("diaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
+                            Constantes.itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("valorRestante"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
                             resul = true;
                         }
                     }
@@ -652,7 +652,6 @@ public class VisualizarDevolucion extends AppCompatActivity
                             valorRestanteFactura,
                             Constantes.itemsFactura.get(0).getEstado(),
                             Constantes.itemsFactura.get(0).getFechaCobro(),
-                            Constantes.itemsFactura.get(0).getDiaCobro(),
                             Constantes.itemsFactura.get(0).getHoraCobro(),
                             Constantes.itemsFactura.get(0).getIdVendedor(),
                             Constantes.itemsFactura.get(0).getIdCliente());
@@ -686,10 +685,9 @@ public class VisualizarDevolucion extends AppCompatActivity
             nameValuePairs.add(new BasicNameValuePair("valorRestante", params[3]));
             nameValuePairs.add(new BasicNameValuePair("estado", params[4]));
             nameValuePairs.add(new BasicNameValuePair("fechaCobro", params[5]));
-            nameValuePairs.add(new BasicNameValuePair("diaCobro", params[6]));
-            nameValuePairs.add(new BasicNameValuePair("horaCobro", params[7]));
-            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[8]));
-            nameValuePairs.add(new BasicNameValuePair("idCliente", params[9]));
+            nameValuePairs.add(new BasicNameValuePair("horaCobro", params[6]));
+            nameValuePairs.add(new BasicNameValuePair("idVendedor", params[7]));
+            nameValuePairs.add(new BasicNameValuePair("idCliente", params[8]));
             nameValuePairs.add(new BasicNameValuePair("option", "updateBill"));
 
             try

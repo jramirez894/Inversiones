@@ -87,7 +87,6 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
     public static String totalFactura;
     public static String valorRestante;
     public static String fechaCobroFactura;
-    public static String diaCobroFactura;
     public static String horaCobroFactura;
     public static String idVendedorFactura;
     public static String idClienteFactura;
@@ -120,7 +119,6 @@ public class VisualizarCliente extends ActionBarActivity implements TabHost.OnTa
         totalFactura = bundle.getString("totalFactura");
         valorRestante = bundle.getString("valorRestante");
         fechaCobroFactura = bundle.getString("fechaCobroFactura");
-        diaCobroFactura = bundle.getString("diaCobroFactura");
         horaCobroFactura = bundle.getString("horaCobroFactura");
         idVendedorFactura = bundle.getString("idVendedorFactura");
         idClienteFactura = bundle.getString("idClienteFactura");

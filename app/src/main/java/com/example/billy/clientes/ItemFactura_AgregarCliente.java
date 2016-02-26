@@ -11,19 +11,17 @@ public class ItemFactura_AgregarCliente
     public String valorRestante;
     public String estado;
     public String fechaCobro;
-    public String diaCobro;
     public String horaCobro;
     public String idVendedor;
     public String idCliente;
 
-    public ItemFactura_AgregarCliente(String idFactura, String fecha, String total, String valorRestante, String estado, String fechaCobro, String diaCobro, String horaCobro, String idVendedor, String idCliente) {
+    public ItemFactura_AgregarCliente(String idFactura, String fecha, String total, String valorRestante, String estado, String fechaCobro, String horaCobro, String idVendedor, String idCliente) {
         this.idFactura = idFactura;
         this.fecha = fecha;
         this.total = total;
         this.valorRestante = valorRestante;
         this.estado = estado;
         this.fechaCobro = fechaCobro;
-        this.diaCobro = diaCobro;
         this.horaCobro = horaCobro;
         this.idVendedor = idVendedor;
         this.idCliente = idCliente;
@@ -75,14 +73,6 @@ public class ItemFactura_AgregarCliente
 
     public void setFechaCobro(String fechaCobro) {
         this.fechaCobro = fechaCobro;
-    }
-
-    public String getDiaCobro() {
-        return diaCobro;
-    }
-
-    public void setDiaCobro(String diaCobro) {
-        this.diaCobro = diaCobro;
     }
 
     public String getHoraCobro() {

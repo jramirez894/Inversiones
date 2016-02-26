@@ -37,14 +37,6 @@
             android:textColor="@android:color/background_dark"
             android:layout_marginTop="30dp"/>
 
-        <TextView
-            android:id="@+id/textViewDiaCobro_VDetalleCobro"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Dia de Cobro:"
-            android:textSize="20sp"
-            android:textColor="@android:color/background_dark"
-            android:layout_marginTop="30dp"/>
 
         <TextView
             android:id="@+id/textViewtHoraCobro_VDetalleCobro"

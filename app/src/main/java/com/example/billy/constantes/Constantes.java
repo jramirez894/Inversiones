@@ -48,7 +48,6 @@ public class Constantes
     public static String totalFactura;
     public static String valorRestante;
     public static String fechaCobroFactura;
-    public static String diaCobroFactura;
     public static String horaCobroFactura;
     public static String idVendedorFactura;
     public static String idClienteFactura;
