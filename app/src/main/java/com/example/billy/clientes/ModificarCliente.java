@@ -301,7 +301,7 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
         String horaCobro;
         try
         {
-            fechaCobro = M_DetalleCobro.fechaDeCobro.getSelectedItem().toString();
+            fechaCobro = M_DetalleCobro.fechaCobro.getText().toString();
             horaCobro = M_DetalleCobro.horaCobro.getSelectedItem().toString();
         }
         catch (Exception ex)
@@ -317,157 +317,167 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
                 correo.equals("")||
                 nomEmpresa.equals("")||
                 dirEmpresa.equals("")||
-                fechaCobro.equalsIgnoreCase("Fecha de Cobro")||
+                fechaCobro.equals("")||
                 horaCobro.equalsIgnoreCase("Hora de Cobro"))
         {
             Toast.makeText(ModificarCliente.this, "Faltan campos por llenar", Toast.LENGTH_LONG).show();
         }
         else
         {
-            txtMensaje_AlertaMCliente = (TextView) dialoglayout.findViewById(R.id.txtMensaje_AlertaMCliente);
-            editCalificacion_AlertaMCliente = (EditText) dialoglayout.findViewById(R.id.editCalificacion_AlertaMCliente);
-            editFecha_AlertaMCliente = (EditText) dialoglayout.findViewById(R.id.editFecha_AlertaMCliente);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String fechaActual = sdf.format(new Date());
 
-            try
+            if(fechaActual.equalsIgnoreCase(fechaCobro))
             {
-                valorRestante = Integer.valueOf(M_DatosCobro.valorRestante.getText().toString());
-            }
-            catch (Exception e)
-            {
-                valorRestante = 1;
-            }
-
-            if(valorRestante == 1)
-            {
-                txtMensaje_AlertaMCliente.setVisibility(View.GONE);
-                editCalificacion_AlertaMCliente.setVisibility(View.GONE);
-                editFecha_AlertaMCliente.setVisibility(View.GONE);
-
-                estadoCliente = "Activo";
+                Toast.makeText(ModificarCliente.this,"La fecha del proximo cobro no puede ser la actual",Toast.LENGTH_SHORT).show();
             }
             else
             {
-                if(valorRestante != 0)
+                txtMensaje_AlertaMCliente = (TextView) dialoglayout.findViewById(R.id.txtMensaje_AlertaMCliente);
+                editCalificacion_AlertaMCliente = (EditText) dialoglayout.findViewById(R.id.editCalificacion_AlertaMCliente);
+                editFecha_AlertaMCliente = (EditText) dialoglayout.findViewById(R.id.editFecha_AlertaMCliente);
+
+                try
+                {
+                    valorRestante = Integer.valueOf(M_DatosCobro.valorRestante.getText().toString());
+                }
+                catch (Exception e)
+                {
+                    valorRestante = 1;
+                }
+
+                if(valorRestante == 1)
                 {
                     txtMensaje_AlertaMCliente.setVisibility(View.GONE);
                     editCalificacion_AlertaMCliente.setVisibility(View.GONE);
+                    editFecha_AlertaMCliente.setVisibility(View.GONE);
+
                     estadoCliente = "Activo";
-
-                    insertarAbono = true;
-
-                    if(abono.equalsIgnoreCase("0") || abono.equalsIgnoreCase(""))
-                    {
-                        editFecha_AlertaMCliente.setVisibility(View.GONE);
-                        insertarAbono = false;
-                    }
                 }
                 else
                 {
-                    if(abono.equalsIgnoreCase("0") || abono.equalsIgnoreCase(""))
+                    if(valorRestante != 0)
                     {
-                        editFecha_AlertaMCliente.setVisibility(View.GONE);
-                        insertarAbono = false;
+                        txtMensaje_AlertaMCliente.setVisibility(View.GONE);
+                        editCalificacion_AlertaMCliente.setVisibility(View.GONE);
+                        estadoCliente = "Activo";
+
+                        insertarAbono = true;
+
+                        if(abono.equalsIgnoreCase("0") || abono.equalsIgnoreCase(""))
+                        {
+                            editFecha_AlertaMCliente.setVisibility(View.GONE);
+                            insertarAbono = false;
+                        }
                     }
-
-                    estadoCliente = "Inactivo";
-                    estadoFactura = "Inactivo";
-                    insertarAbono = true;
-                }
-            }
-
-            //Fecha Personalizada para la garantia
-            dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-            editFecha_AlertaMCliente.setInputType(InputType.TYPE_NULL);
-            editFecha_AlertaMCliente.requestFocus();
-            setDateTimeField();
-
-            AlertDialog.Builder alerta = new AlertDialog.Builder(ModificarCliente.this);
-            alerta.setIcon(R.mipmap.guardar);
-            alerta.setTitle("Guardar");
-            alerta.setView(dialoglayout);
-            alerta.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i)
-                {
-                    fecha = editFecha_AlertaMCliente.getText().toString();
-                    calificacion = editCalificacion_AlertaMCliente.getText().toString();
-                    switch (Constantes.interfaz)
+                    else
                     {
-                        case "Administrador":
+                        if(abono.equalsIgnoreCase("0") || abono.equalsIgnoreCase(""))
+                        {
+                            editFecha_AlertaMCliente.setVisibility(View.GONE);
+                            insertarAbono = false;
+                        }
 
-                            if(valorRestante == 1)
-                            {
-                                TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
-                                tareaUpdateClient.execute(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa, editCalificacion_AlertaMCliente.getText().toString());
+                        estadoCliente = "Inactivo";
+                        estadoFactura = "Inactivo";
+                        insertarAbono = true;
+                    }
+                }
 
-                                AlertaCargando();
-                            }
-                            else
-                            {
-                                if (valorRestante != 0)
+                //Fecha Personalizada para la garantia
+                dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                editFecha_AlertaMCliente.setInputType(InputType.TYPE_NULL);
+                editFecha_AlertaMCliente.requestFocus();
+                setDateTimeField();
+
+                AlertDialog.Builder alerta = new AlertDialog.Builder(ModificarCliente.this);
+                alerta.setIcon(R.mipmap.guardar);
+                alerta.setTitle("Guardar");
+                alerta.setView(dialoglayout);
+                alerta.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        fecha = editFecha_AlertaMCliente.getText().toString();
+                        calificacion = editCalificacion_AlertaMCliente.getText().toString();
+                        switch (Constantes.interfaz)
+                        {
+                            case "Administrador":
+
+                                if(valorRestante == 1)
                                 {
-                                    if (fecha.equals(""))
-                                    {
-                                        Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
-                                    }
-                                    else
-                                    {
-                                        TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
-                                        tareaUpdateClient.execute(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa, editCalificacion_AlertaMCliente.getText().toString());
+                                    TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
+                                    tareaUpdateClient.execute(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa, editCalificacion_AlertaMCliente.getText().toString());
 
-                                        AlertaCargando();
-                                    }
+                                    AlertaCargando();
                                 }
                                 else
                                 {
-                                    if (fecha.equals("") ||
-                                            calificacion.equals(""))
+                                    if (valorRestante != 0)
                                     {
-                                        Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar aqui", Toast.LENGTH_SHORT).show();
+                                        if (fecha.equals(""))
+                                        {
+                                            Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
+                                        }
+                                        else
+                                        {
+                                            TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
+                                            tareaUpdateClient.execute(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa, editCalificacion_AlertaMCliente.getText().toString());
+
+                                            AlertaCargando();
+                                        }
                                     }
                                     else
                                     {
-                                        TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
-                                        tareaUpdateClient.execute(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa, editCalificacion_AlertaMCliente.getText().toString());
+                                        if (fecha.equals("") ||
+                                                calificacion.equals(""))
+                                        {
+                                            Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar aqui", Toast.LENGTH_SHORT).show();
+                                        }
+                                        else
+                                        {
+                                            TareaUpdateClient tareaUpdateClient = new TareaUpdateClient();
+                                            tareaUpdateClient.execute(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa, editCalificacion_AlertaMCliente.getText().toString());
 
-                                        AlertaCargando();
+                                            AlertaCargando();
+                                        }
                                     }
                                 }
-                            }
 
-                            break;
+                                break;
 
-                        case "Empleado":
-                            if (valorRestante != 0) {
-                                if (fecha.equals("")) {
-                                    Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
+                            case "Empleado":
+                                if (valorRestante != 0) {
+                                    if (fecha.equals("")) {
+                                        Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
+                                        Intent intent1 = new Intent(ModificarCliente.this, PrincipalEmpleado.class);
+                                        startActivity(intent1);
+                                        finish();
+                                    }
+
                                 } else {
-                                    Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
-                                    Intent intent1 = new Intent(ModificarCliente.this, PrincipalEmpleado.class);
-                                    startActivity(intent1);
-                                    finish();
+                                    if (fecha.equals("") ||
+                                            calificacion.equals("")) {
+                                        Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
+                                        Intent intent1 = new Intent(ModificarCliente.this, PrincipalEmpleado.class);
+                                        startActivity(intent1);
+                                        finish();
+                                    }
                                 }
 
-                            } else {
-                                if (fecha.equals("") ||
-                                        calificacion.equals("")) {
-                                    Toast.makeText(ModificarCliente.this, "Faltan Datos Por Llenar", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(ModificarCliente.this, "Los Cambios Fueron Exitosos", Toast.LENGTH_SHORT).show();
-                                    Intent intent1 = new Intent(ModificarCliente.this, PrincipalEmpleado.class);
-                                    startActivity(intent1);
-                                    finish();
-                                }
-                            }
-
-                            break;
+                                break;
+                        }
                     }
-                }
-            });
-            alerta.setNegativeButton("Cancelar", null);
-            alerta.setCancelable(false);
-            alerta.show();
+                });
+                alerta.setNegativeButton("Cancelar", null);
+                alerta.setCancelable(false);
+                alerta.show();
+            }
         }
     }
 
@@ -773,7 +783,7 @@ public class ModificarCliente extends ActionBarActivity implements TabHost.OnTab
 
             try
             {
-                fechaCobro = M_DetalleCobro.fechaDeCobro.getSelectedItem().toString();
+                fechaCobro = M_DetalleCobro.fechaCobro.getText().toString();
                 horaCobro = M_DetalleCobro.horaCobro.getSelectedItem().toString();
 
                 for(int i = 0; i < Constantes.itemsFactura.size(); i++)

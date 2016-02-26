@@ -52,12 +52,20 @@
                 android:textColor="@android:color/background_dark"
                 android:layout_marginTop="5dp"/>
 
-            <Spinner
-                android:id="@+id/spinnerFechaCobro_DetalleCobro"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp">
-            </Spinner>
+                android:text="Fecha de Cobro"
+                android:textSize="16sp"
+                android:textColor="@android:color/background_dark"
+                android:layout_marginTop="10dp"/>
+
+            <EditText
+                android:id="@+id/editFechaCobro_DetalleCobro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Fecha de Cobro"
+                android:inputType="date"/>
 
             <Spinner
                 android:id="@+id/spinnerHoraCobro_DetalleCobro"

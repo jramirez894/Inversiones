@@ -2,17 +2,21 @@
 package com.example.billy.clientes;
 
 import android.annotation.TargetApi;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -36,16 +40,19 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
-public class DetalleCobro extends Fragment
+public class DetalleCobro extends Fragment implements View.OnClickListener
 {
     public static AutoCompleteTextView buscarEmpleado;
     public static TextView dir;
     public static TextView tel;
 
-    public static Spinner fechaDeCobro;
+    public static EditText fechaDeCobro;
     public static Spinner horaCobro;
 
     boolean existe = false;
@@ -58,6 +65,9 @@ public class DetalleCobro extends Fragment
     public static String direccion = "";
     public static String telefono = "";
 
+    private DatePickerDialog datePickerDialog;
+    private SimpleDateFormat dateFormatter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -68,13 +78,15 @@ public class DetalleCobro extends Fragment
         buscarEmpleado=(AutoCompleteTextView)view.findViewById(R.id.autoCompleteBuscarEmpleado_DetalleCobro);
         dir=(TextView)view.findViewById(R.id.textViewdirEmpleado_DetalleCobro);
         tel=(TextView)view.findViewById(R.id.textViewtelEmpleado_DetalleCobro);
-        fechaDeCobro=(Spinner)view.findViewById(R.id.spinnerFechaCobro_DetalleCobro);
         horaCobro=(Spinner)view.findViewById(R.id.spinnerHoraCobro_DetalleCobro);
 
+        //Fecha Personalizada
+        fechaDeCobro=(EditText)view.findViewById(R.id.editFechaCobro_DetalleCobro);
+        dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        fechaDeCobro.setInputType(InputType.TYPE_NULL);
+        fechaDeCobro.requestFocus();
 
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(getActivity(), R.array.fechadeCobro, android.R.layout.simple_spinner_item);
-        fechaDeCobro.setAdapter(adapter);
-
+        setDateTimeField();
 
         ArrayAdapter adapter2 = ArrayAdapter.createFromResource(getActivity(), R.array.horadeCobro, android.R.layout.simple_spinner_item);
         horaCobro.setAdapter(adapter2);
@@ -108,6 +120,32 @@ public class DetalleCobro extends Fragment
 
         return view;
 
+    }
+
+    private void setDateTimeField()
+    {
+        fechaDeCobro.setOnClickListener(this);
+
+        Calendar newCalendar = Calendar.getInstance();
+
+        datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener()
+        {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
+            {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                fechaDeCobro.setText(dateFormatter.format(newDate.getTime()));
+            }
+        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+    }
+
+    @Override
+    public void onClick(View view)
+    {
+        if(view == fechaDeCobro) {
+            datePickerDialog.show();
+        }
     }
 
     @Override

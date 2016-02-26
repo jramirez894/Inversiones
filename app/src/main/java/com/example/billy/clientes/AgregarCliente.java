@@ -234,7 +234,7 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
 
                     //Variables Asociadas tab DetalleCobro
                     nomEmpleado =DetalleCobro.buscarEmpleado.getText().toString();
-                    fechaCobro = DetalleCobro.fechaDeCobro.getSelectedItem().toString();
+                    fechaCobro = DetalleCobro.fechaDeCobro.getText().toString();
                     horaCobro = DetalleCobro.horaCobro.getSelectedItem().toString();
 
                     if (cedula.equals("")||
@@ -247,26 +247,36 @@ public class AgregarCliente extends ActionBarActivity implements TabHost.OnTabCh
                             fechaVenta.equals("")||
                             totalPagar.equals("")||
                             nomEmpleado.equals("")||
-                            fechaCobro.equalsIgnoreCase("Fecha de Cobro")||
+                            fechaCobro.equals("")||
                             horaCobro.equalsIgnoreCase("Hora de Cobro"))
                     {
                         Toast.makeText(AgregarCliente.this,"Faltan Datos Por Llenar",Toast.LENGTH_SHORT).show();
                     }
                     else
                     {
-                        if(DatosCobro.arrayListItems.isEmpty())
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        String fechaActual = sdf.format(new Date());
+
+                        if(fechaActual.equalsIgnoreCase(fechaCobro))
                         {
-                            Toast.makeText(AgregarCliente.this,"Debe añadir productos a la lista",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AgregarCliente.this,"La fecha del proximo cobro no puede ser la actual",Toast.LENGTH_SHORT).show();
                         }
                         else
                         {
-                            if(isEmailValid(correo))
+                            if(DatosCobro.arrayListItems.isEmpty())
                             {
-                                guardarCliente(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa);
+                                Toast.makeText(AgregarCliente.this,"Debe añadir productos a la lista",Toast.LENGTH_SHORT).show();
                             }
                             else
                             {
-                                Toast.makeText(AgregarCliente.this,"Debe Ingresar un Correo Valido",Toast.LENGTH_SHORT).show();
+                                if(isEmailValid(correo))
+                                {
+                                    guardarCliente(cedula, nombre, direccion, telefono, correo, nomEmpresa, dirEmpresa);
+                                }
+                                else
+                                {
+                                    Toast.makeText(AgregarCliente.this,"Debe Ingresar un Correo Valido",Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
                     }

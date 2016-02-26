@@ -185,6 +185,8 @@ public class SaldoCaja extends AppCompatActivity
     private class TareaGastos extends AsyncTask<String,Integer,Boolean>
     {
         private String respStr;
+        JSONObject respJSON;
+        String sinDatos = "";
 
         @TargetApi(Build.VERSION_CODES.KITKAT)
         protected Boolean doInBackground(String... params)
@@ -206,7 +208,8 @@ public class SaldoCaja extends AppCompatActivity
 
                 respStr = EntityUtils.toString(resp.getEntity());
 
-                JSONObject respJSON = new JSONObject(respStr);
+                respJSON = new JSONObject(respStr);
+
                 JSONArray objItems = respJSON.getJSONArray("items");
                 JSONArray objFechas = objItems.getJSONArray(0);
 
@@ -253,17 +256,8 @@ public class SaldoCaja extends AppCompatActivity
 
         protected void onPostExecute(Boolean result)
         {
-            if(existe)
-            {
-                TareaCobros tareaCobros = new TareaCobros();
-                tareaCobros.execute();
-            }
-            else
-            {
-                Toast.makeText(SaldoCaja.this, "Error al cargar los gastos", Toast.LENGTH_LONG).show();
-                progressDialog.dismiss();
-            }
-
+            TareaCobros tareaCobros = new TareaCobros();
+            tareaCobros.execute();
         }
     }
 
@@ -338,34 +332,25 @@ public class SaldoCaja extends AppCompatActivity
 
         protected void onPostExecute(Boolean result)
         {
-            if(existe)
+            progressDialog.dismiss();
+
+            gastoDia.setText("Gastos Por Dia: $ " + filtrarGastos());
+            cobroDia.setText("Cobros Por Dia: $ " + filtrarCobros());
+
+            //Calcular la diferencia
+            int resta = 0;
+            resta = cobros - gastos;
+
+            diferencia.setText("Diferencia: $ " + String.valueOf(resta));
+
+            if(resta < 0)
             {
-                progressDialog.dismiss();
-
-                gastoDia.setText("Gastos Por Dia: $ " + filtrarGastos());
-                cobroDia.setText("Cobros Por Dia: $ " + filtrarCobros());
-
-                //Calcular la diferencia
-                int resta = 0;
-                resta = cobros - gastos;
-
-                diferencia.setText("Diferencia: $ " + String.valueOf(resta));
-
-                if(resta < 0)
-                {
-                    imgDiferencia.setImageDrawable(getResources().getDrawable(R.drawable.dislike));
-                }
-                else
-                {
-                    imgDiferencia.setImageDrawable(getResources().getDrawable(R.drawable.like));
-                }
+                imgDiferencia.setImageDrawable(getResources().getDrawable(R.drawable.dislike));
             }
             else
             {
-                Toast.makeText(SaldoCaja.this, "Error al cargar los cobros", Toast.LENGTH_LONG).show();
-                progressDialog.dismiss();
+                imgDiferencia.setImageDrawable(getResources().getDrawable(R.drawable.like));
             }
-
         }
     }
 }

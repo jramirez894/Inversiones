@@ -30,15 +30,6 @@
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <!-- Items Sppiner -->
-    <string-array name="fechadeCobro">
-        <item>Fecha de Cobro</item>
-        <item>Semanal</item>
-        <item>Cada 10 Dias</item>
-        <item>Quincenal</item>
-        <item>Mensual</item>
-    </string-array>
-
     <string-array name="horadeCobro">
         <item>Hora de Cobro</item>
         <item>6:00 Am</item>

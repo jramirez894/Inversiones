@@ -1,16 +1,20 @@
 package com.example.billy.clientes;
 
 import android.annotation.TargetApi;
+import android.app.DatePickerDialog;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -33,17 +37,23 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
-public class M_DetalleCobro extends Fragment
+public class M_DetalleCobro extends Fragment implements View.OnClickListener
 {
     public static AutoCompleteTextView buscarEmpleado;
     public static TextView nom;
     public static TextView tel;
 
-    public static Spinner fechaDeCobro;
+    private DatePickerDialog datePickerDialog;
+    private SimpleDateFormat dateFormatter;
+
     public static Spinner horaCobro;
+    public static EditText fechaCobro;
 
     boolean existe = false;
     String respuesta = "";
@@ -66,13 +76,15 @@ public class M_DetalleCobro extends Fragment
         nom=(TextView)view.findViewById(R.id.textViewnomEmpleado_DetalleCobro_Mcliente);
         tel=(TextView)view.findViewById(R.id.textViewtelEmpleado_DetalleCobro_Mcliente);
 
-        fechaDeCobro=(Spinner)view.findViewById(R.id.spinnerFechaCobro_DetalleCobro_Mcliente);
+        //Fecha Personalizada
+        fechaCobro = (EditText) view.findViewById(R.id.editFechaCobro_DetalleCobro_Mcliente);
+        dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        fechaCobro.setInputType(InputType.TYPE_NULL);
+        fechaCobro.requestFocus();
+
+        setDateTimeField();
+
         horaCobro=(Spinner)view.findViewById(R.id.spinnerHoraCobro_DetalleCobro_Mcliente);
-
-
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(getActivity(), R.array.fechadeCobro, android.R.layout.simple_spinner_item);
-        fechaDeCobro.setAdapter(adapter);
-
 
         ArrayAdapter adapter2 = ArrayAdapter.createFromResource(getActivity(), R.array.horadeCobro, android.R.layout.simple_spinner_item);
         horaCobro.setAdapter(adapter2);
@@ -80,10 +92,7 @@ public class M_DetalleCobro extends Fragment
         nom.setText("Nombre: " + Constantes.nombreVendedorUsuarios);
         tel.setText("Telefono: " + Constantes.telefonoVendedorUsuarios);
 
-        //Ubicar en los spinner los datos del servidor
-        int posfechaDeCobro = adapter.getPosition(Constantes.fechaCobroFactura);
-        fechaDeCobro.setSelection(posfechaDeCobro);
-
+        fechaCobro.setText(Constantes.fechaCobroFactura);
 
         int poshoraCobro = adapter2.getPosition(Constantes.horaCobroFactura);
         horaCobro.setSelection(poshoraCobro);
@@ -118,6 +127,32 @@ public class M_DetalleCobro extends Fragment
         });
 
         return view;
+    }
+
+    private void setDateTimeField()
+    {
+        fechaCobro.setOnClickListener(this);
+
+        Calendar newCalendar = Calendar.getInstance();
+
+        datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener()
+        {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
+            {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                fechaCobro.setText(dateFormatter.format(newDate.getTime()));
+            }
+        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+    }
+
+    @Override
+    public void onClick(View view)
+    {
+        if(view == fechaCobro) {
+            datePickerDialog.show();
+        }
     }
 
     private class TareaListado extends AsyncTask<String,Integer,Boolean>
