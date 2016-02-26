@@ -58,25 +58,18 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class M_DatosCobro extends Fragment implements View.OnClickListener
+public class M_DatosCobro extends Fragment
 {
     public static ListView lista;
     public static ArrayList<ItemListaroductos_MDatosCobro> arrayList = new ArrayList<ItemListaroductos_MDatosCobro>();
     public static ArrayList<ItemListaroductos_MDatosCobro> arrayListInsert = new ArrayList<ItemListaroductos_MDatosCobro>();
 
-    private DatePickerDialog datePickerDialogPendiente;
-    private SimpleDateFormat dateFormatterPendiente;
-
     public static AutoCompleteTextView buscarProducto;
     public static EditText fechaVenta;
     public static EditText totalPagar;
     public static EditText abono;
-    public static ImageView pendiente;
-    public static EditText fechaPendiente;
     public static EditText valorRestante;
     public static EditText saldoRestante;
-
-    String habilitar = "Habilitar";
 
     public static ArrayList<ItemsListaProductos_Productos> arrayListP = new ArrayList<ItemsListaProductos_Productos>();
     public static ArrayList<String> arrayListNombresProductos = new ArrayList<String>();
@@ -92,7 +85,6 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
         buscarProducto=(AutoCompleteTextView)view.findViewById(R.id.autoCompleteBuscarProducto_DatoCobro_Mcliente);
         totalPagar=(EditText)view.findViewById(R.id.editTotalPagar_DatosCobro_Mcliente);
         abono=(EditText)view.findViewById(R.id.editTextAbono_DatosCobro_Mcliente);
-        pendiente=(ImageView)view.findViewById(R.id.buttonPendiente_DatosCobro_Mcliente);
 
         valorRestante=(EditText)view.findViewById(R.id.editTextValorRestante_DatosCobro_Mcliente);
         saldoRestante=(EditText)view.findViewById(R.id.editSaldoRestante_DatosCobro_Mcliente);
@@ -107,39 +99,9 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
         fechaVenta=(EditText)view.findViewById(R.id.editFechaVenta_DatosCobro_Mcliente);
         fechaVenta.setText(Constantes.fechaFactura);
 
-        //Fecha Pendiente
-        dateFormatterPendiente = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        fechaPendiente=(EditText)view.findViewById(R.id.editTextFechaPendiente_DatosCobro_Mcliente);
-        fechaPendiente.setInputType(InputType.TYPE_NULL);
-        fechaPendiente.requestFocus();
-
         lista=(ListView)view.findViewById(R.id.listViewListaProductos_DatosCobro_Mcliente);
 
         ActualizarLista();
-        setDateTimeFieldPendiente();
-
-        pendiente.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switch (habilitar) {
-                    case "Habilitar":
-
-                        fechaPendiente.setVisibility(View.VISIBLE);
-                        abono.setEnabled(false);
-                        habilitar = "Desabilitar";
-
-                        break;
-
-                    case "Desabilitar":
-
-                        fechaPendiente.setVisibility(View.GONE);
-                        abono.setEnabled(true);
-                        habilitar = "Habilitar";
-
-                        break;
-                }
-            }
-        });
 
         //Metodo para restar el abono ingresado al valor total
         abono.addTextChangedListener(new TextWatcher() {
@@ -360,33 +322,6 @@ public class M_DatosCobro extends Fragment implements View.OnClickListener
         builder.setPositiveButton("Aceptar", null);
         builder.setCancelable(false);
         builder.show();
-    }
-
-    private void setDateTimeFieldPendiente()
-    {
-        fechaPendiente.setOnClickListener(this);
-
-        Calendar newCalendar = Calendar.getInstance();
-
-        datePickerDialogPendiente = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener()
-        {
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth)
-            {
-                Calendar newDate = Calendar.getInstance();
-                newDate.set(year, monthOfYear, dayOfMonth);
-                fechaPendiente.setText(dateFormatterPendiente.format(newDate.getTime()));
-            }
-        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
-    }
-
-    @Override
-    public void onClick(View view)
-    {
-        if(view == fechaPendiente)
-        {
-            datePickerDialogPendiente.show();
-        }
     }
 
     public void ActualizarLista()

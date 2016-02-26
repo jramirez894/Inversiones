@@ -93,35 +93,13 @@
                 android:textColor="@android:color/black"
                 android:layout_marginTop="10dp"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/editTextAbono_DatosCobro_Mcliente"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="0"
-                    android:inputType="number"/>
-
-                <ImageView
-                    android:id="@+id/buttonPendiente_DatosCobro_Mcliente"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/pendiente"
-                    android:layout_gravity="center"/>
-            </LinearLayout>
-
             <EditText
-                android:id="@+id/editTextFechaPendiente_DatosCobro_Mcliente"
+                android:id="@+id/editTextAbono_DatosCobro_Mcliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:hint="Fecha Pendiente"
-                android:inputType="date"
-                android:visibility="gone"/>
+                android:layout_weight="1"
+                android:hint="0"
+                android:inputType="number"/>
 
             <TextView
                 android:layout_width="wrap_content"

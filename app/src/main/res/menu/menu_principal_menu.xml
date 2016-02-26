@@ -10,19 +10,4 @@
         android:title="Agregar Cliente"
         android:visible="true"/>
 
-
-    <item
-        android:id="@+id/ordenarCliente"
-        app:showAsAction="ifRoom"
-        android:icon="@mipmap/ordenar"
-        android:title="Ordenar Clientes"
-        android:visible="true"/>
-
-    <item
-        android:id="@+id/guardarCliente"
-        app:showAsAction="ifRoom"
-        android:icon="@mipmap/guardar"
-        android:title="Ordenar Clientes"
-        android:visible="false"/>
-
 </menu>

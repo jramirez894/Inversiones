@@ -345,9 +345,7 @@ public class PrincipalMenu extends AppCompatActivity
         getMenuInflater().inflate(R.menu.menu_principal_menu, menu);
 
         //Elementos del menu item
-        menuGuardar = (MenuItem) menu.findItem(R.id.guardarCliente);
         menuAgregar = (MenuItem) menu.findItem(R.id.agregarCliente);
-        menuOrdenar = (MenuItem) menu.findItem(R.id.ordenarCliente);
 
         return true;
     }
@@ -372,40 +370,6 @@ public class PrincipalMenu extends AppCompatActivity
                 Intent intent = new Intent(PrincipalMenu.this,AgregarCliente.class);
                 intent.putExtra("Interfaz","Administrador");
                 startActivity(intent);
-                break;
-
-            case R.id.ordenarCliente:
-                Constantes.EDITAR_LISTA = "EditText";
-                ActualizarLista();
-                menuGuardar.setVisible(true);
-                menuAgregar.setVisible(false);
-                menuOrdenar.setVisible(false);
-
-                break;
-
-            case R.id.guardarCliente:
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setIcon(android.R.drawable.ic_menu_save);
-                builder.setTitle("Guardar");
-                builder.setMessage("¿Confirmar?");
-                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        menuGuardar.setVisible(false);
-                        menuAgregar.setVisible(true);
-                        menuOrdenar.setVisible(true);
-
-                        Constantes.EDITAR_LISTA = "Botones";
-                        ActualizarLista();
-                    }
-                });
-
-                builder.setNegativeButton("Cancelar", null);
-                builder.setCancelable(false);
-                builder.show();
-
                 break;
         }
 
