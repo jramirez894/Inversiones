@@ -55,7 +55,7 @@ public class Adapter_Garantia extends ArrayAdapter
         }
         else
         {
-            if(items.getEstado().equalsIgnoreCase("Pendiente"))
+            if(items.getEstado().equalsIgnoreCase("En proceso"))
             {
                 layout.setBackgroundColor(Color.parseColor("#8f2868ff"));
             }

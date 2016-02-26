@@ -53,7 +53,17 @@ public class Adapter_Devolucion extends ArrayAdapter
         estado.setText(items.getEstado());
 
         //Para cambiar el color de fondo segun el estado de la garantia
-        layout.setBackgroundColor(Color.parseColor("#8fff2109"));
+        if(items.getEstado().equalsIgnoreCase("En espera"))
+        {
+            layout.setBackgroundColor(Color.parseColor("#8fff2109"));
+        }
+        else
+        {
+            if(items.getEstado().equalsIgnoreCase("En proceso"))
+            {
+                layout.setBackgroundColor(Color.parseColor("#8f2868ff"));
+            }
+        }
 
         return convertView;
     }
