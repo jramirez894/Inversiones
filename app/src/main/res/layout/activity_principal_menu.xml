@@ -33,6 +33,41 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <RadioGroup
+                android:id="@+id/radioButton_PrincipalMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbVerTodos_PrincipalMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ver Todos"
+                    android:textSize="15sp"
+                    android:checked="true"
+                    android:textColor="@android:color/background_dark"/>
+
+                <RadioButton
+                    android:id="@+id/rbClienteDia_PrincipalMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Clientes del día"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/background_dark"/>
+
+            </RadioGroup>
+
+        </LinearLayout>
+
         <ListView
             android:id="@+id/listaClienes_MenuPrincipal"
             android:layout_width="match_parent"

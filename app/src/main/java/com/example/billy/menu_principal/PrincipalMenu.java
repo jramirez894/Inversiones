@@ -25,6 +25,8 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.billy.cancelados.Cancelados;
@@ -37,8 +39,11 @@ import com.example.billy.constantes.Constantes;
 import com.example.billy.devolucion.Devolucion;
 import com.example.billy.devolucion.Items_Devolucion;
 import com.example.billy.empleado.Empleados;
+import com.example.billy.garantias_product.Adapter_Garantia;
 import com.example.billy.garantias_product.Garantia;
 import com.example.billy.garantias_product.Items_Garantia;
+import com.example.billy.garantias_product.Items_Garantia_Visualizar;
+import com.example.billy.garantias_product.VisualizarGarantia;
 import com.example.billy.gastos.Reg_Gasto;
 import com.example.billy.inversiones.MainActivity;
 import com.example.billy.perfil.Perfil;
@@ -62,7 +67,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PrincipalMenu extends AppCompatActivity
@@ -73,6 +80,7 @@ public class PrincipalMenu extends AppCompatActivity
 
     public static ListView listaClientes;
     public static ArrayList<ItemListaPersonalizada> items = new ArrayList<ItemListaPersonalizada>();
+    public static ArrayList<ItemListaPersonalizada> itemsFiltro = new ArrayList<ItemListaPersonalizada>();
     public static ArrayList<String> itemsNombreCliente = new ArrayList<String>();
 
     MenuItem menuGuardar;
@@ -122,6 +130,10 @@ public class PrincipalMenu extends AppCompatActivity
     //Alerta Cargando
     ProgressDialog progressDialog;
 
+    RadioGroup radioGroup;
+    RadioButton rbVerTodos;
+    RadioButton rbClienteDia;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -139,6 +151,62 @@ public class PrincipalMenu extends AppCompatActivity
         actionBar.setTitle("Menu");
 
         actionBar.setHomeAsUpIndicator(R.drawable.ic_drawer);
+
+        radioGroup = (RadioGroup)findViewById(R.id.radioButton_PrincipalMenu);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+                if (checkedId == R.id.rbVerTodos_PrincipalMenu)
+                {
+                    listaClientes.setAdapter(new AdapterListaPersonalizada(PrincipalMenu.this, items));
+                }
+                else
+                {
+                    if (checkedId == R.id.rbClienteDia_PrincipalMenu)
+                    {
+                        AlertaCargando();
+
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                        String fechaActual = sdf.format(new Date());
+
+                        itemsFiltro.clear();
+
+                        for (int j = 0; j < items.size(); j++)
+                        {
+                            for (int k = 0; k < itemsFactura.size(); k++)
+                            {
+                                if(items.get(j).getIdCliente().equalsIgnoreCase(itemsFactura.get(k).getIdCliente()))
+                                {
+                                    if(fechaActual.equalsIgnoreCase(itemsFactura.get(k).getFechaCobro()))
+                                    {
+                                        itemsFiltro.add(new ItemListaPersonalizada(items.get(j).getNombreLista(),
+                                                R.mipmap.editar, "",
+                                                items.get(j).getIdCliente(),
+                                                items.get(j).getCedula(),
+                                                items.get(j).getDireccion(),
+                                                items.get(j).getTelefono(),
+                                                items.get(j).getCorreo(),
+                                                items.get(j).getNombreEmpresa(),
+                                                items.get(j).getDireccionEmpresa(),
+                                                items.get(j).getEstado(),
+                                                items.get(j).getCalificacion()));
+                                    }
+                                }
+                            }
+                        }
+
+                        progressDialog.dismiss();
+                        listaClientes.setAdapter(new AdapterListaPersonalizada(PrincipalMenu.this, itemsFiltro));
+                    }
+                }
+            }
+        });
+
+        //para buscar la garantia que haya sido seleccionada
+
+        rbVerTodos = (RadioButton) findViewById(R.id.rbVerTodos_PrincipalMenu);
+        rbClienteDia = (RadioButton) findViewById(R.id.rbClienteDia_PrincipalMenu);
 
         //Obtener drawer
         menuDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -243,7 +311,19 @@ public class PrincipalMenu extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l)
             {
-                ItemListaPersonalizada cliente = items.get(position);
+                ItemListaPersonalizada cliente = null;
+
+                if(rbVerTodos.isChecked())
+                {
+                    cliente = items.get(position);
+                }
+                else
+                {
+                    if (rbClienteDia.isChecked())
+                    {
+                        cliente = itemsFiltro.get(position);
+                    }
+                }
 
                 cedulaCliente = cliente.getCedula();
                 nombreCliente = cliente.getNombreLista();
@@ -367,7 +447,7 @@ public class PrincipalMenu extends AppCompatActivity
         {
             case R.id.agregarCliente:
                 Intent intent = new Intent(PrincipalMenu.this,AgregarCliente.class);
-                intent.putExtra("Interfaz","Administrador");
+                intent.putExtra("Interfaz", "Administrador");
                 startActivity(intent);
                 break;
         }
@@ -410,7 +490,7 @@ public class PrincipalMenu extends AppCompatActivity
 
                 if(respuesta.equalsIgnoreCase("No Existe"))
                 {
-                    existe = false;
+                    resul = false;
                 }
                 else
                 {
@@ -426,10 +506,8 @@ public class PrincipalMenu extends AppCompatActivity
                         }
                     }
 
-                    existe = true;
+                    resul = true;
                 }
-
-                resul = true;
             }
             catch(UnsupportedEncodingException e)
             {
@@ -450,6 +528,7 @@ public class PrincipalMenu extends AppCompatActivity
             }
             catch (JSONException e) {
                 e.printStackTrace();
+                resul = false;
             }
 
             return resul;
@@ -457,10 +536,109 @@ public class PrincipalMenu extends AppCompatActivity
 
         protected void onPostExecute(Boolean result)
         {
-            //Toast.makeText(PrincipalMenu.this, respuesta, Toast.LENGTH_SHORT).show();
-            progressDialog.dismiss();
-            listaClientes.setAdapter(new AdapterListaPersonalizada(PrincipalMenu.this, items));
-            autocompleteBuscarClientes_MenuPrincipal.setAdapter(new ArrayAdapter<String>(PrincipalMenu.this, android.R.layout.simple_dropdown_item_1line, itemsNombreCliente));
+            if(result)
+            {
+                TareaGetBillFiltro tareaGetBillFiltro = new TareaGetBillFiltro();
+                tareaGetBillFiltro.execute();
+
+            }
+            else
+            {
+                progressDialog.dismiss();
+            }
+        }
+    }
+
+    //Clases Asyntask para traer las facturas
+    private class TareaGetBillFiltro extends AsyncTask<String,Integer,Boolean>
+    {
+        private String respStr;
+        private JSONObject msg;
+
+        @TargetApi(Build.VERSION_CODES.KITKAT)
+        protected Boolean doInBackground(String... params)
+        {
+            boolean resul = true;
+            HttpClient httpClient;
+            List<NameValuePair> nameValuePairs;
+            HttpPost httpPost;
+            httpClient= new DefaultHttpClient();
+            httpPost = new HttpPost("http://inversiones.aprendicesrisaralda.com/Controllers/ControllerFactura.php");
+
+            nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("option",  "getAllBill"));
+
+            try
+            {
+                httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+                HttpResponse resp= httpClient.execute(httpPost);
+
+                respStr = EntityUtils.toString(resp.getEntity());
+
+                JSONObject respJSON = new JSONObject(respStr);
+                JSONArray objItems = respJSON.getJSONArray("items");
+                JSONArray objFacturas = objItems.getJSONArray(0);
+
+                //String obj
+                String respuesta= String.valueOf(objFacturas);
+
+                if(respuesta.equalsIgnoreCase("No Existe"))
+                {
+                    existe = false;
+                }
+                else
+                {
+                    itemsFactura.clear();
+                    for(int i=0; i<objFacturas.length(); i++)
+                    {
+                        JSONObject obj = objFacturas.getJSONObject(i);
+                        if(obj.getString("estado").equalsIgnoreCase("Activo"))
+                        {
+                            itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("valorRestante"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
+                            existe = true;
+                        }
+                    }
+                }
+            }
+            catch(UnsupportedEncodingException e)
+            {
+                e.printStackTrace();
+                existe = false;
+            }
+
+            catch(ClientProtocolException e)
+            {
+                e.printStackTrace();
+                existe = false;
+            }
+
+            catch (IOException e)
+            {
+                e.printStackTrace();
+                existe = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+                existe = false;
+            }
+
+            return existe;
+        }
+
+        protected void onPostExecute(Boolean result)
+        {
+            //Toast.makeText(AgregarCliente.this, respStr.toString(), Toast.LENGTH_SHORT).show();
+            if (existe)
+            {
+                //Toast.makeText(PrincipalMenu.this, respuesta, Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+                listaClientes.setAdapter(new AdapterListaPersonalizada(PrincipalMenu.this, items));
+                autocompleteBuscarClientes_MenuPrincipal.setAdapter(new ArrayAdapter<String>(PrincipalMenu.this, android.R.layout.simple_dropdown_item_1line, itemsNombreCliente));
+            }
+            else
+            {
+                progressDialog.dismiss();
+                Toast.makeText(PrincipalMenu.this, "Error al cargar las facturas", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -507,8 +685,11 @@ public class PrincipalMenu extends AppCompatActivity
                     for(int i=0; i<objFacturas.length(); i++)
                     {
                         JSONObject obj = objFacturas.getJSONObject(i);
-                        itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("valorRestante"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
-                        existe = true;
+                        if(obj.getString("estado").equalsIgnoreCase("Activo"))
+                        {
+                            itemsFactura.add(new ItemFactura_AgregarCliente(obj.getString("idFactura"), obj.getString("fecha"), obj.getString("total"), obj.getString("valorRestante"), obj.getString("estado"), obj.getString("fechaCobro"), obj.getString("horaCobro"), obj.getString("idVendedor"), obj.getString("idCliente")));
+                            existe = true;
+                        }
                     }
                 }
             }
