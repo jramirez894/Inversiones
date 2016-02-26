@@ -507,7 +507,7 @@ public class AdapterLista_Productos_MDatosCobro extends ArrayAdapter implements 
                         idGarantia = Constantes.itemsGarantias.get(posicionLista).getIdGarantia();
 
                         TareaUpdadteGarantia updadteGarantia = new TareaUpdadteGarantia();
-                        updadteGarantia.execute(Constantes.itemsGarantias.get(posicionLista).getIdGarantia(),"En espera", capDescripcion, capFecha, cantidadP, Constantes.itemsGarantias.get(posicionLista).getIdVendedor(),Constantes.itemsGarantias.get(posicionLista).getIdCliente(), Constantes.itemsGarantias.get(posicionLista).getIdProducto());
+                        updadteGarantia.execute(Constantes.itemsGarantias.get(posicionLista).getIdGarantia(),Constantes.itemsGarantias.get(posicionLista).getEstado(), capDescripcion, capFecha, cantidadP, Constantes.itemsGarantias.get(posicionLista).getIdVendedor(),Constantes.itemsGarantias.get(posicionLista).getIdCliente(), Constantes.itemsGarantias.get(posicionLista).getIdProducto());
 
                         AlertaCargando();
                     }
